@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { evaluateGuess, LetterState } from "@/lib/gameState";
 
 interface GameBoardProps {
@@ -34,16 +35,33 @@ interface TileProps {
 
 function Tile({ letter, state, animate, delay = 0 }: TileProps) {
   const base =
-    "w-full aspect-square flex items-center justify-center text-2xl sm:text-3xl font-bold border-2 uppercase select-none transition-colors duration-100";
-  const style = getCellStyle(state);
+    "w-full aspect-square flex items-center justify-center text-xl sm:text-2xl font-bold border-2 select-none";
+  // When animating, start without color and reveal it at the midpoint (250ms into 500ms animation)
+  const [revealed, setRevealed] = useState(!animate);
+  useEffect(() => {
+    if (!animate || state === "empty") return;
+    const t = setTimeout(() => setRevealed(true), delay * 300 + 250);
+    return () => clearTimeout(t);
+  }, [animate, delay, state]);
+
+  const colorStyle = revealed ? getCellStyle(state) : "bg-tile border-border text-white";
   const flipClass = animate && state !== "empty" ? "animate-flip" : "";
 
   return (
     <div
-      className={`${base} ${style} ${flipClass}`}
+      className={`${base} ${colorStyle} ${flipClass}`}
       style={animate ? { animationDelay: `${delay * 300}ms` } : undefined}
     >
-      {letter}
+      <span
+        style={{
+          display: "inline-block",
+          fontVariantLigatures: "none",
+          unicodeBidi: "isolate",
+          letterSpacing: 0,
+        }}
+      >
+        {letter}
+      </span>
     </div>
   );
 }
@@ -86,11 +104,11 @@ export default function GameBoard({
   }
 
   return (
-    <div className="flex flex-col gap-1.5 my-4 mx-auto w-full max-w-[350px] px-2">
+    <div className="flex flex-col gap-1 my-2 mx-auto w-full max-w-[320px] px-2">
       {rows.map((row, rowIdx) => (
         <div
           key={rowIdx}
-          className={`grid grid-cols-5 gap-1.5 ${rowIdx === guesses.length && shake ? "animate-shake" : ""}`}
+          className={`grid grid-cols-5 gap-1 ${rowIdx === guesses.length && shake ? "animate-shake" : ""}`}
         >
           {row.letters.map((letter, colIdx) => (
             <Tile

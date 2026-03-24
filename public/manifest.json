@@ -1,0 +1,13 @@
+{
+  "name": "كلمة - لعبة الكلمات اليومية",
+  "short_name": "كلمة",
+  "description": "خمّن الكلمة العربية اليومية في 6 محاولات",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121213",
+  "theme_color": "#121213",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

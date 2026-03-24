@@ -2,7 +2,20 @@
 
 import { Stats } from "@/lib/gameState";
 import { generateShareText, copyToClipboard } from "@/lib/shareText";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+function getTimeUntilNextPuzzle(): string {
+  const now = new Date();
+  const riyadhOffset = 3 * 60 * 60 * 1000;
+  const riyadhNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + riyadhOffset);
+  const tomorrow = new Date(riyadhNow);
+  tomorrow.setHours(24, 0, 0, 0);
+  const diff = tomorrow.getTime() - riyadhNow.getTime();
+  const h = Math.floor(diff / 3600000).toString().padStart(2, "0");
+  const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, "0");
+  const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, "0");
+  return `${h}:${m}:${s}`;
+}
 
 interface StatsModalProps {
   stats: Stats;
@@ -20,6 +33,14 @@ export default function StatsModal({
   answer,
 }: StatsModalProps) {
   const [copied, setCopied] = useState(false);
+  const [countdown, setCountdown] = useState(getTimeUntilNextPuzzle());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdown(getTimeUntilNextPuzzle());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
   const winPercent =
     stats.gamesPlayed > 0
       ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100)
@@ -42,11 +63,11 @@ export default function StatsModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center overflow-hidden"
       onClick={onClose}
     >
       <div
-        className="bg-surface rounded-lg w-full max-w-md p-6 text-white relative"
+        className="bg-surface rounded-t-2xl sm:rounded-2xl w-full max-w-md p-6 text-white relative overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
         dir="rtl"
       >
@@ -128,6 +149,12 @@ export default function StatsModal({
               </div>
             );
           })}
+        </div>
+
+        {/* Countdown to next puzzle */}
+        <div className="text-center mb-4">
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">الكلمة القادمة في</p>
+          <p className="text-2xl font-bold tabular-nums" dir="ltr">{countdown}</p>
         </div>
 
         {/* Share button */}

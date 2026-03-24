@@ -30,8 +30,14 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700;900&display=swap"
           rel="stylesheet"
         />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <meta name="theme-color" content="#121213" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="كلمة" />
       </head>
-      <body className="bg-background text-white font-arabic antialiased">
+      <body className="bg-background text-white font-arabic antialiased overflow-x-hidden">
         {children}
       </body>
     </html>
