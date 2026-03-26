@@ -161,7 +161,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col" dir="rtl">
+    <div className="h-screen bg-background flex flex-col overflow-hidden" dir="rtl">
       {/* Header */}
       <header className="w-full border-b border-border">
         <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
