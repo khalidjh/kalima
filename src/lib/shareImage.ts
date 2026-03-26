@@ -104,7 +104,8 @@ function drawGlowRect(
 export async function generateShareImage(
   guesses: string[],
   answer: string,
-  won: boolean
+  won: boolean,
+  currentStreak?: number
 ): Promise<Blob> {
   const canvas = document.createElement("canvas");
   canvas.width = SIZE;
@@ -228,8 +229,18 @@ export async function generateShareImage(
   ctx.textBaseline = "top";
   ctx.fillText(result, SIZE / 2, badgeY);
 
+  // ── Streak line ──
+  const showStreak = currentStreak !== undefined && currentStreak > 1;
+  if (showStreak) {
+    ctx.font = `bold 36px ${ARABIC_FONT}`;
+    ctx.fillStyle = "#FF9500";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText(`🔥 ${currentStreak} يوم`, SIZE / 2, badgeY + 56);
+  }
+
   // ── Challenge line ──
-  const challengeY = badgeY + 64;
+  const challengeY = badgeY + (showStreak ? 112 : 64);
   ctx.font = `34px ${ARABIC_FONT}`;
   ctx.fillStyle = GRAY;
   ctx.textAlign = "center";

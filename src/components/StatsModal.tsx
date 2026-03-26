@@ -4,6 +4,7 @@ import { Stats } from "@/lib/gameState";
 import { generateShareText, copyToClipboard } from "@/lib/shareText";
 import { generateShareImage } from "@/lib/shareImage";
 import { getPuzzleNumber } from "@/data/words";
+import { track } from "@/lib/analytics";
 import { useState, useEffect } from "react";
 
 function getTimeUntilNextPuzzle(): string {
@@ -52,12 +53,14 @@ export default function StatsModal({
   const maxDist = Math.max(...Object.values(stats.guessDistribution), 1);
 
   const handleImageShare = async () => {
+    const puzzleNum = getPuzzleNumber();
     setImageSharing(true);
     try {
-      const blob = await generateShareImage(guesses, answer, gameStatus === "won");
-      const puzzleNum = getPuzzleNumber();
+      const blob = await generateShareImage(guesses, answer, gameStatus === "won", stats.currentStreak);
       const filename = `kalima-puzzle-${puzzleNum}.png`;
       const file = new File([blob], filename, { type: "image/png" });
+
+      track("share_image", { puzzle: puzzleNum });
 
       // Try native share with file on mobile
       if (navigator.canShare?.({ files: [file] })) {
@@ -79,6 +82,7 @@ export default function StatsModal({
   };
 
   const handleShare = async () => {
+    const puzzleNum = getPuzzleNumber();
     const text = generateShareText(
       guesses,
       answer,
@@ -86,6 +90,7 @@ export default function StatsModal({
     );
     const success = await copyToClipboard(text);
     if (success) {
+      track("share_text", { puzzle: puzzleNum });
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

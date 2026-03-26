@@ -16,6 +16,7 @@ import {
   Stats,
 } from "@/lib/gameState";
 import { getDailyWord, isValidGuess, getPuzzleNumber } from "@/data/words";
+import { track } from "@/lib/analytics";
 
 const ARABIC_LETTERS = new Set([
   "ا", "أ", "إ", "آ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ",
@@ -94,6 +95,7 @@ export default function Home() {
     if (won) {
       const newStats = updateStatsOnWin(newGuesses.length);
       setStats(newStats);
+      track("game_won", { puzzle: puzzleNumber, guesses: newGuesses.length, streak: newStats.currentStreak });
       const messages = ["ممتاز! 🌟", "رائع! 🎉", "أحسنت! 👏", "جيد جداً! 😊", "حسناً 😌", "بالكاد! 😅"];
       showToast(messages[newGuesses.length - 1] ?? "أحسنت!");
       setTimeout(() => {
@@ -104,6 +106,7 @@ export default function Home() {
     } else if (lost) {
       const newStats = updateStatsOnLoss();
       setStats(newStats);
+      track("game_lost", { puzzle: puzzleNumber });
       showToast(`الإجابة: ${answer}`, 3000);
       setTimeout(() => setShowStats(true), 2000);
       saveGameState({ puzzleNumber, guesses: newGuesses, gameStatus: "lost" });
@@ -162,22 +165,33 @@ export default function Home() {
       {/* Header */}
       <header className="w-full border-b border-border">
         <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
-          {/* How to play */}
-          <button
-            onClick={() => setShowHowToPlay(true)}
-            className="text-white hover:text-gray-300 transition-colors p-1"
-            aria-label="كيف تلعب"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              fill="currentColor"
+          {/* Right side (RTL start): how to play + streak badge */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowHowToPlay(true)}
+              className="text-white hover:text-gray-300 transition-colors p-1"
+              aria-label="كيف تلعب"
             >
-              <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 0 24 24"
+                width="24"
+                fill="currentColor"
+              >
+                <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
+              </svg>
+            </button>
+            {stats.currentStreak > 0 && (
+              <button
+                onClick={() => setShowStats(true)}
+                className={`flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded-full bg-surface text-white border border-border hover:border-gray-500 transition-colors${stats.currentStreak >= 7 ? " animate-pulse" : ""}`}
+                aria-label={`تتابع ${stats.currentStreak}`}
+              >
+                🔥 {stats.currentStreak}
+              </button>
+            )}
+          </div>
 
           {/* Title */}
           <h1 className="text-2xl font-black tracking-wider text-white">
