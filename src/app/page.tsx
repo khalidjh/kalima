@@ -161,7 +161,7 @@ export default function Home() {
   }
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden" dir="rtl">
+    <div className="bg-background flex flex-col overflow-hidden" style={{ height: '100dvh' }} dir="rtl">
       {/* Header */}
       <header className="w-full border-b border-border">
         <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
@@ -218,13 +218,13 @@ export default function Home() {
       </header>
 
       {/* Puzzle number */}
-      <div className="text-center text-gray-500 text-xs mt-2">
+      <div className="text-center text-gray-500 text-xs mt-1">
         #{puzzleNumber}
       </div>
 
       {/* Game Board */}
-      <main className="flex-1 flex flex-col items-center overflow-hidden">
-        <div className="flex-1 flex items-center justify-center w-full">
+      <main className="flex-1 flex flex-col items-center overflow-hidden min-h-0">
+        <div className="flex-1 flex items-center justify-center w-full min-h-0">
           <GameBoard
             guesses={guesses}
             currentGuess={currentGuess}
@@ -235,7 +235,7 @@ export default function Home() {
         </div>
 
         {/* Keyboard — pinned to bottom */}
-        <div className="w-full pb-2 px-1">
+        <div className="w-full px-1 pb-1 shrink-0">
           <Keyboard
             letterStates={keyboardStates}
             onKey={handleKey}

@@ -44,7 +44,7 @@ function LetterKey({ letter, state, onKey, disabled }: LetterKeyProps) {
         if (!disabled) onKey(letter);
       }}
       disabled={disabled}
-      className={`h-12 w-full rounded text-sm font-bold select-none touch-manipulation transition-colors ${getKeyStyle(state)}`}
+      className={`h-10 sm:h-12 w-full rounded text-sm font-bold select-none touch-manipulation transition-colors ${getKeyStyle(state)}`}
     >
       {letter}
     </button>
@@ -59,7 +59,7 @@ export default function Keyboard({
   disabled,
 }: KeyboardProps) {
   return (
-    <div className="w-full max-w-[480px] mx-auto px-1 pb-1 overflow-hidden" dir="rtl">
+    <div className="w-full max-w-[480px] mx-auto px-1 pb-safe overflow-hidden" dir="rtl">
       {/* Row 1 — 11 keys, smaller */}
       <div className="grid gap-1 mb-1" style={{ gridTemplateColumns: `repeat(${ROW1.length}, 1fr)` }}>
         {ROW1.map((l) => (
@@ -80,7 +80,7 @@ export default function Keyboard({
         <button
           onPointerDown={(e) => { e.preventDefault(); if (!disabled) onEnter(); }}
           disabled={disabled}
-          className="h-12 rounded bg-surface text-white text-xs font-bold select-none touch-manipulation disabled:opacity-50"
+          className="h-10 sm:h-12 rounded bg-surface text-white text-xs font-bold select-none touch-manipulation disabled:opacity-50"
         >
           إدخال
         </button>
@@ -93,7 +93,7 @@ export default function Keyboard({
         <button
           onPointerDown={(e) => { e.preventDefault(); if (!disabled) onDelete(); }}
           disabled={disabled}
-          className="h-12 rounded bg-surface text-white text-xs font-bold select-none touch-manipulation disabled:opacity-50"
+          className="h-10 sm:h-12 rounded bg-surface text-white text-xs font-bold select-none touch-manipulation disabled:opacity-50"
         >
           حذف
         </button>
