@@ -8,11 +8,7 @@ interface ToastProps {
   onDismiss: () => void;
 }
 
-export default function Toast({
-  message,
-  duration = 2000,
-  onDismiss,
-}: ToastProps) {
+export default function Toast({ message, duration = 2000, onDismiss }: ToastProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -26,12 +22,14 @@ export default function Toast({
 
   return (
     <div
-      className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-white text-black font-bold px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 pointer-events-none ${
-        visible ? "opacity-100" : "opacity-0"
+      className={`fixed top-16 inset-x-0 flex justify-center z-50 pointer-events-none transition-all duration-300 ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
       }`}
       dir="rtl"
     >
-      {message}
+      <div className="bg-[#e0e0e0] text-black font-bold text-sm px-5 py-2.5 rounded-full shadow-xl max-w-[80%] text-center">
+        {message}
+      </div>
     </div>
   );
 }

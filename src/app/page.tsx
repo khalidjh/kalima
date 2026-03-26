@@ -81,11 +81,8 @@ export default function Home() {
       triggerShake();
       return;
     }
-    if (!isValidGuess(currentGuess)) {
-      showToast("الكلمة غير موجودة في القائمة");
-      triggerShake();
-      return;
-    }
+    // Word list validation removed — accept any 5 Arabic letters
+    void isValidGuess;
 
     const newGuesses = [...guesses, currentGuess];
     setGuesses(newGuesses);
@@ -212,17 +209,19 @@ export default function Home() {
       </div>
 
       {/* Game Board */}
-      <main className="flex-1 flex flex-col items-center justify-between pb-4 pt-2">
-        <GameBoard
-          guesses={guesses}
-          currentGuess={currentGuess}
-          answer={answer}
-          gameOver={gameStatus !== "playing"}
-          shake={shake}
-        />
+      <main className="flex-1 flex flex-col items-center overflow-hidden">
+        <div className="flex-1 flex items-center justify-center w-full">
+          <GameBoard
+            guesses={guesses}
+            currentGuess={currentGuess}
+            answer={answer}
+            gameOver={gameStatus !== "playing"}
+            shake={shake}
+          />
+        </div>
 
-        {/* Keyboard */}
-        <div className="w-full px-2 mt-auto">
+        {/* Keyboard — pinned to bottom */}
+        <div className="w-full pb-2 px-1">
           <Keyboard
             letterStates={keyboardStates}
             onKey={handleKey}

@@ -10,13 +10,11 @@ interface KeyboardProps {
   disabled: boolean;
 }
 
-// Arabic keyboard rows
-const ROWS: string[][] = [
-  ["ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج"],
-  ["ش", "س", "ي", "ب", "ل", "ا", "ت", "ن", "م", "ك"],
-  ["ذ", "د", "ز", "ر", "و", "ط", "ظ"],
-  ["ة", "ى", "إ", "أ", "آ", "ء", "ئ", "ؤ"],
-];
+// Arabic keyboard rows — Enter on row 3 start (right), Delete on row 3 end (left)
+const ROW1 = ["ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج"];
+const ROW2 = ["ش", "س", "ي", "ب", "ل", "ا", "ت", "ن", "م", "ك"];
+const ROW3 = ["ذ", "د", "ز", "ر", "و", "ط", "ظ"];
+const ROW4 = ["ة", "ى", "إ", "أ", "آ", "ء", "ئ", "ؤ"];
 
 function getKeyStyle(state: LetterState | undefined): string {
   switch (state) {
@@ -27,8 +25,30 @@ function getKeyStyle(state: LetterState | undefined): string {
     case "absent":
       return "bg-absent text-white opacity-60";
     default:
-      return "bg-surface text-white hover:bg-border-filled";
+      return "bg-surface text-white";
   }
+}
+
+interface LetterKeyProps {
+  letter: string;
+  state?: LetterState;
+  onKey: (k: string) => void;
+  disabled: boolean;
+}
+
+function LetterKey({ letter, state, onKey, disabled }: LetterKeyProps) {
+  return (
+    <button
+      onPointerDown={(e) => {
+        e.preventDefault();
+        if (!disabled) onKey(letter);
+      }}
+      disabled={disabled}
+      className={`h-12 w-full rounded text-sm font-bold select-none touch-manipulation transition-colors ${getKeyStyle(state)}`}
+    >
+      {letter}
+    </button>
+  );
 }
 
 export default function Keyboard({
@@ -39,52 +59,51 @@ export default function Keyboard({
   disabled,
 }: KeyboardProps) {
   return (
-    <div
-      className="flex flex-col gap-1.5 w-full max-w-[500px] mx-auto px-1"
-      dir="rtl"
-    >
-      {ROWS.map((row, rowIdx) => (
-        <div key={rowIdx} className="flex justify-center gap-1">
-          {row.map((letter) => (
-            <button
-              key={letter}
-              onClick={() => !disabled && onKey(letter)}
-              disabled={disabled}
-              className={`h-14 min-w-[2.5rem] flex-1 max-w-[2.8rem] rounded text-sm sm:text-base font-bold transition-colors duration-100 select-none cursor-pointer disabled:cursor-default ${getKeyStyle(letterStates[letter])}`}
-              aria-label={`حرف ${letter}`}
-            >
-              {letter}
-            </button>
-          ))}
-        </div>
-      ))}
+    <div className="w-full max-w-[480px] mx-auto px-1 pb-1 overflow-hidden" dir="rtl">
+      {/* Row 1 — 11 keys, smaller */}
+      <div className="grid gap-1 mb-1" style={{ gridTemplateColumns: `repeat(${ROW1.length}, 1fr)` }}>
+        {ROW1.map((l) => (
+          <LetterKey key={l} letter={l} state={letterStates[l]} onKey={onKey} disabled={disabled} />
+        ))}
+      </div>
 
-      {/* Action row */}
-      <div className="flex justify-center gap-2 mt-1">
+      {/* Row 2 — 10 keys */}
+      <div className="grid gap-1 mb-1 px-[4%]" style={{ gridTemplateColumns: `repeat(${ROW2.length}, 1fr)` }}>
+        {ROW2.map((l) => (
+          <LetterKey key={l} letter={l} state={letterStates[l]} onKey={onKey} disabled={disabled} />
+        ))}
+      </div>
+
+      {/* Row 3 — Enter + 7 keys + Delete */}
+      <div className="grid gap-1 mb-1" style={{ gridTemplateColumns: "1.6fr repeat(7, 1fr) 1.6fr" }}>
+        {/* Enter — rightmost in RTL */}
         <button
-          onClick={() => !disabled && onEnter()}
+          onPointerDown={(e) => { e.preventDefault(); if (!disabled) onEnter(); }}
           disabled={disabled}
-          className="h-14 px-4 rounded bg-surface text-white text-sm font-bold hover:bg-border-filled transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-default"
-          aria-label="إدخال"
+          className="h-12 rounded bg-surface text-white text-xs font-bold select-none touch-manipulation disabled:opacity-50"
         >
           إدخال
         </button>
+
+        {ROW3.map((l) => (
+          <LetterKey key={l} letter={l} state={letterStates[l]} onKey={onKey} disabled={disabled} />
+        ))}
+
+        {/* Delete — leftmost in RTL */}
         <button
-          onClick={() => !disabled && onDelete()}
+          onPointerDown={(e) => { e.preventDefault(); if (!disabled) onDelete(); }}
           disabled={disabled}
-          className="h-14 px-4 rounded bg-surface text-white text-sm font-bold hover:bg-border-filled transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-default flex items-center justify-center"
-          aria-label="حذف"
+          className="h-12 rounded bg-surface text-white text-xs font-bold select-none touch-manipulation disabled:opacity-50"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="20"
-            viewBox="0 0 24 24"
-            width="20"
-            fill="currentColor"
-          >
-            <path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z" />
-          </svg>
+          حذف
         </button>
+      </div>
+
+      {/* Row 4 — 8 special chars */}
+      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${ROW4.length}, 1fr)` }}>
+        {ROW4.map((l) => (
+          <LetterKey key={l} letter={l} state={letterStates[l]} onKey={onKey} disabled={disabled} />
+        ))}
       </div>
     </div>
   );

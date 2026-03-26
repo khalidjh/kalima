@@ -2,6 +2,8 @@
 
 import { Stats } from "@/lib/gameState";
 import { generateShareText, copyToClipboard } from "@/lib/shareText";
+import { generateShareImage } from "@/lib/shareImage";
+import { getPuzzleNumber } from "@/data/words";
 import { useState, useEffect } from "react";
 
 function getTimeUntilNextPuzzle(): string {
@@ -33,6 +35,7 @@ export default function StatsModal({
   answer,
 }: StatsModalProps) {
   const [copied, setCopied] = useState(false);
+  const [imageSharing, setImageSharing] = useState(false);
   const [countdown, setCountdown] = useState(getTimeUntilNextPuzzle());
 
   useEffect(() => {
@@ -47,6 +50,33 @@ export default function StatsModal({
       : 0;
 
   const maxDist = Math.max(...Object.values(stats.guessDistribution), 1);
+
+  const handleImageShare = async () => {
+    setImageSharing(true);
+    try {
+      const blob = await generateShareImage(guesses, answer, gameStatus === "won");
+      const puzzleNum = getPuzzleNumber();
+      const filename = `kalima-puzzle-${puzzleNum}.png`;
+      const file = new File([blob], filename, { type: "image/png" });
+
+      // Try native share with file on mobile
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: `كلمة #${puzzleNum}` });
+      } else {
+        // Fallback: auto-download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch {
+      // User cancelled share or error — silently ignore
+    } finally {
+      setImageSharing(false);
+    }
+  };
 
   const handleShare = async () => {
     const text = generateShareText(
@@ -127,6 +157,9 @@ export default function StatsModal({
         <p className="font-bold text-center mb-3 text-sm uppercase tracking-widest">
           توزيع التخمينات
         </p>
+        {stats.gamesPlayed === 0 ? (
+          <p className="text-center text-gray-500 text-sm mb-6">لا توجد بيانات بعد</p>
+        ) : (
         <div className="space-y-1 mb-6">
           {[1, 2, 3, 4, 5, 6].map((num) => {
             const count = stats.guessDistribution[num] ?? 0;
@@ -150,6 +183,7 @@ export default function StatsModal({
             );
           })}
         </div>
+        )}
 
         {/* Countdown to next puzzle */}
         <div className="text-center mb-4">
@@ -157,14 +191,23 @@ export default function StatsModal({
           <p className="text-2xl font-bold tabular-nums" dir="ltr">{countdown}</p>
         </div>
 
-        {/* Share button */}
+        {/* Share buttons */}
         {(gameStatus === "won" || gameStatus === "lost") && (
-          <button
-            onClick={handleShare}
-            className="w-full py-3 rounded-lg bg-correct text-white font-bold text-lg hover:bg-green-600 transition-colors"
-          >
-            {copied ? "تم النسخ! ✓" : "مشاركة 📤"}
-          </button>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={handleShare}
+              className="w-full py-3 rounded-lg bg-correct text-white font-bold text-lg hover:bg-green-600 transition-colors"
+            >
+              {copied ? "تم النسخ! ✓" : "مشاركة 📤"}
+            </button>
+            <button
+              onClick={handleImageShare}
+              disabled={imageSharing}
+              className="w-full py-3 rounded-lg bg-[#C9A84C] text-[#0F0F1A] font-bold text-lg hover:bg-yellow-500 transition-colors disabled:opacity-60"
+            >
+              {imageSharing ? "جارٍ التحضير..." : "تحميل الصورة 📸"}
+            </button>
+          </div>
         )}
       </div>
     </div>

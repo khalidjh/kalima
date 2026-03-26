@@ -32,11 +32,11 @@ function ExampleTile({
 export default function HowToPlayModal({ onClose }: HowToPlayModalProps) {
   return (
     <div
-      className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center overflow-hidden"
       onClick={onClose}
     >
       <div
-        className="bg-surface rounded-lg w-full max-w-md p-6 text-white relative"
+        className="bg-surface rounded-t-2xl sm:rounded-2xl w-full max-w-md p-6 text-white relative overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
         dir="rtl"
       >

@@ -26,7 +26,7 @@ export function generateShareText(
     return states.map(stateToEmoji).join("");
   });
 
-  return `كلمة #${puzzleNum} ${result}\n${rows.join("\n")}\n\nkalima.app`;
+  return `كلمة #${puzzleNum} ${result}\n${rows.join("\n")}\n\nkalima.fun`;
 }
 
 export async function copyToClipboard(text: string): Promise<boolean> {
