@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,13 +33,13 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <meta name="theme-color" content="#121213" />
+        <script defer data-domain="kalima.fun" src="https://plausible.io/js/script.js"></script>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="كلمة" />
       </head>
       <body className="bg-background text-white font-arabic antialiased overflow-x-hidden">
         {children}
-        <Analytics />
       </body>
     </html>
   );
