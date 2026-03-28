@@ -195,7 +195,7 @@ export default function Home() {
 
           {/* Title */}
           <h1 className="flex items-center justify-center">
-            <img src="/kalima-logo.png" alt="كلمة" className="h-10 w-auto" />
+            <img src="/kalima-header.svg" alt="كلمة" className="h-9 w-auto" />
           </h1>
 
           {/* Stats */}
