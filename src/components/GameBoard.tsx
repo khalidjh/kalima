@@ -104,7 +104,7 @@ export default function GameBoard({
   }
 
   return (
-    <div className="flex flex-col gap-1 my-1 mx-auto w-full px-2" style={{ maxWidth: "min(320px, calc((100dvh - 230px) * 5/6))" }}>
+    <div className="flex flex-col gap-1 my-1 mx-auto w-full px-2" style={{ maxWidth: "min(300px, calc((100dvh - 340px) * 5/6))" }}>
       {rows.map((row, rowIdx) => (
         <div
           key={rowIdx}

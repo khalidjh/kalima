@@ -1,18 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --color-correct: #538d4e;
-  --color-present: #b59f3b;
-  --color-absent: #3a3a3c;
-  --color-tile: #121213;
-  --color-background: #121213;
-  --color-surface: #1a1a1b;
-  --color-border: #3a3a3c;
-  --color-border-filled: #565758;
+  --color-primary: #6B35C8;
+  --color-correct: #3DAA7A;
+  --color-present: #D4A017;
+  --color-absent: #6B6475;
+  --color-accent: #E8604C;
+  --color-background: #141218;
+  --color-surface: #1E1B24;
+  --color-border: #6B6475;
+  --color-border-filled: #F0EDE8;
+  --color-text: #F0EDE8;
+  --color-text-muted: #7A7589;
 }
 
 * {
@@ -25,11 +28,8 @@ html {
 
 html, body {
   background-color: var(--color-background);
-  color: white;
-  font-family: 'Noto Sans Arabic', sans-serif;
-  height: 100dvh;
-  max-height: 100dvh;
-  overflow: hidden;
+  color: var(--color-text);
+  font-family: 'IBM Plex Arabic', sans-serif;
   margin: 0;
   padding: 0;
 }

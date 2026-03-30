@@ -93,7 +93,7 @@ export default function Keyboard({
         <button
           onPointerDown={(e) => { e.preventDefault(); if (!disabled) onDelete(); }}
           disabled={disabled}
-          className="h-10 sm:h-12 rounded bg-[#8B2020] text-white text-xs font-bold select-none touch-manipulation disabled:opacity-40 hover:opacity-90 transition-opacity"
+          className="h-10 sm:h-12 rounded bg-accent text-white text-xs font-bold select-none touch-manipulation disabled:opacity-40 hover:opacity-90 transition-opacity"
         >
           حذف
         </button>

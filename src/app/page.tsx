@@ -161,22 +161,22 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-background flex flex-col overflow-hidden" style={{ height: '100dvh' }} dir="rtl">
-      {/* Header */}
-      <header className="w-full border-b border-border">
-        <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
+    <div className="bg-background flex flex-col overflow-hidden h-full" dir="rtl">
+      {/* Game controls header */}
+      <header className="w-full border-b border-border flex-shrink-0">
+        <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between">
           {/* Right side (RTL start): how to play + streak badge */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowHowToPlay(true)}
-              className="text-white hover:text-gray-300 transition-colors p-1"
+              className="text-white hover:text-primary-light transition-colors p-1"
               aria-label="كيف تلعب"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                height="24"
+                height="22"
                 viewBox="0 0 24 24"
-                width="24"
+                width="22"
                 fill="currentColor"
               >
                 <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
@@ -185,7 +185,7 @@ export default function Home() {
             {stats.currentStreak > 0 && (
               <button
                 onClick={() => setShowStats(true)}
-                className={`flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded-full bg-surface text-white border border-border hover:border-gray-500 transition-colors${stats.currentStreak >= 7 ? " animate-pulse" : ""}`}
+                className={`flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded-full bg-surface text-accent border border-border hover:border-accent transition-colors${stats.currentStreak >= 7 ? " animate-pulse" : ""}`}
                 aria-label={`تتابع ${stats.currentStreak}`}
               >
                 🔥 {stats.currentStreak}
@@ -193,22 +193,20 @@ export default function Home() {
             )}
           </div>
 
-          {/* Title */}
-          <h1 className="flex items-center justify-center">
-            <img src="/kalima-header.svg" alt="كلمة" className="h-9 w-auto" />
-          </h1>
+          {/* Puzzle number */}
+          <span className="text-muted text-sm font-medium">#{puzzleNumber}</span>
 
           {/* Stats */}
           <button
             onClick={() => setShowStats(true)}
-            className="text-white hover:text-gray-300 transition-colors p-1"
+            className="text-white hover:text-primary-light transition-colors p-1"
             aria-label="الإحصائيات"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              height="24"
+              height="22"
               viewBox="0 0 24 24"
-              width="24"
+              width="22"
               fill="currentColor"
             >
               <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
@@ -216,11 +214,6 @@ export default function Home() {
           </button>
         </div>
       </header>
-
-      {/* Puzzle number */}
-      <div className="text-center text-gray-500 text-xs mt-1">
-        #{puzzleNumber}
-      </div>
 
       {/* Game Board */}
       <main className="flex-1 flex flex-col items-center overflow-hidden min-h-0">
