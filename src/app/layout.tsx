@@ -3,6 +3,8 @@ import Link from "next/link";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 import FirebaseInit from "@/components/FirebaseInit";
+import { AuthProvider } from "@/lib/auth";
+import HeaderAuth from "@/components/HeaderAuth";
 
 export const metadata: Metadata = {
   title: "كلمة - ألعاب الكلمات العربية اليومية",
@@ -51,36 +53,41 @@ export default function RootLayout({
       <body
         className="bg-background text-white font-arabic antialiased overflow-hidden flex flex-col h-dvh"
       >
-        {/* Kalima brand header */}
-        <header
-          className="flex-shrink-0 h-12 bg-primary flex items-center px-4"
-          dir="rtl"
-        >
-          <Link href="/home" className="flex items-center gap-2.5">
-            {/* ك tile mark: white tile, purple letter */}
-            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-              <span
-                className="text-primary font-bold text-lg leading-none"
-                style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
-              >
-                ك
+        <AuthProvider>
+          {/* Kalima brand header */}
+          <header
+            className="flex-shrink-0 h-12 bg-primary flex items-center justify-between px-4"
+            dir="rtl"
+          >
+            <Link href="/home" className="flex items-center gap-2.5">
+              {/* ك tile mark: white tile, purple letter */}
+              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                <span
+                  className="text-primary font-bold text-lg leading-none"
+                  style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+                >
+                  ك
+                </span>
+              </div>
+              {/* كلمة wordmark */}
+              <span className="text-white font-bold text-xl tracking-wide">
+                كلمة
               </span>
-            </div>
-            {/* كلمة wordmark */}
-            <span className="text-white font-bold text-xl tracking-wide">
-              كلمة
-            </span>
-          </Link>
-        </header>
+            </Link>
 
-        {/* Page content */}
-        <div className="flex-1 min-h-0 overflow-hidden">
-          {children}
-        </div>
-        <FirebaseInit />
+            {/* Login / user avatar — left side in RTL */}
+            <HeaderAuth />
+          </header>
 
-        {/* Bottom navigation */}
-        <BottomNav />
+          {/* Page content */}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            {children}
+          </div>
+          <FirebaseInit />
+
+          {/* Bottom navigation */}
+          <BottomNav />
+        </AuthProvider>
       </body>
     </html>
   );

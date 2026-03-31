@@ -16,6 +16,7 @@ import {
   RawabetStats,
 } from "@/lib/rawabetState";
 import RawabetResultModal from "@/components/RawabetResultModal";
+import { writeStatsToFirestore } from "@/lib/firestoreSync";
 
 const MAX_MISTAKES = 4;
 
@@ -133,6 +134,7 @@ export default function RawabetPage() {
         if (newFound.length === 4) {
           const newStats = updateRawabetStatsOnWin();
           setStats(newStats);
+          writeStatsToFirestore();
           setGameStatus("won");
           saveRawabetGameState({
             puzzleNumber,
@@ -174,6 +176,7 @@ export default function RawabetPage() {
         if (newMistakes >= MAX_MISTAKES) {
           const newStats = updateRawabetStatsOnLoss();
           setStats(newStats);
+          writeStatsToFirestore();
           setGameStatus("lost");
           saveRawabetGameState({
             puzzleNumber,

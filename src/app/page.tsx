@@ -17,6 +17,7 @@ import {
 } from "@/lib/gameState";
 import { getDailyWord, isValidGuess, getPuzzleNumber } from "@/data/words";
 import { track } from "@/lib/analytics";
+import { writeStatsToFirestore } from "@/lib/firestoreSync";
 
 const ARABIC_LETTERS = new Set([
   "ا", "أ", "إ", "آ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ",
@@ -96,6 +97,7 @@ export default function Home() {
       const newStats = updateStatsOnWin(newGuesses.length);
       setStats(newStats);
       track("game_won", { puzzle: puzzleNumber, guesses: newGuesses.length, streak: newStats.currentStreak });
+      writeStatsToFirestore();
       const messages = ["ممتاز! 🌟", "رائع! 🎉", "أحسنت! 👏", "جيد جداً! 😊", "حسناً 😌", "بالكاد! 😅"];
       showToast(messages[newGuesses.length - 1] ?? "أحسنت!");
       setTimeout(() => {
@@ -107,6 +109,7 @@ export default function Home() {
       const newStats = updateStatsOnLoss();
       setStats(newStats);
       track("game_lost", { puzzle: puzzleNumber });
+      writeStatsToFirestore();
       showToast(`الإجابة: ${answer}`, 3000);
       setTimeout(() => setShowStats(true), 2000);
       saveGameState({ puzzleNumber, guesses: newGuesses, gameStatus: "lost" });
