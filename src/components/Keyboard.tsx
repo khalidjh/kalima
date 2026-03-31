@@ -23,9 +23,9 @@ function getKeyStyle(state: LetterState | undefined): string {
     case "present":
       return "bg-present text-white";
     case "absent":
-      return "bg-absent text-white opacity-60";
+      return "bg-[#1A1500] text-[#4A3F00] border border-[#2A2200]";
     default:
-      return "bg-surface text-white";
+      return "bg-surface text-[#FFF8DC]";
   }
 }
 
