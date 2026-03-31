@@ -76,3 +76,57 @@ html, body {
 .animate-pop {
   animation: pop 0.1s ease;
 }
+
+/* Scale bounce on select */
+@keyframes select-bounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(0.93); }
+  70% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+.animate-select {
+  animation: select-bounce 0.2s ease forwards;
+}
+
+/* Tile flip for category found */
+@keyframes tile-flip {
+  0% { transform: rotateX(0deg); }
+  50% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+.animate-tile-flip {
+  animation: tile-flip 0.4s ease forwards;
+}
+
+/* Shake for wrong guess */
+@keyframes rawabet-shake {
+  0%, 100% { transform: translateX(0); }
+  15%, 55% { transform: translateX(-6px); }
+  35%, 75% { transform: translateX(6px); }
+}
+
+.animate-rawabet-shake {
+  animation: rawabet-shake 0.4s ease forwards;
+}
+
+/* Slide up for modal */
+@keyframes slide-up {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease forwards;
+}
+
+/* Toast fade in/out */
+@keyframes toast-in {
+  from { transform: translateX(-50%) translateY(8px); opacity: 0; }
+  to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+.animate-toast {
+  animation: toast-in 0.2s ease forwards;
+}

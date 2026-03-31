@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { loadStats, loadGameState } from "@/lib/gameState";
+import { loadRawabetGameState } from "@/lib/rawabetState";
 
 // حروف icon: 2×3 mini tile grid, Minted / Slate / Saffron pattern
 function HoroufIcon() {
@@ -50,6 +51,7 @@ function RawabetIcon() {
 export default function HomePage() {
   const [streak, setStreak] = useState(0);
   const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost" | null>(null);
+  const [rawabetStatus, setRawabetStatus] = useState<"playing" | "won" | "lost" | null>(null);
 
   useEffect(() => {
     const stats = loadStats();
@@ -59,9 +61,15 @@ export default function HomePage() {
     if (saved) {
       setGameStatus(saved.gameStatus);
     }
+
+    const rawabetSaved = loadRawabetGameState();
+    if (rawabetSaved) {
+      setRawabetStatus(rawabetSaved.gameStatus);
+    }
   }, []);
 
   const gameCompleted = gameStatus === "won" || gameStatus === "lost";
+  const rawabetCompleted = rawabetStatus === "won" || rawabetStatus === "lost";
 
   return (
     <div className="h-full overflow-y-auto bg-background" dir="rtl">
@@ -107,9 +115,9 @@ export default function HomePage() {
             </div>
           </Link>
 
-          {/* روابط card — coming soon */}
-          <div className="opacity-60 cursor-not-allowed select-none">
-            <div className="bg-surface rounded-xl p-4 border border-border">
+          {/* روابط card — active */}
+          <Link href="/rawabet" className="block group">
+            <div className="bg-surface rounded-xl p-4 border border-border group-hover:border-primary-light transition-colors">
               <div className="flex items-start gap-4">
                 {/* Icon */}
                 <RawabetIcon />
@@ -118,9 +126,15 @@ export default function HomePage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <h3 className="text-lg font-semibold text-white">روابط</h3>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-muted bg-surface px-2.5 py-0.5 rounded-full border border-border flex-shrink-0">
-                      🔒 قريباً
-                    </span>
+                    {rawabetCompleted ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
+                        ✓ أنهيت اليوم
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                        العب
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm text-muted leading-relaxed">
                     اربط الكلمات المتشابهة في مجموعات
@@ -128,7 +142,7 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </div>
