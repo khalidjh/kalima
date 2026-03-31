@@ -37,7 +37,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <meta name="theme-color" content="#6B35C8" />
+        <meta name="theme-color" content="#F5C200" />
         <script
           defer
           data-domain="kalima.fun"
@@ -60,8 +60,8 @@ export default function RootLayout({
             dir="rtl"
           >
             <Link href="/home" className="flex items-center gap-2.5">
-              {/* ك tile mark: white tile, purple letter */}
-              <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+              {/* ك tile mark */}
+              <div className="w-8 h-8 bg-[#0F0C00] rounded-lg flex items-center justify-center shadow-sm">
                 <span
                   className="text-primary font-bold text-lg leading-none"
                   style={{ fontFamily: "'Cairo', sans-serif" }}
@@ -70,7 +70,7 @@ export default function RootLayout({
                 </span>
               </div>
               {/* كلمة wordmark */}
-              <span className="text-white font-bold text-xl tracking-wide">
+              <span className="text-[#0F0C00] font-bold text-xl tracking-wide">
                 كلمة
               </span>
             </Link>

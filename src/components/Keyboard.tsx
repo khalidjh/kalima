@@ -80,7 +80,7 @@ export default function Keyboard({
         <button
           onPointerDown={(e) => { e.preventDefault(); if (!disabled) onEnter(); }}
           disabled={disabled}
-          className="h-10 sm:h-12 rounded bg-correct text-white text-xs font-bold select-none touch-manipulation disabled:opacity-40 hover:opacity-90 transition-opacity"
+          className="h-10 sm:h-12 rounded bg-primary text-primary-text text-xs font-bold select-none touch-manipulation disabled:opacity-40 hover:opacity-90 transition-opacity"
         >
           إدخال
         </button>
