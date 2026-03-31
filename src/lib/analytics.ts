@@ -1,5 +1,12 @@
-export function track(event: string, props?: Record<string, unknown>) {
-  if (typeof window !== "undefined" && (window as any).va) {
-    (window as any).va("track", event, props);
+import { logEvent } from "firebase/analytics";
+import { getFirebaseAnalytics } from "@/lib/firebase";
+
+export async function track(event: string, props?: Record<string, unknown>) {
+  try {
+    const analytics = await getFirebaseAnalytics();
+    if (!analytics) return;
+    logEvent(analytics, event, props as Record<string, string | number | boolean> | undefined);
+  } catch {
+    // Silently fail — never break the game for analytics
   }
 }

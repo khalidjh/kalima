@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
+import FirebaseInit from "@/components/FirebaseInit";
 
 export const metadata: Metadata = {
   title: "كلمة - ألعاب الكلمات العربية اليومية",
@@ -76,6 +77,7 @@ export default function RootLayout({
         <div className="flex-1 min-h-0 overflow-hidden">
           {children}
         </div>
+        <FirebaseInit />
 
         {/* Bottom navigation */}
         <BottomNav />
