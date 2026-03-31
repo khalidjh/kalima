@@ -24,7 +24,7 @@ const config: Config = {
         "border-filled": "#F0EDE8",
       },
       fontFamily: {
-        arabic: ["IBM Plex Arabic", "sans-serif"],
+        arabic: ["Cairo", "sans-serif"],
         sans: ["Inter", "sans-serif"],
       },
     },

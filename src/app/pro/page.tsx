@@ -47,7 +47,7 @@ export default function ProPage() {
     <div
       className="min-h-screen bg-[#0F0E17] flex flex-col items-center justify-center px-4 py-12"
       dir="rtl"
-      style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+      style={{ fontFamily: "'Cairo', sans-serif" }}
     >
       {/* Back button */}
       <button

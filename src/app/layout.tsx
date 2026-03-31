@@ -32,7 +32,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cairo+Play:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
         <link rel="manifest" href="/manifest.json" />
@@ -64,7 +64,7 @@ export default function RootLayout({
               <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
                 <span
                   className="text-primary font-bold text-lg leading-none"
-                  style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+                  style={{ fontFamily: "'Cairo', sans-serif" }}
                 >
                   ك
                 </span>

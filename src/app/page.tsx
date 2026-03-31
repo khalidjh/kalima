@@ -286,7 +286,7 @@ export default function Home() {
           className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4"
           onClick={() => setShowArchiveModal(false)}
           dir="rtl"
-          style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+          style={{ fontFamily: "'Cairo', sans-serif" }}
         >
           <div
             className="bg-[#1E1B24] border border-[#6B35C8]/40 rounded-2xl p-8 max-w-xs w-full text-center shadow-xl"

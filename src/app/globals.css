@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -29,7 +29,7 @@ html {
 html, body {
   background-color: var(--color-background);
   color: var(--color-text);
-  font-family: 'IBM Plex Arabic', sans-serif;
+  font-family: 'Cairo', sans-serif;
   margin: 0;
   padding: 0;
 }

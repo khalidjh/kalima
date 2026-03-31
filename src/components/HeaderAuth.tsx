@@ -31,7 +31,7 @@ export default function HeaderAuth() {
       <button
         onClick={signInWithGoogle}
         className="text-sm text-white border border-[#6B35C8] rounded-lg px-3 py-1 hover:bg-[#6B35C8]/20 transition-colors"
-        style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+        style={{ fontFamily: "'Cairo', sans-serif" }}
       >
         دخول
       </button>
@@ -78,7 +78,7 @@ export default function HeaderAuth() {
                 setOpen(false);
               }}
               className="w-full text-right px-4 py-2.5 text-sm text-[#9B6FE8] hover:bg-[#6B35C8]/20 transition-colors border-b border-[#6B35C8]/20"
-              style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+              style={{ fontFamily: "'Cairo', sans-serif" }}
             >
               ✦ ترقية إلى Pro
             </button>
@@ -89,7 +89,7 @@ export default function HeaderAuth() {
               setOpen(false);
             }}
             className="w-full text-right px-4 py-2.5 text-sm text-white hover:bg-[#6B35C8]/20 transition-colors"
-            style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+            style={{ fontFamily: "'Cairo', sans-serif" }}
           >
             تسجيل الخروج
           </button>

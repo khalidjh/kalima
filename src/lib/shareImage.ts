@@ -2,7 +2,7 @@ import { evaluateGuess, LetterState } from "@/lib/gameState";
 import { getPuzzleNumber } from "@/data/words";
 
 const SIZE = 1080;
-const ARABIC_FONT = '"Noto Naskh Arabic", "Traditional Arabic", Arial, sans-serif';
+const ARABIC_FONT = '"Cairo, Traditional Arabic, Arial, sans-serif';
 
 // Palette
 const GOLD = "#C9A84C";
