@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import GameBoard from "@/components/GameBoard";
 import Keyboard from "@/components/Keyboard";
 import HowToPlayModal from "@/components/HowToPlayModal";
@@ -18,6 +19,8 @@ import {
 import { getDailyWord, isValidGuess, getPuzzleNumber } from "@/data/words";
 import { track } from "@/lib/analytics";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
+import { useAuth } from "@/lib/auth";
+import { useIsPro } from "@/lib/subscription";
 
 const ARABIC_LETTERS = new Set([
   "ا", "أ", "إ", "آ", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ",
@@ -26,6 +29,9 @@ const ARABIC_LETTERS = new Set([
 ]);
 
 export default function Home() {
+  const { user } = useAuth();
+  const { isPro } = useIsPro(user);
+  const router = useRouter();
   const [answer, setAnswer] = useState("");
   const [puzzleNumber, setPuzzleNumber] = useState(1);
   const [guesses, setGuesses] = useState<string[]>([]);
@@ -37,6 +43,7 @@ export default function Home() {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [showArchiveModal, setShowArchiveModal] = useState(false);
 
   // Initialize game
   useEffect(() => {
@@ -199,22 +206,38 @@ export default function Home() {
           {/* Puzzle number */}
           <span className="text-muted text-sm font-medium">#{puzzleNumber}</span>
 
-          {/* Stats */}
-          <button
-            onClick={() => setShowStats(true)}
-            className="text-white hover:text-primary-light transition-colors p-1"
-            aria-label="الإحصائيات"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="22"
-              viewBox="0 0 24 24"
-              width="22"
-              fill="currentColor"
+          {/* Archive + Stats */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => {
+                if (isPro) {
+                  setShowArchiveModal(true);
+                } else {
+                  router.push("/pro");
+                }
+              }}
+              className="text-[#7A7589] hover:text-primary-light transition-colors p-1 text-xs flex items-center gap-0.5"
+              aria-label="أرشيف الألغاز"
+              title="أرشيف الألغاز"
             >
-              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-            </svg>
-          </button>
+              {isPro ? "📅" : "🔒"} الأرشيف
+            </button>
+            <button
+              onClick={() => setShowStats(true)}
+              className="text-white hover:text-primary-light transition-colors p-1"
+              aria-label="الإحصائيات"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="22"
+                viewBox="0 0 24 24"
+                width="22"
+                fill="currentColor"
+              >
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -255,6 +278,31 @@ export default function Home() {
           guesses={guesses}
           answer={answer}
         />
+      )}
+
+      {/* Archive Modal (Pro stub) */}
+      {showArchiveModal && (
+        <div
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4"
+          onClick={() => setShowArchiveModal(false)}
+          dir="rtl"
+          style={{ fontFamily: "'IBM Plex Arabic', sans-serif" }}
+        >
+          <div
+            className="bg-[#1E1B24] border border-[#6B35C8]/40 rounded-2xl p-8 max-w-xs w-full text-center shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-4xl mb-4">📅</div>
+            <h2 className="text-xl font-bold text-white mb-2">أرشيف الألغاز</h2>
+            <p className="text-[#7A7589] text-sm mb-6">قريباً — العب أي لغز من الأيام السابقة</p>
+            <button
+              onClick={() => setShowArchiveModal(false)}
+              className="w-full h-10 rounded-lg bg-[#6B35C8] text-white font-semibold text-sm hover:bg-[#7A45D8] transition-colors"
+            >
+              حسناً
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Toast */}
