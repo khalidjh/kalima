@@ -11,6 +11,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut as fbSignOut,
   onAuthStateChanged,
   User,
@@ -39,6 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const auth = getAuth(app);
+
+    // Handle redirect result on page load (mobile flow)
+    getRedirectResult(auth).then(async (result) => {
+      if (result?.user) {
+        track("login", { method: "google" });
+        try {
+          await mergeLocalStatsFromFirestore(result.user.uid);
+        } catch { /* graceful */ }
+      }
+    }).catch(() => {});
+
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       setLoading(false);
@@ -58,8 +71,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      track("login", { method: "google" });
+      // Use redirect on mobile (popup gets blocked), popup on desktop
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        await signInWithRedirect(auth, provider);
+      } else {
+        await signInWithPopup(auth, provider);
+        track("login", { method: "google" });
+      }
     } catch {
       // Graceful failure — never break the app for auth
     }
