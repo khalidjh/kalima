@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
-import { IconStar, IconArrowRight } from "tabler-icons-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 const FEATURES = [
   { text: "أرشيف الألغاز — العب أي يوم سابق" },
@@ -55,7 +55,7 @@ export default function ProPage() {
         onClick={() => router.back()}
         className="absolute top-4 right-4 text-[#8A7A3A] hover:text-[#FFF8DC] transition-colors text-sm flex items-center gap-1"
       >
-        <IconArrowRight size={16} />
+        <ArrowRight size={16} />
         رجوع
       </button>
 
@@ -63,7 +63,7 @@ export default function ProPage() {
         {/* Badge */}
         <div className="flex justify-center mb-6">
           <span className="bg-[#F5C200]/20 border border-[#F5C200]/50 text-[#F5C200] text-xs font-semibold px-3 py-1 rounded-full tracking-widest uppercase flex items-center gap-1.5">
-            <IconStar size={12} />
+            <Sparkles size={12} />
             PRO
           </span>
         </div>

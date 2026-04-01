@@ -17,7 +17,7 @@ import {
 } from "@/lib/rawabetState";
 import RawabetResultModal from "@/components/RawabetResultModal";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
-import { IconShuffle, IconCheck } from "tabler-icons-react";
+import { Shuffle, CheckCircle2 } from "lucide-react";
 
 const MAX_MISTAKES = 4;
 
@@ -290,7 +290,7 @@ export default function RawabetPage() {
               onClick={handleShuffle}
               className="px-4 py-2.5 rounded-xl bg-surface border border-border text-[#8A7A3A] text-sm font-medium hover:border-primary/50 transition-colors flex items-center gap-1.5"
             >
-              <IconShuffle size={15} />
+              <Shuffle size={15} />
               خلط
             </button>
             <button
@@ -305,7 +305,7 @@ export default function RawabetPage() {
               disabled={selected.length !== 4}
               className="flex-1 py-2.5 rounded-xl bg-primary text-[#0F0C00] font-bold text-sm transition-colors disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FFD740] flex items-center justify-center gap-1.5"
             >
-              <IconCheck size={16} />
+              <CheckCircle2 size={16} />
               تحقق
             </button>
           </div>

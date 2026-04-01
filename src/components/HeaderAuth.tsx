@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LogIn, IconLogout, IconStar } from "tabler-icons-react";
+import { LogIn, LogOut, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
 
@@ -76,7 +76,7 @@ export default function HeaderAuth() {
               onPointerDown={() => { router.push("/pro"); setOpen(false); }}
               className="w-full text-right px-4 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors border-b border-border flex items-center gap-2"
             >
-              <IconStar size={14} />
+              <Sparkles size={14} />
               ترقية إلى Pro
             </button>
           )}
@@ -84,7 +84,7 @@ export default function HeaderAuth() {
             onPointerDown={() => { signOut(); setOpen(false); }}
             className="w-full text-right px-4 py-2.5 text-sm text-text hover:bg-primary/10 transition-colors flex items-center gap-2"
           >
-            <IconLogout size={14} />
+            <LogOut size={14} />
             تسجيل الخروج
           </button>
         </div>

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { setUserPro } from "@/lib/subscription";
 import { Suspense } from "react";
-import { IconStar } from "tabler-icons-react";
+import { Sparkles } from "lucide-react";
 
 function SuccessContent() {
   const { user, loading: authLoading } = useAuth();
@@ -75,7 +75,7 @@ function SuccessContent() {
       <p className="text-[#8A7A3A] text-sm mb-2">مرحباً بك في كلمة برو</p>
       <div className="flex justify-center gap-1 mb-8">
         <span className="bg-[#F5C200]/20 border border-[#F5C200]/50 text-[#F5C200] text-xs font-semibold px-3 py-1 rounded-full tracking-widest uppercase flex items-center gap-1.5">
-          <IconStar size={12} />
+          <Sparkles size={12} />
           PRO
         </span>
       </div>

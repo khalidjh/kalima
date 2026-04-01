@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "tabler-icons-react";
+import { X } from "lucide-react";
 
 interface HowToPlayModalProps {
   onClose: () => void;
