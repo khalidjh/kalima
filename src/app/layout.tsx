@@ -7,8 +7,27 @@ import { AuthProvider } from "@/lib/auth";
 import HeaderAuth from "@/components/HeaderAuth";
 
 export const metadata: Metadata = {
-  title: "كلمة - ألعاب الكلمات العربية اليومية",
-  description: "خمّن الكلمة العربية اليومية في 6 محاولات",
+  title: "كلمة - لعبة الكلمات العربية اليومية",
+  description: "العب كلمة — لعبة تخمين الكلمات العربية اليومية. خمّن الكلمة في 6 محاولات وشارك نتيجتك. لغز جديد كل يوم!",
+  keywords: ["لعبة كلمات عربية", "كلمة اليوم", "wordle عربي", "لعبة تخمين", "ألعاب عربية", "كلمة", "kalima"],
+  metadataBase: new URL("https://kalima.fun"),
+  alternates: { canonical: "https://kalima.fun" },
+  openGraph: {
+    title: "كلمة - لعبة الكلمات العربية اليومية",
+    description: "خمّن الكلمة العربية في 6 محاولات. لغز جديد كل يوم!",
+    url: "https://kalima.fun",
+    siteName: "كلمة",
+    locale: "ar_SA",
+    type: "website",
+    images: [{ url: "/kalima-logo.png", width: 500, height: 500, alt: "كلمة" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "كلمة - لعبة الكلمات العربية اليومية",
+    description: "خمّن الكلمة العربية في 6 محاولات. لغز جديد كل يوم!",
+    images: ["/kalima-logo.png"],
+  },
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
