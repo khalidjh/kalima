@@ -19,6 +19,7 @@ import {
 import RawabetResultModal from "@/components/RawabetResultModal";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
 import { Shuffle, CheckCircle2 } from "lucide-react";
+import BackToHome from "@/components/BackToHome";
 
 const MAX_MISTAKES = 4;
 
@@ -212,13 +213,7 @@ export default function RawabetPage() {
 
         {/* Header */}
         <div className="flex items-center justify-between">
-          <button
-            onClick={() => router.push("/home")}
-            className="text-[#8A7A3A] hover:text-white transition-colors text-xs"
-            aria-label="الرجوع للبيت"
-          >
-            🏠
-          </button>
+          <BackToHome />
           <div className="text-sm text-[#8A7A3A]">لغز #{puzzleNumber}</div>
           {/* Mistake dots */}
           <div className="flex items-center gap-1.5">

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { HelpCircle, BarChart2, Lock } from "lucide-react";
+import BackToHome from "@/components/BackToHome";
 import GameBoard from "@/components/GameBoard";
 import Keyboard from "@/components/Keyboard";
 import HowToPlayModal from "@/components/HowToPlayModal";
@@ -200,14 +201,7 @@ export default function Home() {
           <span className="text-muted text-sm font-medium">#{puzzleNumber}</span>
 
           {/* Home button */}
-          <button
-            onClick={() => router.push("/home")}
-            className="text-muted hover:text-white transition-colors p-1 text-xs"
-            aria-label="الرجوع للبيت"
-            title="البيت"
-          >
-            🏠
-          </button>
+          <BackToHome />
 
           {/* Archive + Stats */}
           <div className="flex items-center gap-1">
