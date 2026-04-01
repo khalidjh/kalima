@@ -18,9 +18,10 @@ import {
 } from "@/lib/rawabetState";
 import RawabetResultModal from "@/components/RawabetResultModal";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
-import { Shuffle, CheckCircle2 } from "lucide-react";
+import { Shuffle, CheckCircle2, HelpCircle } from "lucide-react";
 import BackToHome from "@/components/BackToHome";
 import GameHeader from "@/components/GameHeader";
+import HowToPlayRawabet from "@/components/HowToPlayRawabet";
 
 const MAX_MISTAKES = 4;
 
@@ -60,6 +61,7 @@ export default function RawabetPage() {
   const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost">("playing");
   const [shakingTiles, setShakingTiles] = useState<string[]>([]);
   const [flippingTiles, setFlippingTiles] = useState<string[]>([]);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [stats, setStats] = useState<RawabetStats>(loadRawabetStats());
@@ -216,15 +218,23 @@ export default function RawabetPage() {
         <GameHeader
           center={<span className="text-sm font-bold text-white">#{puzzleNumber}</span>}
           right={
-            <div className="flex items-center gap-1.5">
-              {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                    i < mistakes ? "bg-present scale-110" : "bg-border"
-                  }`}
-                />
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                      i < mistakes ? "bg-present scale-110" : "bg-border"
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={() => setShowHowToPlay(true)}
+                className="text-muted hover:text-white transition-colors p-1"
+              >
+                <HelpCircle size={20} strokeWidth={1.5} />
+              </button>
             </div>
           }
         />
@@ -354,6 +364,10 @@ export default function RawabetPage() {
         puzzleNumber={puzzleNumber}
         stats={stats}
       />
+
+      {showHowToPlay && (
+        <HowToPlayRawabet onClose={() => setShowHowToPlay(false)} />
+      )}
     </div>
   );
 }
