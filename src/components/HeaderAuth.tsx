@@ -29,7 +29,7 @@ export default function HeaderAuth() {
   if (!user) {
     return (
       <button
-        onPointerDown={(e) => { e.preventDefault(); signInWithGoogle(); }}
+        onClick={() => signInWithGoogle()}
         className="text-sm font-bold text-primary bg-primary/20 border border-primary/50 rounded-lg px-4 py-1.5 hover:bg-primary/30 transition-colors active:scale-95 flex items-center gap-1.5"
       >
         <LogIn size={15} />

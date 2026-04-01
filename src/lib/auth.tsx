@@ -76,13 +76,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
-      // Always set LOCAL persistence first so session survives redirect
       await setPersistence(auth, browserLocalPersistence);
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
-        await signInWithRedirect(auth, provider);
-      } else {
-        await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      if (result.user) {
         track("login", { method: "google" });
       }
     } catch {

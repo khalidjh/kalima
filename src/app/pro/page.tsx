@@ -104,7 +104,7 @@ export default function ProPage() {
                 سجّل دخولك أولاً للاشتراك
               </p>
               <button
-                onPointerDown={(e) => { e.preventDefault(); signInWithGoogle(); }}
+                onClick={() => signInWithGoogle()}
                 className="w-full h-14 rounded-xl bg-white text-[#0A0A0A] font-semibold text-base flex items-center justify-center gap-3 hover:opacity-90 transition-opacity active:scale-95"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
