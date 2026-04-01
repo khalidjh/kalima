@@ -30,7 +30,7 @@ export default function HeaderAuth() {
     return (
       <button
         onPointerDown={(e) => { e.preventDefault(); signInWithGoogle(); }}
-        className="text-sm font-bold text-[#0F0C00] bg-[#0F0C00]/15 border border-[#0F0C00]/40 rounded-lg px-4 py-1.5 hover:bg-[#0F0C00]/25 transition-colors active:scale-95 flex items-center gap-1.5"
+        className="text-sm font-bold text-primary bg-primary/20 border border-primary/50 rounded-lg px-4 py-1.5 hover:bg-primary/30 transition-colors active:scale-95 flex items-center gap-1.5"
       >
         <LogIn size={15} />
         دخول
