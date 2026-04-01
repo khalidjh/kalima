@@ -37,7 +37,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <meta name="theme-color" content="#F5C200" />
+        <meta name="theme-color" content="#0A0A0A" />
         <script
           defer
           data-domain="kalima.fun"
@@ -56,21 +56,21 @@ export default function RootLayout({
         <AuthProvider>
           {/* Kalima brand header */}
           <header
-            className="flex-shrink-0 h-12 bg-primary flex items-center justify-between px-4"
+            className="flex-shrink-0 h-12 bg-[#0A0A0A] flex items-center justify-between px-4 border-b border-[#2A2A2A]"
             dir="rtl"
           >
             <Link href="/home" className="flex items-center gap-2.5">
               {/* ك tile mark */}
-              <div className="w-8 h-8 bg-[#0F0C00] rounded-lg flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
                 <span
-                  className="text-primary font-bold text-lg leading-none"
+                  className="text-[#0A0A0A] font-bold text-lg leading-none"
                   style={{ fontFamily: "'Cairo', sans-serif" }}
                 >
                   ك
                 </span>
               </div>
               {/* كلمة wordmark */}
-              <span className="text-[#0F0C00] font-bold text-xl tracking-wide animate-shimmer">
+              <span className="text-white font-bold text-xl tracking-wide animate-shimmer">
                 كلمة
               </span>
             </Link>
