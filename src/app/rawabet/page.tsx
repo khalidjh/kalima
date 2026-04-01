@@ -211,11 +211,9 @@ export default function RawabetPage() {
   const remainingTiles = tiles;
 
   return (
-    <div className="h-full overflow-y-auto bg-background" dir="rtl">
-      <div className="max-w-lg mx-auto px-4 py-4 flex flex-col gap-4">
-
-        {/* Header */}
-        <GameHeader
+    <div className="h-full flex flex-col bg-background" dir="rtl">
+      {/* Header — flush to top, outside scroll area */}
+      <GameHeader
           center={<span className="text-sm font-bold text-white">#{puzzleNumber}</span>}
           right={
             <div className="flex items-center gap-2">
@@ -238,6 +236,10 @@ export default function RawabetPage() {
             </div>
           }
         />
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+      <div className="max-w-lg mx-auto px-4 py-4 flex flex-col gap-4">
 
         {/* Found category rows */}
         {foundCategories.map((cat) => (
@@ -351,6 +353,7 @@ export default function RawabetPage() {
             {t.message}
           </div>
         ))}
+      </div>
       </div>
 
       {/* Result modal */}
