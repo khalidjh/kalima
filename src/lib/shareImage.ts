@@ -197,32 +197,11 @@ export async function generateShareImage(
     }
   }
 
-  // ── Answer reveal (won only) ──
+  // ── No answer reveal — keeps the puzzle secret for others ──
   const answerY = gridY + guesses.length * rowHeight + 36;
-  if (won) {
-    // Subtle divider
-    ctx.save();
-    ctx.strokeStyle = GOLD;
-    ctx.globalAlpha = 0.25;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(SIZE / 2 - 140, answerY);
-    ctx.lineTo(SIZE / 2 + 140, answerY);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.font = `bold 72px ${ARABIC_FONT}`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.shadowColor = GOLD;
-    ctx.shadowBlur = 12;
-    ctx.fillStyle = GOLD_LIGHT;
-    ctx.fillText(answer, SIZE / 2, answerY + 20);
-    ctx.shadowBlur = 0;
-  }
 
   // ── Result badge (e.g. "3/6") ──
-  const badgeY = won ? answerY + 110 : gridY + guesses.length * rowHeight + 36;
+  const badgeY = answerY;
   ctx.font = `bold 44px ${ARABIC_FONT}`;
   ctx.fillStyle = won ? CORRECT_LIGHT : GRAY;
   ctx.textAlign = "center";
