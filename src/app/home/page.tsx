@@ -73,7 +73,7 @@ export default function HomePage() {
 
   return (
     <div className="h-full overflow-y-auto bg-background" dir="rtl">
-      <div className="max-w-lg mx-auto px-4 py-6">
+      <div className="max-w-lg mx-auto px-4 pt-5 pb-6">
         {/* Section header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-white">ألعاب اليوم</h2>
