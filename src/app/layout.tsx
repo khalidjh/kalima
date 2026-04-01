@@ -70,7 +70,7 @@ export default function RootLayout({
                 </span>
               </div>
               {/* كلمة wordmark */}
-              <span className="text-[#0F0C00] font-bold text-xl tracking-wide">
+              <span className="text-[#0F0C00] font-bold text-xl tracking-wide animate-shimmer">
                 كلمة
               </span>
             </Link>

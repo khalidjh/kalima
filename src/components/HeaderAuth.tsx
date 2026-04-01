@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { LogIn, LogOut, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
 
@@ -29,8 +30,9 @@ export default function HeaderAuth() {
     return (
       <button
         onPointerDown={(e) => { e.preventDefault(); signInWithGoogle(); }}
-        className="text-sm font-bold text-[#0F0C00] bg-[#0F0C00]/15 border border-[#0F0C00]/40 rounded-lg px-4 py-1.5 hover:bg-[#0F0C00]/25 transition-colors active:scale-95"
+        className="text-sm font-bold text-[#0F0C00] bg-[#0F0C00]/15 border border-[#0F0C00]/40 rounded-lg px-4 py-1.5 hover:bg-[#0F0C00]/25 transition-colors active:scale-95 flex items-center gap-1.5"
       >
+        <LogIn size={15} />
         دخول
       </button>
     );
@@ -72,15 +74,17 @@ export default function HeaderAuth() {
           {!isPro && (
             <button
               onPointerDown={() => { router.push("/pro"); setOpen(false); }}
-              className="w-full text-right px-4 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors border-b border-border"
+              className="w-full text-right px-4 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors border-b border-border flex items-center gap-2"
             >
-              ✦ ترقية إلى Pro
+              <Sparkles size={14} />
+              ترقية إلى Pro
             </button>
           )}
           <button
             onPointerDown={() => { signOut(); setOpen(false); }}
-            className="w-full text-right px-4 py-2.5 text-sm text-text hover:bg-primary/10 transition-colors"
+            className="w-full text-right px-4 py-2.5 text-sm text-text hover:bg-primary/10 transition-colors flex items-center gap-2"
           >
+            <LogOut size={14} />
             تسجيل الخروج
           </button>
         </div>

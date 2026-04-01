@@ -1,6 +1,6 @@
 import { getPuzzleNumber } from "./words";
 
-export type CategoryColor = "yellow" | "green" | "blue" | "purple";
+export type CategoryColor = "yellow" | "green" | "blue" | "red";
 
 export interface RawabetCategory {
   name: string;
@@ -20,7 +20,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "فواكه", words: ["تفاح", "برتقال", "موز", "عنب"], color: "yellow" },
       { name: "حيوانات البحر", words: ["سمكة", "حوت", "دلفين", "قرش"], color: "green" },
       { name: "ألوان", words: ["أحمر", "أزرق", "أخضر", "أصفر"], color: "blue" },
-      { name: "أيام الأسبوع", words: ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس"], color: "purple" },
+      { name: "أيام الأسبوع", words: ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس"], color: "red" },
     ],
   },
   {
@@ -29,7 +29,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "مشروبات", words: ["قهوة", "شاي", "عصير", "لبن"], color: "yellow" },
       { name: "مدن سعودية", words: ["الرياض", "جدة", "مكة", "المدينة"], color: "green" },
       { name: "أدوات المطبخ", words: ["ملعقة", "شوكة", "سكين", "طنجرة"], color: "blue" },
-      { name: "طيور", words: ["عقاب", "حمامة", "بلبل", "غراب"], color: "purple" },
+      { name: "طيور", words: ["عقاب", "حمامة", "بلبل", "غراب"], color: "red" },
     ],
   },
   {
@@ -38,7 +38,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "رياضات", words: ["كرة القدم", "تنس", "سباحة", "ملاكمة"], color: "yellow" },
       { name: "أشهر رمضان", words: ["سحور", "إفطار", "تراويح", "زكاة"], color: "green" },
       { name: "مهن", words: ["طبيب", "مهندس", "معلم", "محامي"], color: "blue" },
-      { name: "أجزاء الوجه", words: ["عين", "أنف", "فم", "أذن"], color: "purple" },
+      { name: "أجزاء الوجه", words: ["عين", "أنف", "فم", "أذن"], color: "red" },
     ],
   },
   {
@@ -47,7 +47,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "خضروات", words: ["جزر", "بطاطا", "بصل", "ثوم"], color: "yellow" },
       { name: "أنبياء", words: ["موسى", "عيسى", "إبراهيم", "يوسف"], color: "green" },
       { name: "وسائل النقل", words: ["قطار", "طائرة", "سفينة", "حافلة"], color: "blue" },
-      { name: "تحيات عربية", words: ["أهلاً", "مرحباً", "هلاً", "السلام"], color: "purple" },
+      { name: "تحيات عربية", words: ["أهلاً", "مرحباً", "هلاً", "السلام"], color: "red" },
     ],
   },
   {
@@ -56,7 +56,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "توابل", words: ["زعفران", "كمون", "فلفل", "قرفة"], color: "yellow" },
       { name: "دول الخليج", words: ["الكويت", "البحرين", "قطر", "عمان"], color: "green" },
       { name: "أدوات دراسية", words: ["قلم", "كتاب", "مسطرة", "ممحاة"], color: "blue" },
-      { name: "تعابير الفرح", words: ["ماشاء الله", "يهلا", "بالتوفيق", "مبروك"], color: "purple" },
+      { name: "تعابير الفرح", words: ["ماشاء الله", "يهلا", "بالتوفيق", "مبروك"], color: "red" },
     ],
   },
   {
@@ -65,7 +65,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أكلات شعبية", words: ["كبسة", "مندي", "هريسة", "مطبق"], color: "yellow" },
       { name: "أجزاء الجسم", words: ["قلب", "كبد", "رئة", "كلية"], color: "green" },
       { name: "فصول السنة", words: ["ربيع", "صيف", "خريف", "شتاء"], color: "blue" },
-      { name: "ما بعد الموت", words: ["جنة", "نار", "برزخ", "حساب"], color: "purple" },
+      { name: "ما بعد الموت", words: ["جنة", "نار", "برزخ", "حساب"], color: "red" },
     ],
   },
   {
@@ -74,7 +74,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "حيوانات الصحراء", words: ["جمل", "ثعلب", "ضب", "ورل"], color: "yellow" },
       { name: "كواكب", words: ["المريخ", "زحل", "المشتري", "الزهرة"], color: "green" },
       { name: "ملابس", words: ["ثوب", "عباءة", "غترة", "إزار"], color: "blue" },
-      { name: "أسماء قرآنية للنساء", words: ["مريم", "هاجر", "آسيا", "بلقيس"], color: "purple" },
+      { name: "أسماء قرآنية للنساء", words: ["مريم", "هاجر", "آسيا", "بلقيس"], color: "red" },
     ],
   },
   {
@@ -83,7 +83,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع الرز", words: ["بسمتي", "ياباني", "برياني", "مصري"], color: "yellow" },
       { name: "عواصم عربية", words: ["بغداد", "دمشق", "القاهرة", "عمّان"], color: "green" },
       { name: "مشاعر", words: ["فرح", "حزن", "غضب", "خوف"], color: "blue" },
-      { name: "أسماء أنهار", words: ["النيل", "الفرات", "دجلة", "الأردن"], color: "purple" },
+      { name: "أسماء أنهار", words: ["النيل", "الفرات", "دجلة", "الأردن"], color: "red" },
     ],
   },
   {
@@ -92,7 +92,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع الخبز", words: ["رقاق", "تنور", "صامولي", "بغل"], color: "yellow" },
       { name: "أدوات الموسيقى", words: ["عود", "ناي", "طبلة", "ربابة"], color: "green" },
       { name: "أوقات الصلاة", words: ["فجر", "ظهر", "عصر", "مغرب"], color: "blue" },
-      { name: "معادن نفيسة", words: ["ذهب", "فضة", "بلاتين", "ماس"], color: "purple" },
+      { name: "معادن نفيسة", words: ["ذهب", "فضة", "بلاتين", "ماس"], color: "red" },
     ],
   },
   {
@@ -101,7 +101,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "نجوم كرة القدم العرب", words: ["سالم الدوسري", "يسف النسيري", "عمر عبد الودود", "عبد الرزاق حمد الله"], color: "yellow" },
       { name: "أنواع الصيام", words: ["رمضان", "شوال", "عاشوراء", "قضاء"], color: "green" },
       { name: "ألعاب شعبية", words: ["الغميضة", "الحجلة", "البليات", "الطاق طاق"], color: "blue" },
-      { name: "صفات الله الحسنى", words: ["الرحمن", "الغفور", "الكريم", "العليم"], color: "purple" },
+      { name: "صفات الله الحسنى", words: ["الرحمن", "الغفور", "الكريم", "العليم"], color: "red" },
     ],
   },
   {
@@ -110,7 +110,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "حلويات عربية", words: ["كنافة", "بقلاوة", "لقيمات", "هريسة"], color: "yellow" },
       { name: "أنواع القهوة", words: ["إسبريسو", "كابتشينو", "لاتيه", "أمريكانو"], color: "green" },
       { name: "أرقام عربية", words: ["واحد", "اثنان", "ثلاثة", "أربعة"], color: "blue" },
-      { name: "أقمار الكواكب", words: ["القمر", "فوبوس", "تيتان", "يوروبا"], color: "purple" },
+      { name: "أقمار الكواكب", words: ["القمر", "فوبوس", "تيتان", "يوروبا"], color: "red" },
     ],
   },
   {
@@ -119,7 +119,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع السمك", words: ["سلمون", "تونة", "هامور", "زبيدي"], color: "yellow" },
       { name: "مدن مصرية", words: ["الإسكندرية", "أسوان", "الأقصر", "بورسعيد"], color: "green" },
       { name: "أدوات البناء", words: ["مطرقة", "مسمار", "مبرد", "منشار"], color: "blue" },
-      { name: "أنواع العقود", words: ["بيع", "إجارة", "هبة", "رهن"], color: "purple" },
+      { name: "أنواع العقود", words: ["بيع", "إجارة", "هبة", "رهن"], color: "red" },
     ],
   },
   {
@@ -128,7 +128,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "حشرات", words: ["نملة", "نحلة", "فراشة", "جندب"], color: "yellow" },
       { name: "أسماء أدوات الكتابة القديمة", words: ["قلم", "مداد", "لوح", "ريشة"], color: "green" },
       { name: "مواسم دينية", words: ["عيد الفطر", "عيد الأضحى", "رمضان", "الحج"], color: "blue" },
-      { name: "أسماء شعراء عرب", words: ["المتنبي", "أبو نواس", "امرؤ القيس", "الجاحظ"], color: "purple" },
+      { name: "أسماء شعراء عرب", words: ["المتنبي", "أبو نواس", "امرؤ القيس", "الجاحظ"], color: "red" },
     ],
   },
   {
@@ -137,7 +137,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "محاصيل زراعية", words: ["قمح", "شعير", "ذرة", "أرز"], color: "yellow" },
       { name: "تضاريس جغرافية", words: ["جبل", "وادي", "سهل", "هضبة"], color: "green" },
       { name: "حروف التعليل", words: ["لأن", "بسبب", "إذ", "كيلا"], color: "blue" },
-      { name: "أسماء سور قرآنية", words: ["البقرة", "النساء", "الكهف", "يوسف"], color: "purple" },
+      { name: "أسماء سور قرآنية", words: ["البقرة", "النساء", "الكهف", "يوسف"], color: "red" },
     ],
   },
   {
@@ -146,7 +146,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "رواد الفضاء العرب", words: ["هزاع المنصوري", "سلطان النيادي", "علي القرني", "رائد سلام"], color: "yellow" },
       { name: "أنواع الشعر", words: ["عمودي", "حر", "هايكو", "ملحمي"], color: "green" },
       { name: "أسماء بحار", words: ["المتوسط", "الأحمر", "العربي", "الأسود"], color: "blue" },
-      { name: "صنوف الجيش", words: ["مشاة", "مدرعات", "بحرية", "جوية"], color: "purple" },
+      { name: "صنوف الجيش", words: ["مشاة", "مدرعات", "بحرية", "جوية"], color: "red" },
     ],
   },
   {
@@ -155,7 +155,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع الجبن", words: ["شيدر", "موزاريلا", "بري", "فيتا"], color: "yellow" },
       { name: "علماء مسلمون", words: ["ابن سينا", "الخوارزمي", "البيروني", "ابن رشد"], color: "green" },
       { name: "أدوات الطبخ", words: ["موقد", "فرن", "مقلاة", "خلاط"], color: "blue" },
-      { name: "أنواع الخيمة", words: ["شعر", "قماش", "نايلون", "جلد"], color: "purple" },
+      { name: "أنواع الخيمة", words: ["شعر", "قماش", "نايلون", "جلد"], color: "red" },
     ],
   },
   {
@@ -164,7 +164,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع الصلوات", words: ["فريضة", "سنة", "تطوع", "وتر"], color: "yellow" },
       { name: "مدن مغربية", words: ["الرباط", "فاس", "مراكش", "الدار البيضاء"], color: "green" },
       { name: "أوزان الشعر", words: ["طويل", "بسيط", "كامل", "وافر"], color: "blue" },
-      { name: "حيوانات مفترسة", words: ["أسد", "نمر", "ضبع", "ذئب"], color: "purple" },
+      { name: "حيوانات مفترسة", words: ["أسد", "نمر", "ضبع", "ذئب"], color: "red" },
     ],
   },
   {
@@ -173,7 +173,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "مواد البناء", words: ["إسمنت", "رمل", "حصى", "طابوق"], color: "yellow" },
       { name: "أجزاء الشجرة", words: ["جذر", "ساق", "ورقة", "ثمرة"], color: "green" },
       { name: "أنواع المطر", words: ["رذاذ", "وابل", "طل", "صيب"], color: "blue" },
-      { name: "أسماء الملائكة", words: ["جبريل", "ميكائيل", "إسرافيل", "عزرائيل"], color: "purple" },
+      { name: "أسماء الملائكة", words: ["جبريل", "ميكائيل", "إسرافيل", "عزرائيل"], color: "red" },
     ],
   },
   {
@@ -182,7 +182,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "تقنيات حديثة", words: ["ذكاء اصطناعي", "بلوكتشين", "ميتافيرس", "سحابة"], color: "yellow" },
       { name: "أسماء زهور", words: ["وردة", "ياسمين", "زنبق", "أقحوان"], color: "green" },
       { name: "أنواع الأكل البحري", words: ["جمبري", "كراب", "أخطبوط", "بطلينوس"], color: "blue" },
-      { name: "صفات الرجل الكريم", words: ["جود", "سخاء", "كرم", "عطاء"], color: "purple" },
+      { name: "صفات الرجل الكريم", words: ["جود", "سخاء", "كرم", "عطاء"], color: "red" },
     ],
   },
   {
@@ -191,7 +191,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع التمر", words: ["مجدول", "خلاص", "سكري", "أجوة"], color: "yellow" },
       { name: "فنانون عرب", words: ["فيروز", "أم كلثوم", "عبد الحليم", "ووردة"], color: "green" },
       { name: "أسماء صحراوات", words: ["الربع الخالي", "النفود", "الدهناء", "الدبدبة"], color: "blue" },
-      { name: "مصطلحات النحو", words: ["مبتدأ", "خبر", "فاعل", "مفعول"], color: "purple" },
+      { name: "مصطلحات النحو", words: ["مبتدأ", "خبر", "فاعل", "مفعول"], color: "red" },
     ],
   },
   {
@@ -200,7 +200,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "مكونات الشاورما", words: ["لحم", "طحينة", "توم", "فلفل"], color: "yellow" },
       { name: "أسماء خلفاء راشدين", words: ["أبوبكر", "عمر", "عثمان", "علي"], color: "green" },
       { name: "ظواهر طبيعية", words: ["زلزال", "بركان", "إعصار", "تسونامي"], color: "blue" },
-      { name: "أدوات الاستفهام", words: ["من", "ما", "متى", "كيف"], color: "purple" },
+      { name: "أدوات الاستفهام", words: ["من", "ما", "متى", "كيف"], color: "red" },
     ],
   },
   {
@@ -209,7 +209,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع البيت", words: ["فيلا", "شقة", "قصر", "خيمة"], color: "yellow" },
       { name: "أعضاء الحواس", words: ["عين", "أذن", "أنف", "لسان"], color: "green" },
       { name: "أسماء بحيرات", words: ["تشاد", "فيكتوريا", "بايكال", "تيتيكاكا"], color: "blue" },
-      { name: "تصنيف القرآن", words: ["جزء", "حزب", "ربع", "سورة"], color: "purple" },
+      { name: "تصنيف القرآن", words: ["جزء", "حزب", "ربع", "سورة"], color: "red" },
     ],
   },
   {
@@ -218,7 +218,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع العسل", words: ["سدر", "أكاسيا", "مانوكا", "زهور"], color: "yellow" },
       { name: "مدن عراقية", words: ["الموصل", "البصرة", "أربيل", "كربلاء"], color: "green" },
       { name: "أنواع الصيد", words: ["قنص", "شبكة", "سنارة", "مصيدة"], color: "blue" },
-      { name: "أسماء مشهورة من التاريخ الإسلامي", words: ["صلاح الدين", "خالد بن الوليد", "طارق بن زياد", "نور الدين"], color: "purple" },
+      { name: "أسماء مشهورة من التاريخ الإسلامي", words: ["صلاح الدين", "خالد بن الوليد", "طارق بن زياد", "نور الدين"], color: "red" },
     ],
   },
   {
@@ -227,7 +227,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع الخضرة", words: ["نعنع", "بقدونس", "كزبرة", "ريحان"], color: "yellow" },
       { name: "مؤسسو دول عربية", words: ["عبد العزيز", "محمد علي", "قابوس", "زايد"], color: "green" },
       { name: "أنواع المحيطات", words: ["الهادئ", "الأطلسي", "الهندي", "المتجمد"], color: "blue" },
-      { name: "مصطلحات صرفية", words: ["مصدر", "فعل", "اسم", "حرف"], color: "purple" },
+      { name: "مصطلحات صرفية", words: ["مصدر", "فعل", "اسم", "حرف"], color: "red" },
     ],
   },
   {
@@ -236,7 +236,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "حيوانات المزرعة", words: ["بقرة", "خروف", "دجاجة", "حمار"], color: "yellow" },
       { name: "مدن تركية", words: ["إسطنبول", "أنقرة", "إزمير", "بورصة"], color: "green" },
       { name: "أنواع الرياح", words: ["شمال", "جنوب", "شرقية", "غربية"], color: "blue" },
-      { name: "أمثال عربية مشهورة تبدأ بـ\"من\"", words: ["من جد وجد", "من صبر ظفر", "من سلم سلم", "من طلب العلا"], color: "purple" },
+      { name: "أمثال عربية مشهورة تبدأ بـ\"من\"", words: ["من جد وجد", "من صبر ظفر", "من سلم سلم", "من طلب العلا"], color: "red" },
     ],
   },
   {
@@ -245,7 +245,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "وجبات يومية", words: ["فطور", "غداء", "عشاء", "سحور"], color: "yellow" },
       { name: "أنواع الشاي", words: ["أخضر", "أسود", "مورينغا", "نعنع"], color: "green" },
       { name: "دول أفريقية عربية", words: ["المغرب", "تونس", "الجزائر", "ليبيا"], color: "blue" },
-      { name: "أسماء كواكب المجموعة الشمسية بالترتيب", words: ["عطارد", "الزهرة", "الأرض", "المريخ"], color: "purple" },
+      { name: "أسماء كواكب المجموعة الشمسية بالترتيب", words: ["عطارد", "الزهرة", "الأرض", "المريخ"], color: "red" },
     ],
   },
   {
@@ -254,7 +254,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "طيور لا تطير", words: ["نعامة", "بطريق", "كيوي", "إيمو"], color: "yellow" },
       { name: "أنواع التربة", words: ["طينية", "رملية", "صخرية", "طباشيرية"], color: "green" },
       { name: "أسماء تلال مكة", words: ["أبو قبيس", "أبي قبيس", "قعيقعان", "هندي"], color: "blue" },
-      { name: "أنواع الصوم المنهي عنه", words: ["الوصال", "الدهر", "الصمت", "يوم الشك"], color: "purple" },
+      { name: "أنواع الصوم المنهي عنه", words: ["الوصال", "الدهر", "الصمت", "يوم الشك"], color: "red" },
     ],
   },
   {
@@ -263,7 +263,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "مواد خام للأقمشة", words: ["قطن", "حرير", "صوف", "كتان"], color: "yellow" },
       { name: "أسماء خلجان", words: ["العقبة", "السويس", "عدن", "عمان"], color: "green" },
       { name: "أنواع الرياضة المائية", words: ["تجديف", "غطس", "إبحار", "تزلج مائي"], color: "blue" },
-      { name: "شروط الصلاة الصحيحة", words: ["طهارة", "استقبال القبلة", "وقت", "نية"], color: "purple" },
+      { name: "شروط الصلاة الصحيحة", words: ["طهارة", "استقبال القبلة", "وقت", "نية"], color: "red" },
     ],
   },
   {
@@ -272,7 +272,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أطباق الفطور السعودي", words: ["فول", "بيض", "جبن", "مرمريتة"], color: "yellow" },
       { name: "أسماء ملوك السعودية", words: ["عبد العزيز", "سعود", "فيصل", "خالد"], color: "green" },
       { name: "أنواع الخط العربي", words: ["نسخ", "ثلث", "ديواني", "رقعة"], color: "blue" },
-      { name: "أسماء دول تبدأ بـ\"ال\"", words: ["الأردن", "اليمن", "الكويت", "البحرين"], color: "purple" },
+      { name: "أسماء دول تبدأ بـ\"ال\"", words: ["الأردن", "اليمن", "الكويت", "البحرين"], color: "red" },
     ],
   },
   {
@@ -281,7 +281,7 @@ export const RAWABET_PUZZLES: RawabetPuzzle[] = [
       { name: "أنواع العقود الرياضية", words: ["إعارة", "انتقال حر", "بيع", "تمديد"], color: "yellow" },
       { name: "أسماء من سورة يوسف", words: ["يعقوب", "يوسف", "بنيامين", "زليخا"], color: "green" },
       { name: "أنواع الأسماك في الخليج", words: ["كنعد", "شعري", "ربيان", "بياح"], color: "blue" },
-      { name: "مصطلحات الشطرنج", words: ["رخ", "وزير", "بيدق", "فيل"], color: "purple" },
+      { name: "مصطلحات الشطرنج", words: ["رخ", "وزير", "بيدق", "فيل"], color: "red" },
     ],
   },
 ];

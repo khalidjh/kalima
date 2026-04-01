@@ -8,6 +8,7 @@ interface GameBoardProps {
   currentGuess: string;
   answer: string;
   gameOver: boolean;
+  won: boolean;
   shake: boolean;
 }
 
@@ -31,9 +32,11 @@ interface TileProps {
   state: LetterState;
   animate?: boolean;
   delay?: number;
+  waveBounce?: boolean;
+  waveDelay?: number;
 }
 
-function Tile({ letter, state, animate, delay = 0 }: TileProps) {
+function Tile({ letter, state, animate, delay = 0, waveBounce, waveDelay = 0 }: TileProps) {
   const base =
     "w-full aspect-square flex items-center justify-center text-xl sm:text-2xl font-bold border-2 select-none";
   // When animating, start without color and reveal it at the midpoint (250ms into 500ms animation)
@@ -49,8 +52,11 @@ function Tile({ letter, state, animate, delay = 0 }: TileProps) {
 
   return (
     <div
-      className={`${base} ${colorStyle} ${flipClass}`}
-      style={animate ? { animationDelay: `${delay * 300}ms` } : undefined}
+      className={`${base} ${colorStyle} ${flipClass} ${waveBounce ? "animate-wave-bounce" : ""}`}
+      style={{
+        ...(animate ? { animationDelay: `${delay * 300}ms` } : undefined),
+        ...(waveBounce ? { animationDelay: `${waveDelay}ms` } : undefined),
+      }}
     >
       <span
         style={{
@@ -71,6 +77,7 @@ export default function GameBoard({
   currentGuess,
   answer,
   gameOver,
+  won,
   shake,
 }: GameBoardProps) {
   const rows: Array<{ letters: string[]; states: LetterState[]; animate: boolean }> = [];
@@ -103,12 +110,15 @@ export default function GameBoard({
     });
   }
 
+  const winningRowIdx = won ? guesses.length - 1 : -1;
+
   return (
     <div className="flex flex-col gap-1 my-1 mx-auto w-full px-2" style={{ maxWidth: "min(300px, calc((100dvh - 340px) * 5/6))" }}>
       {rows.map((row, rowIdx) => (
         <div
           key={rowIdx}
-          className={`grid grid-cols-5 gap-1 ${rowIdx === guesses.length && shake ? "animate-shake" : ""}`}
+          className={`grid grid-cols-5 gap-1 animate-tile-enter ${rowIdx === guesses.length && shake ? "animate-shake" : ""}`}
+          style={{ animationDelay: `${rowIdx * 50}ms` }}
         >
           {row.letters.map((letter, colIdx) => (
             <Tile
@@ -117,6 +127,8 @@ export default function GameBoard({
               state={row.states[colIdx]}
               animate={row.animate}
               delay={colIdx}
+              waveBounce={rowIdx === winningRowIdx}
+              waveDelay={600 + colIdx * 100}
             />
           ))}
         </div>

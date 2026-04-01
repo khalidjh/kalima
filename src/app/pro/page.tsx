@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 const FEATURES = [
   { text: "أرشيف الألغاز — العب أي يوم سابق" },
@@ -45,47 +46,49 @@ export default function ProPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#0F0E17] flex flex-col items-center justify-center px-4 py-12"
+      className="min-h-screen bg-[#0F0C00] flex flex-col items-center justify-center px-4 py-12"
       dir="rtl"
       style={{ fontFamily: "'Cairo', sans-serif" }}
     >
       {/* Back button */}
       <button
         onClick={() => router.back()}
-        className="absolute top-4 right-4 text-[#7A7589] hover:text-white transition-colors text-sm"
+        className="absolute top-4 right-4 text-[#8A7A3A] hover:text-[#FFF8DC] transition-colors text-sm flex items-center gap-1"
       >
-        ← رجوع
+        <ArrowRight size={16} />
+        رجوع
       </button>
 
       <div className="w-full max-w-sm mx-auto">
         {/* Badge */}
         <div className="flex justify-center mb-6">
-          <span className="bg-[#6B35C8]/20 border border-[#6B35C8]/50 text-[#9B6FE8] text-xs font-semibold px-3 py-1 rounded-full tracking-widest uppercase">
+          <span className="bg-[#F5C200]/20 border border-[#F5C200]/50 text-[#F5C200] text-xs font-semibold px-3 py-1 rounded-full tracking-widest uppercase flex items-center gap-1.5">
+            <Sparkles size={12} />
             PRO
           </span>
         </div>
 
         {/* Headline */}
-        <h1 className="text-4xl font-bold text-white text-center mb-2">كلمة برو</h1>
-        <p className="text-[#7A7589] text-center mb-8 text-sm">
+        <h1 className="text-4xl font-bold text-[#FFF8DC] text-center mb-2">كلمة برو</h1>
+        <p className="text-[#8A7A3A] text-center mb-8 text-sm">
           تجربة ألعاب كاملة بدون حدود
         </p>
 
         {/* Price card */}
-        <div className="bg-[#1E1B24] border border-[#6B35C8]/30 rounded-2xl p-6 mb-6 shadow-lg shadow-[#6B35C8]/10">
+        <div className="bg-[#1E1900] border border-[#3D3500] rounded-2xl p-6 mb-6 shadow-lg">
           <div className="text-center mb-6">
-            <span className="text-5xl font-bold text-white">٩٫٩٩</span>
-            <span className="text-[#7A7589] text-lg mr-2">ريال / شهر</span>
+            <span className="text-5xl font-bold text-[#FFF8DC]">٩٫٩٩</span>
+            <span className="text-[#8A7A3A] text-lg mr-2">ريال / شهر</span>
           </div>
 
           {/* Features */}
           <ul className="space-y-3">
             {FEATURES.map((feature, i) => (
               <li key={i} className="flex items-start gap-3">
-                <span className="text-[#6B35C8] font-bold text-lg leading-tight flex-shrink-0">
+                <span className="text-[#F5C200] font-bold text-lg leading-tight flex-shrink-0">
                   ✓
                 </span>
-                <span className="text-[#F0EDE8] text-sm leading-relaxed">{feature.text}</span>
+                <span className="text-[#FFF8DC] text-sm leading-relaxed">{feature.text}</span>
               </li>
             ))}
           </ul>
@@ -93,20 +96,20 @@ export default function ProPage() {
 
         {/* CTA / State */}
         {isLoading ? (
-          <div className="h-14 bg-[#1E1B24] rounded-xl animate-pulse" />
+          <div className="h-14 bg-[#1E1900] rounded-xl animate-pulse" />
         ) : isPro ? (
-          <div className="w-full h-14 rounded-xl bg-[#3DAA7A]/20 border border-[#3DAA7A]/50 flex items-center justify-center gap-2">
-            <span className="text-[#3DAA7A] font-semibold text-lg">أنت مشترك!</span>
+          <div className="w-full h-14 rounded-xl bg-[#22A65A]/20 border border-[#22A65A]/50 flex items-center justify-center gap-2">
+            <span className="text-[#22A65A] font-semibold text-lg">أنت مشترك!</span>
             <span className="text-xl">✓</span>
           </div>
         ) : !user ? (
           <div className="space-y-3">
-            <p className="text-[#7A7589] text-center text-sm">
+            <p className="text-[#8A7A3A] text-center text-sm">
               سجّل دخولك أولاً للاشتراك
             </p>
             <button
               onClick={signInWithGoogle}
-              className="w-full h-14 rounded-xl bg-white text-[#0F0E17] font-semibold text-base flex items-center justify-center gap-3 hover:bg-[#F0EDE8] transition-colors"
+              className="w-full h-14 rounded-xl bg-white text-[#0F0C00] font-semibold text-base flex items-center justify-center gap-3 hover:bg-[#FFF8DC] transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -132,16 +135,16 @@ export default function ProPage() {
         ) : (
           <div className="space-y-3">
             {error && (
-              <p className="text-[#E8604C] text-center text-sm">{error}</p>
+              <p className="text-[#F5820A] text-center text-sm">{error}</p>
             )}
             <button
               onClick={handleSubscribe}
               disabled={checkoutLoading}
-              className="w-full h-14 rounded-xl bg-[#6B35C8] hover:bg-[#7A45D8] disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-lg transition-colors shadow-lg shadow-[#6B35C8]/30"
+              className="w-full h-14 rounded-xl bg-[#F5C200] hover:bg-[#FFD740] disabled:opacity-60 disabled:cursor-not-allowed text-[#0F0C00] font-bold text-lg transition-colors shadow-lg shadow-[#F5C200]/30"
             >
               {checkoutLoading ? "جاري التحويل..." : "اشترك الآن"}
             </button>
-            <p className="text-[#7A7589] text-center text-xs">
+            <p className="text-[#8A7A3A] text-center text-xs">
               يمكنك الإلغاء في أي وقت · دفع آمن عبر Moyasar
             </p>
           </div>

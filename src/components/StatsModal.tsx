@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { Stats } from "@/lib/gameState";
 import { generateShareText, copyToClipboard } from "@/lib/shareText";
 import { generateShareImage } from "@/lib/shareImage";
@@ -111,15 +112,7 @@ export default function StatsModal({
           className="absolute top-4 left-4 text-gray-400 hover:text-white transition-colors"
           aria-label="إغلاق"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24"
-            viewBox="0 0 24 24"
-            width="24"
-            fill="currentColor"
-          >
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-          </svg>
+          <X size={24} />
         </button>
 
         <h2 className="text-xl font-bold text-center mb-4 uppercase tracking-widest">
