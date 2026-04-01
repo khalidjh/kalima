@@ -166,7 +166,7 @@ export default function Home() {
 
   if (!initialized) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="h-full bg-background flex items-center justify-center">
         <div className="text-white text-2xl font-bold">كلمة</div>
       </div>
     );
@@ -176,20 +176,17 @@ export default function Home() {
     <div className="bg-background flex flex-col overflow-hidden h-full" dir="rtl">
       {/* Game controls header */}
       <header className="w-full border-b border-border flex-shrink-0">
-        <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between">
-          {/* Right side (RTL start): how to play + streak badge */}
+        <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between gap-2">
+          {/* Left: back */}
+          <BackToHome />
+
+          {/* Center: puzzle # + streak */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowHowToPlay(true)}
-              className="text-white hover:text-primary-light transition-colors p-1"
-              aria-label="كيف تلعب"
-            >
-              <HelpCircle size={22} strokeWidth={1.5} />
-            </button>
+            <span className="text-muted text-sm font-medium">#{puzzleNumber}</span>
             {stats.currentStreak > 0 && (
               <button
                 onClick={() => setShowStats(true)}
-                className="flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded-full bg-surface text-accent border border-border hover:border-accent transition-colors"
+                className="flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded-full bg-surface text-primary border border-border hover:border-primary/50 transition-colors"
                 aria-label={`تتابع ${stats.currentStreak}`}
               >
                 <span className="animate-fire-pulse inline-block">🔥</span> {stats.currentStreak}
@@ -197,34 +194,28 @@ export default function Home() {
             )}
           </div>
 
-          {/* Puzzle number */}
-          <span className="text-muted text-sm font-medium">#{puzzleNumber}</span>
-
-          {/* Home button */}
-          <BackToHome />
-
-          {/* Archive + Stats */}
+          {/* Right: archive + stats + help */}
           <div className="flex items-center gap-1">
             <button
-              onClick={() => {
-                if (isPro) {
-                  setShowArchiveModal(true);
-                } else {
-                  router.push("/pro");
-                }
-              }}
-              className="text-[#7A7589] hover:text-primary-light transition-colors p-1 text-xs flex items-center gap-0.5"
+              onClick={() => isPro ? setShowArchiveModal(true) : router.push("/pro")}
+              className="text-muted hover:text-white transition-colors p-1"
               aria-label="أرشيف الألغاز"
-              title="أرشيف الألغاز"
             >
-              {isPro ? "📅" : <Lock size={13} />} الأرشيف
+              <Lock size={16} strokeWidth={1.5} />
             </button>
             <button
               onClick={() => setShowStats(true)}
-              className="text-white hover:text-primary-light transition-colors p-1"
+              className="text-muted hover:text-white transition-colors p-1"
               aria-label="الإحصائيات"
             >
-              <BarChart2 size={22} strokeWidth={1.5} />
+              <BarChart2 size={20} strokeWidth={1.5} />
+            </button>
+            <button
+              onClick={() => setShowHowToPlay(true)}
+              className="text-muted hover:text-white transition-colors p-1"
+              aria-label="كيف تلعب"
+            >
+              <HelpCircle size={20} strokeWidth={1.5} />
             </button>
           </div>
         </div>
@@ -279,15 +270,15 @@ export default function Home() {
           style={{ fontFamily: "'Cairo', sans-serif" }}
         >
           <div
-            className="bg-[#1E1900] border border-[#3D3500] rounded-2xl p-8 max-w-xs w-full text-center shadow-xl animate-slide-up"
+            className="bg-surface border border-border rounded-2xl p-8 max-w-xs w-full text-center shadow-xl animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-4xl mb-4">📅</div>
             <h2 className="text-xl font-bold text-white mb-2">أرشيف الألغاز</h2>
-            <p className="text-[#8A7A3A] text-sm mb-6">قريباً — العب أي لغز من الأيام السابقة</p>
+            <p className="text-muted text-sm mb-6">قريباً — العب أي لغز من الأيام السابقة</p>
             <button
               onClick={() => setShowArchiveModal(false)}
-              className="w-full h-10 rounded-lg bg-[#F5C200] text-[#0F0C00] font-semibold text-sm hover:bg-[#FFD740] transition-colors"
+              className="w-full h-10 rounded-lg bg-primary text-[#0A0A0A] font-bold text-sm hover:opacity-90 transition-opacity"
             >
               حسناً
             </button>

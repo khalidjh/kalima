@@ -78,7 +78,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-white">ألعاب اليوم</h2>
           {streak > 0 && (
-            <div className="flex items-center gap-1.5 text-accent font-bold text-sm">
+            <div className="flex items-center gap-1.5 text-primary bg-primary/20 font-bold text-sm px-2 py-0.5 rounded-full">
               <span>🔥</span>
               <span>{streak}</span>
             </div>
@@ -88,7 +88,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-3">
           {/* حروف card — active */}
           <Link href="/" className="block group">
-            <div className="bg-surface rounded-xl p-4 border border-border group-hover:border-primary-light transition-colors">
+            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
               <div className="flex items-start gap-4">
                 {/* Icon */}
                 <HoroufIcon />
@@ -117,7 +117,7 @@ export default function HomePage() {
 
           {/* روابط card — active */}
           <Link href="/rawabet" className="block group">
-            <div className="bg-surface rounded-xl p-4 border border-border group-hover:border-primary-light transition-colors">
+            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
               <div className="flex items-start gap-4">
                 {/* Icon */}
                 <RawabetIcon />

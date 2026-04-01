@@ -208,22 +208,22 @@ export default function RawabetPage() {
   const remainingTiles = tiles;
 
   return (
-    <div className="h-full overflow-y-auto bg-[#0F0C00]" dir="rtl">
+    <div className="h-full overflow-y-auto bg-background" dir="rtl">
       <div className="max-w-lg mx-auto px-4 py-4 flex flex-col gap-4">
 
         {/* Header */}
         <div className="flex items-center justify-between">
           <BackToHome />
-          <div className="text-sm text-[#8A7A3A]">لغز #{puzzleNumber}</div>
+          <div className="text-sm text-muted">لغز #{puzzleNumber}</div>
           {/* Mistake dots */}
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-[#8A7A3A] ml-1">الأخطاء:</span>
+            <span className="text-xs text-muted ml-1">الأخطاء:</span>
             {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
               <div
                 key={i}
                 className={`w-3 h-3 rounded-full transition-colors duration-300 ${
                   i < mistakes
-                    ? "bg-[#F5820A]"
+                    ? "bg-present"
                     : "bg-border"
                 }`}
               />
@@ -259,7 +259,7 @@ export default function RawabetPage() {
         {/* 4×4 grid */}
         {gameStatus === "playing" && remainingTiles.length > 0 && (
           <div className="grid grid-cols-4 gap-2">
-            {remainingTiles.map((word) => {
+            {remainingTiles.map((word, index) => {
               const isSelected = selected.includes(word);
               const isShaking = shakingTiles.includes(word);
               const isFlipping = flippingTiles.includes(word);
@@ -268,12 +268,14 @@ export default function RawabetPage() {
                 <button
                   key={word}
                   onClick={() => toggleTile(word)}
+                  style={{ animationDelay: `${index * 40}ms` }}
                   className={[
                     "rounded-xl py-3 px-1 text-center font-bold text-white transition-all duration-150",
                     "text-sm leading-tight min-h-[60px] flex items-center justify-center",
+                    "animate-tile-enter",
                     isSelected
-                      ? "bg-primary border-2 border-[#FFD740] shadow-[0_0_14px_rgba(245,194,0,0.4)] scale-[1.04] text-[#0F0C00]"
-                      : "bg-surface border-2 border-border hover:border-primary/50 hover:bg-[#2A2400]",
+                      ? "bg-primary/20 border-2 border-primary shadow-[0_0_14px_rgba(204,255,0,0.3)] scale-[1.04] text-white"
+                      : "bg-surface border-2 border-border hover:border-primary/40",
                     isShaking ? "animate-rawabet-shake" : "",
                     isFlipping ? "animate-tile-flip" : "",
                   ]
@@ -292,7 +294,7 @@ export default function RawabetPage() {
           <div className="flex gap-2 justify-center">
             <button
               onClick={handleShuffle}
-              className="px-4 py-2.5 rounded-xl bg-surface border border-border text-[#8A7A3A] text-sm font-medium hover:border-primary/50 transition-colors flex items-center gap-1.5"
+              className="px-4 py-2.5 rounded-xl bg-surface border border-border text-muted text-sm font-medium hover:border-primary/50 transition-colors flex items-center gap-1.5"
             >
               <Shuffle size={15} />
               خلط
@@ -300,7 +302,7 @@ export default function RawabetPage() {
             <button
               onClick={() => setSelected([])}
               disabled={selected.length === 0}
-              className="px-4 py-2.5 rounded-xl bg-surface border border-border text-[#8A7A3A] text-sm font-medium hover:border-primary/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              className="px-4 py-2.5 rounded-xl bg-surface border border-border text-muted text-sm font-medium hover:border-primary/50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
               إلغاء التحديد
             </button>
@@ -326,7 +328,7 @@ export default function RawabetPage() {
         )}
 
         {/* How to play */}
-        <div className="text-center text-xs text-[#8A7A3A] pb-2">
+        <div className="text-center text-xs text-muted pb-2">
           اختر ٤ كلمات لها رابط مشترك واضغط &quot;تحقق&quot;
         </div>
       </div>

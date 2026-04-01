@@ -38,10 +38,10 @@ function SuccessContent() {
   if (status === "loading") {
     return (
       <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-[#F5C200]/20 border-2 border-[#F5C200] flex items-center justify-center mx-auto mb-6 animate-pulse">
+        <div className="w-16 h-16 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center mx-auto mb-6 animate-pulse">
           <span className="text-2xl">⏳</span>
         </div>
-        <p className="text-[#8A7A3A]">جارٍ التحقق من الدفع...</p>
+        <p className="text-muted">جارٍ التحقق من الدفع...</p>
       </div>
     );
   }
@@ -49,16 +49,16 @@ function SuccessContent() {
   if (status === "failed") {
     return (
       <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-[#F5820A]/20 border-2 border-[#F5820A] flex items-center justify-center mx-auto mb-6">
+        <div className="w-16 h-16 rounded-full bg-present/20 border-2 border-present flex items-center justify-center mx-auto mb-6">
           <span className="text-2xl">✕</span>
         </div>
-        <h1 className="text-2xl font-bold text-[#FFF8DC] mb-3">لم يتم الدفع</h1>
-        <p className="text-[#8A7A3A] text-sm mb-8">
+        <h1 className="text-2xl font-bold text-white mb-3">لم يتم الدفع</h1>
+        <p className="text-muted text-sm mb-8">
           حدث خطأ أثناء معالجة الدفع. يمكنك المحاولة مجدداً.
         </p>
         <button
           onClick={() => router.push("/pro")}
-          className="w-full h-12 rounded-xl bg-[#F5C200] hover:bg-[#FFD740] text-[#0F0C00] font-semibold transition-colors"
+          className="w-full h-12 rounded-xl bg-primary text-[#0A0A0A] font-bold hover:opacity-90 transition-opacity"
         >
           حاول مجدداً
         </button>
@@ -68,27 +68,27 @@ function SuccessContent() {
 
   return (
     <div className="text-center">
-      <div className="w-20 h-20 rounded-full bg-[#22A65A]/20 border-2 border-[#22A65A] flex items-center justify-center mx-auto mb-6">
+      <div className="w-20 h-20 rounded-full bg-correct/20 border-2 border-correct flex items-center justify-center mx-auto mb-6">
         <span className="text-4xl">🎉</span>
       </div>
-      <h1 className="text-3xl font-bold text-[#FFF8DC] mb-2">تم الاشتراك بنجاح!</h1>
-      <p className="text-[#8A7A3A] text-sm mb-2">مرحباً بك في كلمة برو</p>
+      <h1 className="text-3xl font-bold text-white mb-2">تم الاشتراك بنجاح!</h1>
+      <p className="text-muted text-sm mb-2">مرحباً بك في كلمة برو</p>
       <div className="flex justify-center gap-1 mb-8">
-        <span className="bg-[#F5C200]/20 border border-[#F5C200]/50 text-[#F5C200] text-xs font-semibold px-3 py-1 rounded-full tracking-widest uppercase flex items-center gap-1.5">
+        <span className="bg-primary/20 border border-primary/40 text-primary text-xs font-semibold px-3 py-1 rounded-full tracking-widest uppercase flex items-center gap-1.5">
           <Sparkles size={12} />
           PRO
         </span>
       </div>
 
-      <div className="bg-[#1E1900] border border-[#22A65A]/20 rounded-xl p-4 mb-8">
-        <p className="text-[#FFF8DC] text-sm">
+      <div className="bg-surface border border-correct/20 rounded-xl p-4 mb-8">
+        <p className="text-white text-sm">
           تم تفعيل اشتراكك ✓ يمكنك الآن الوصول إلى جميع المزايا
         </p>
       </div>
 
       <button
         onClick={() => router.push("/home")}
-        className="w-full h-14 rounded-xl bg-[#F5C200] hover:bg-[#FFD740] text-[#0F0C00] font-bold text-lg transition-colors shadow-lg shadow-[#F5C200]/30"
+        className="w-full h-12 rounded-xl bg-primary text-[#0A0A0A] font-bold hover:opacity-90 transition-opacity"
       >
         ابدأ اللعب
       </button>
@@ -98,19 +98,17 @@ function SuccessContent() {
 
 export default function ProSuccessPage() {
   return (
-    <div
-      className="min-h-screen bg-[#0F0C00] flex flex-col items-center justify-center px-4 py-12"
-      dir="rtl"
-      style={{ fontFamily: "'Cairo', sans-serif" }}
-    >
-      <div className="w-full max-w-sm mx-auto">
-        <Suspense
-          fallback={
-            <div className="text-center text-[#8A7A3A]">جارٍ التحميل...</div>
-          }
-        >
-          <SuccessContent />
-        </Suspense>
+    <div className="h-full overflow-y-auto" dir="rtl">
+      <div className="max-w-lg mx-auto px-4 py-6 flex flex-col items-center justify-center min-h-full">
+        <div className="w-full max-w-sm mx-auto">
+          <Suspense
+            fallback={
+              <div className="text-center text-muted">جارٍ التحميل...</div>
+            }
+          >
+            <SuccessContent />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
