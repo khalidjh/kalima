@@ -183,7 +183,7 @@ export default function Home() {
               className="text-white hover:text-primary-light transition-colors p-1"
               aria-label="كيف تلعب"
             >
-              <HelpCircle size={22} />
+              <HelpCircle size={22} strokeWidth={1.5} />
             </button>
             {stats.currentStreak > 0 && (
               <button
@@ -220,7 +220,7 @@ export default function Home() {
               className="text-white hover:text-primary-light transition-colors p-1"
               aria-label="الإحصائيات"
             >
-              <BarChart2 size={22} />
+              <BarChart2 size={22} strokeWidth={1.5} />
             </button>
           </div>
         </div>
