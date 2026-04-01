@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
+
 import FirebaseInit from "@/components/FirebaseInit";
 import { AuthProvider } from "@/lib/auth";
 import HeaderAuth from "@/components/HeaderAuth";
@@ -84,9 +84,6 @@ export default function RootLayout({
             {children}
           </div>
           <FirebaseInit />
-
-          {/* Bottom navigation */}
-          <BottomNav />
         </AuthProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   getDailyRawabetPuzzle,
   getRawabetPuzzleNumber,
@@ -43,6 +44,7 @@ interface Toast {
 let toastCounter = 0;
 
 export default function RawabetPage() {
+  const router = useRouter();
   const puzzle = getDailyRawabetPuzzle();
   const puzzleNumber = getRawabetPuzzleNumber();
 
@@ -210,6 +212,13 @@ export default function RawabetPage() {
 
         {/* Header */}
         <div className="flex items-center justify-between">
+          <button
+            onClick={() => router.push("/home")}
+            className="text-[#8A7A3A] hover:text-white transition-colors text-xs"
+            aria-label="الرجوع للبيت"
+          >
+            🏠
+          </button>
           <div className="text-sm text-[#8A7A3A]">لغز #{puzzleNumber}</div>
           {/* Mistake dots */}
           <div className="flex items-center gap-1.5">

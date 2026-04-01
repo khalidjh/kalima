@@ -199,6 +199,16 @@ export default function Home() {
           {/* Puzzle number */}
           <span className="text-muted text-sm font-medium">#{puzzleNumber}</span>
 
+          {/* Home button */}
+          <button
+            onClick={() => router.push("/home")}
+            className="text-muted hover:text-white transition-colors p-1 text-xs"
+            aria-label="الرجوع للبيت"
+            title="البيت"
+          >
+            🏠
+          </button>
+
           {/* Archive + Stats */}
           <div className="flex items-center gap-1">
             <button
