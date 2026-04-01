@@ -214,20 +214,21 @@ export default function RawabetPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <BackToHome />
-          <div className="text-sm text-muted">لغز #{puzzleNumber}</div>
-          {/* Mistake dots */}
+
+          {/* Center: puzzle number */}
+          <span className="text-sm font-bold text-white">لغز #{puzzleNumber}</span>
+
+          {/* Right: mistake dots */}
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-muted ml-1">الأخطاء:</span>
             {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
               <div
                 key={i}
-                className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                  i < mistakes
-                    ? "bg-present"
-                    : "bg-border"
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                  i < mistakes ? "bg-present scale-110" : "bg-border"
                 }`}
               />
             ))}
+            <span className="text-xs text-muted mr-1">أخطاء</span>
           </div>
         </div>
 
