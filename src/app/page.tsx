@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { HelpCircle, BarChart2, Lock } from "lucide-react";
 import BackToHome from "@/components/BackToHome";
+import GameHeader from "@/components/GameHeader";
 import GameBoard from "@/components/GameBoard";
 import Keyboard from "@/components/Keyboard";
 import HowToPlayModal from "@/components/HowToPlayModal";
@@ -175,51 +176,34 @@ export default function Home() {
   return (
     <div className="bg-background flex flex-col overflow-hidden h-full" dir="rtl">
       {/* Game controls header */}
-      <header className="w-full border-b border-border flex-shrink-0">
-        <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between gap-2">
-          {/* Left: back */}
-          <BackToHome />
-
-          {/* Center: puzzle # + streak */}
+      <GameHeader
+        center={
           <div className="flex items-center gap-2">
-            <span className="text-muted text-sm font-medium">#{puzzleNumber}</span>
+            <span className="text-muted text-sm font-bold">#{puzzleNumber}</span>
             {stats.currentStreak > 0 && (
               <button
                 onClick={() => setShowStats(true)}
                 className="flex items-center gap-1 text-sm font-bold px-2 py-0.5 rounded-full bg-surface text-primary border border-border hover:border-primary/50 transition-colors"
-                aria-label={`تتابع ${stats.currentStreak}`}
               >
                 <span className="animate-fire-pulse inline-block">🔥</span> {stats.currentStreak}
               </button>
             )}
           </div>
-
-          {/* Right: archive + stats + help */}
+        }
+        right={
           <div className="flex items-center gap-1">
-            <button
-              onClick={() => isPro ? setShowArchiveModal(true) : router.push("/pro")}
-              className="text-muted hover:text-white transition-colors p-1"
-              aria-label="أرشيف الألغاز"
-            >
+            <button onClick={() => isPro ? setShowArchiveModal(true) : router.push("/pro")} className="text-muted hover:text-white transition-colors p-1">
               <Lock size={16} strokeWidth={1.5} />
             </button>
-            <button
-              onClick={() => setShowStats(true)}
-              className="text-muted hover:text-white transition-colors p-1"
-              aria-label="الإحصائيات"
-            >
+            <button onClick={() => setShowStats(true)} className="text-muted hover:text-white transition-colors p-1">
               <BarChart2 size={20} strokeWidth={1.5} />
             </button>
-            <button
-              onClick={() => setShowHowToPlay(true)}
-              className="text-muted hover:text-white transition-colors p-1"
-              aria-label="كيف تلعب"
-            >
+            <button onClick={() => setShowHowToPlay(true)} className="text-muted hover:text-white transition-colors p-1">
               <HelpCircle size={20} strokeWidth={1.5} />
             </button>
           </div>
-        </div>
-      </header>
+        }
+      />
 
       {/* Game Board */}
       <main className="flex-1 flex flex-col items-center overflow-hidden min-h-0">

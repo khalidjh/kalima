@@ -20,6 +20,7 @@ import RawabetResultModal from "@/components/RawabetResultModal";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
 import { Shuffle, CheckCircle2 } from "lucide-react";
 import BackToHome from "@/components/BackToHome";
+import GameHeader from "@/components/GameHeader";
 
 const MAX_MISTAKES = 4;
 
@@ -212,25 +213,21 @@ export default function RawabetPage() {
       <div className="max-w-lg mx-auto px-4 py-4 flex flex-col gap-4">
 
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <BackToHome />
-
-          {/* Center: puzzle number */}
-          <span className="text-sm font-bold text-white">لغز #{puzzleNumber}</span>
-
-          {/* Right: mistake dots */}
-          <div className="flex items-center gap-1.5">
-            {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  i < mistakes ? "bg-present scale-110" : "bg-border"
-                }`}
-              />
-            ))}
-            <span className="text-xs text-muted mr-1">أخطاء</span>
-          </div>
-        </div>
+        <GameHeader
+          center={<span className="text-sm font-bold text-white">#{puzzleNumber}</span>}
+          right={
+            <div className="flex items-center gap-1.5">
+              {Array.from({ length: MAX_MISTAKES }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    i < mistakes ? "bg-present scale-110" : "bg-border"
+                  }`}
+                />
+              ))}
+            </div>
+          }
+        />
 
         {/* Found category rows */}
         {foundCategories.map((cat) => (
