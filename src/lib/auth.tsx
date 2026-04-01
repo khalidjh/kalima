@@ -13,14 +13,14 @@ import {
   signInWithPopup,
   signOut as fbSignOut,
   onAuthStateChanged,
-  User,
+  IconUser,
 } from "firebase/auth";
 import { app } from "./firebase";
 import { track } from "./analytics";
 import { setCurrentUser, mergeLocalStatsFromFirestore } from "./firestoreSync";
 
 interface AuthContextType {
-  user: User | null;
+  user: IconUser | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -34,7 +34,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IconUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

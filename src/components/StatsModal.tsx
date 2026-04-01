@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X } from "tabler-icons-react";
 import { Stats } from "@/lib/gameState";
 import { generateShareText, copyToClipboard } from "@/lib/shareText";
 import { generateShareImage } from "@/lib/shareImage";
@@ -76,7 +76,7 @@ export default function StatsModal({
         URL.revokeObjectURL(url);
       }
     } catch {
-      // User cancelled share or error — silently ignore
+      // IconUser cancelled share or error — silently ignore
     } finally {
       setImageSharing(false);
     }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { HelpCircle, BarChart2, Lock } from "lucide-react";
+import { IconHelp, IconChart, IconLock } from "tabler-icons-react";
 import GameBoard from "@/components/GameBoard";
 import Keyboard from "@/components/Keyboard";
 import HowToPlayModal from "@/components/HowToPlayModal";
@@ -183,7 +183,7 @@ export default function Home() {
               className="text-white hover:text-primary-light transition-colors p-1"
               aria-label="كيف تلعب"
             >
-              <HelpCircle size={22} />
+              <IconHelp size={22} />
             </button>
             {stats.currentStreak > 0 && (
               <button
@@ -213,14 +213,14 @@ export default function Home() {
               aria-label="أرشيف الألغاز"
               title="أرشيف الألغاز"
             >
-              {isPro ? "📅" : <Lock size={13} />} الأرشيف
+              {isPro ? "📅" : <IconLock size={13} />} الأرشيف
             </button>
             <button
               onClick={() => setShowStats(true)}
               className="text-white hover:text-primary-light transition-colors p-1"
               aria-label="الإحصائيات"
             >
-              <BarChart2 size={22} />
+              <IconChart size={22} />
             </button>
           </div>
         </div>
