@@ -13,6 +13,8 @@ import {
   signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
+  setPersistence,
+  browserLocalPersistence,
   signOut as fbSignOut,
   onAuthStateChanged,
   User,
@@ -41,6 +43,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const auth = getAuth(app);
+
+    // Ensure persistence is set before checking redirect result
+    setPersistence(auth, browserLocalPersistence).catch(() => {});
 
     // Handle redirect result on page load (mobile flow)
     getRedirectResult(auth).then(async (result) => {
@@ -71,7 +76,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const auth = getAuth(app);
       const provider = new GoogleAuthProvider();
-      // Use redirect on mobile (popup gets blocked), popup on desktop
+      // Always set LOCAL persistence first so session survives redirect
+      await setPersistence(auth, browserLocalPersistence);
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       if (isMobile) {
         await signInWithRedirect(auth, provider);
