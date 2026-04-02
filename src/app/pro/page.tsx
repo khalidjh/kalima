@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
 import { Sparkles } from "lucide-react";
@@ -145,6 +146,21 @@ export default function ProPage() {
               </p>
             </div>
           )}
+        </div>
+
+        {/* Legal footer */}
+        <div className="mt-8 pt-6 border-t border-border text-center">
+          <div className="flex justify-center gap-4 text-xs text-muted">
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              سياسة الخصوصية
+            </Link>
+            <Link href="/refund" className="hover:text-white transition-colors">
+              سياسة الاسترداد
+            </Link>
+            <Link href="/terms" className="hover:text-white transition-colors">
+              شروط الاستخدام
+            </Link>
+          </div>
         </div>
       </div>
     </div>
