@@ -94,8 +94,16 @@ export default function RootLayout({
               </span>
             </Link>
 
-            {/* Login / user avatar — left side in RTL */}
-            <HeaderAuth />
+            {/* Pro link + Login */}
+            <div className="flex items-center gap-2">
+              <Link
+                href="/pro"
+                className="text-xs font-bold text-primary border border-primary/40 rounded-lg px-2.5 py-1 hover:bg-primary/10 transition-colors"
+              >
+                ✦ Pro
+              </Link>
+              <HeaderAuth />
+            </div>
           </header>
 
           {/* Page content */}
