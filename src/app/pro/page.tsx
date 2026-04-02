@@ -43,7 +43,7 @@ export default function ProPage() {
     }
   };
 
-  const isLoading = authLoading || proLoading;
+  const isLoading = (authLoading && !user) || proLoading;
 
   return (
     <div className="h-full overflow-y-auto" dir="rtl">
