@@ -3,7 +3,7 @@ import { getFirestore, Firestore } from "firebase-admin/firestore";
 
 let adminApp: App | null = null;
 
-function getAdminApp(): App | null {
+export function getAdminApp(): App | null {
   try {
     const apps = getApps();
     if (apps.length > 0) {

@@ -10,6 +10,7 @@ import Keyboard from "@/components/Keyboard";
 import HowToPlayModal from "@/components/HowToPlayModal";
 import StatsModal from "@/components/StatsModal";
 import Toast from "@/components/Toast";
+import NotificationPrompt from "@/components/NotificationPrompt";
 import {
   loadGameState,
   saveGameState,
@@ -47,6 +48,7 @@ export default function Home() {
   const [showStats, setShowStats] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [showArchiveModal, setShowArchiveModal] = useState(false);
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
 
   // Initialize game
   useEffect(() => {
@@ -163,6 +165,17 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [submitGuess, handleDelete]);
 
+  // Show notification prompt once after game ends and stats modal opens
+  useEffect(() => {
+    if (!showStats) return;
+    if (gameStatus === "playing") return;
+    if (!user) return;
+    const asked = localStorage.getItem("kalima_notif_asked");
+    if (asked) return;
+    const timer = setTimeout(() => setShowNotificationPrompt(true), 2000);
+    return () => clearTimeout(timer);
+  }, [showStats, gameStatus, user]);
+
   const keyboardStates = getKeyboardLetterStates(guesses, answer);
 
   if (!initialized) {
@@ -275,6 +288,15 @@ export default function Home() {
         <Toast
           message={toast}
           onDismiss={() => setToast(null)}
+        />
+      )}
+
+      {/* Notification permission prompt */}
+      {showNotificationPrompt && user && (
+        <NotificationPrompt
+          uid={user.uid}
+          onClose={() => setShowNotificationPrompt(false)}
+          onSuccess={() => setToast("تم تفعيل الإشعارات ✓")}
         />
       )}
     </div>
