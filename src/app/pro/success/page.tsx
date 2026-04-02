@@ -1,39 +1,24 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/lib/auth";
-import { setUserPro } from "@/lib/subscription";
 import { Suspense } from "react";
 import { Sparkles } from "lucide-react";
 
 function SuccessContent() {
-  const { user, loading: authLoading } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<"loading" | "success" | "failed">("loading");
-  const didRun = useRef(false);
 
   const paymentStatus = searchParams.get("status");
 
   useEffect(() => {
-    if (authLoading) return;
-    if (didRun.current) return;
-    didRun.current = true;
-
-    async function activate() {
-      if (paymentStatus !== "paid") {
-        setStatus("failed");
-        return;
-      }
-      if (user) {
-        await setUserPro(user.uid);
-      }
+    if (paymentStatus === "paid") {
       setStatus("success");
+    } else {
+      setStatus("failed");
     }
-
-    void activate();
-  }, [authLoading, user, paymentStatus]);
+  }, [paymentStatus]);
 
   if (status === "loading") {
     return (
@@ -81,8 +66,12 @@ function SuccessContent() {
       </div>
 
       <div className="bg-surface border border-correct/20 rounded-xl p-4 mb-8">
-        <p className="text-white text-sm">
-          تم تفعيل اشتراكك ✓ يمكنك الآن الوصول إلى جميع المزايا
+        <p className="text-white text-sm mb-2">
+          تم استلام طلب الاشتراك ✓
+        </p>
+        {/* isPro is set server-side via Moyasar webhook only */}
+        <p className="text-muted text-xs">
+          قد يستغرق تفعيل الاشتراك بضع دقائق
         </p>
       </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { app } from "./firebase";
 import { User } from "firebase/auth";
 
@@ -36,19 +36,6 @@ export async function getSubscription(uid: string): Promise<SubscriptionData> {
     };
   } catch {
     return { isPro: false };
-  }
-}
-
-export async function setUserPro(uid: string): Promise<void> {
-  try {
-    const db = getFirestore(app);
-    await setDoc(
-      doc(db, "users", uid),
-      { isPro: true, subscribedAt: new Date().toISOString() },
-      { merge: true }
-    );
-  } catch {
-    // Graceful failure
   }
 }
 
