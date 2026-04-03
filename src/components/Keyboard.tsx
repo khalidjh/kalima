@@ -1,6 +1,7 @@
 "use client";
 
 import { LetterState } from "@/lib/gameState";
+import { playTap, playDelete } from "@/lib/sounds";
 
 interface KeyboardProps {
   letterStates: Record<string, LetterState>;
@@ -41,7 +42,7 @@ function LetterKey({ letter, state, onKey, disabled }: LetterKeyProps) {
     <button
       onPointerDown={(e) => {
         e.preventDefault();
-        if (!disabled) onKey(letter);
+        if (!disabled) { playTap(); onKey(letter); }
       }}
       disabled={disabled}
       className={`h-10 sm:h-12 w-full rounded text-sm font-bold select-none touch-manipulation transition-colors ${getKeyStyle(state)}`}
@@ -91,7 +92,7 @@ export default function Keyboard({
 
         {/* Delete — leftmost in RTL */}
         <button
-          onPointerDown={(e) => { e.preventDefault(); if (!disabled) onDelete(); }}
+          onPointerDown={(e) => { e.preventDefault(); if (!disabled) { playDelete(); onDelete(); } }}
           disabled={disabled}
           className="h-10 sm:h-12 rounded bg-surface border border-border text-muted text-xs font-bold select-none touch-manipulation disabled:opacity-40 hover:text-white hover:border-white/30 transition-colors"
         >

@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { HelpCircle, BarChart2, Lock } from "lucide-react";
+import { playCorrect, playWrong } from "@/lib/sounds";
 import BackToHome from "@/components/BackToHome";
 import GameHeader from "@/components/GameHeader";
 import GameBoard from "@/components/GameBoard";
@@ -106,6 +107,7 @@ export default function Home() {
     const lost = !won && newGuesses.length >= 6;
 
     if (won) {
+      playCorrect();
       const newStats = updateStatsOnWin(newGuesses.length);
       setStats(newStats);
       track("game_won", { puzzle: puzzleNumber, guesses: newGuesses.length, streak: newStats.currentStreak });
@@ -118,6 +120,7 @@ export default function Home() {
       saveGameState({ puzzleNumber, guesses: newGuesses, gameStatus: "won" });
       setGameStatus("won");
     } else if (lost) {
+      playWrong();
       const newStats = updateStatsOnLoss();
       setStats(newStats);
       track("game_lost", { puzzle: puzzleNumber });

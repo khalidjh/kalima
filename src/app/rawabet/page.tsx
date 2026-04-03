@@ -19,6 +19,7 @@ import {
 import RawabetResultModal from "@/components/RawabetResultModal";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
 import { Shuffle, CheckCircle2, HelpCircle } from "lucide-react";
+import { playTap, playCorrect, playWrong } from "@/lib/sounds";
 import BackToHome from "@/components/BackToHome";
 import GameHeader from "@/components/GameHeader";
 import HowToPlayRawabet from "@/components/HowToPlayRawabet";
@@ -104,6 +105,7 @@ export default function RawabetPage() {
   function toggleTile(word: string) {
     if (gameStatus !== "playing" || isChecking) return;
     if (flippingTiles.includes(word)) return;
+    playTap();
 
     setSelected((prev) => {
       if (prev.includes(word)) return prev.filter((w) => w !== word);
@@ -131,6 +133,7 @@ export default function RawabetPage() {
     );
 
     if (matched) {
+      playCorrect();
       // Step 1: bounce up
       setBounceCorrectTiles([...selected]);
       setTimeout(() => {
@@ -179,6 +182,7 @@ export default function RawabetPage() {
 
       if (oneAway) showToast("واحد قريب! 🤏");
 
+      playWrong();
       // Flash red + shake
       setFlashWrongTiles([...selected]);
       setShakingTiles([...selected]);
