@@ -62,6 +62,14 @@ export default function RootLayout({
           data-domain="kalima.fun"
           src="https://plausible.io/js/script.js"
         ></script>
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9R0XYH9YQG"></script>
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-9R0XYH9YQG');
+        `}} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
