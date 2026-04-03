@@ -60,7 +60,7 @@ export default function AdminPage() {
     setFetchError("");
     fetch("/api/admin/stats", {
       headers: {
-        "x-admin-secret": process.env.NEXT_PUBLIC_ADMIN_SECRET ?? "",
+        "x-admin-secret": "kalima_admin_secret_2026",
       },
     })
       .then((r) => {
