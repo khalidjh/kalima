@@ -74,7 +74,7 @@ export default function AdminPage() {
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+    if (password === "kalima_admin_2026") {
       document.cookie = "kalima_admin=1; path=/; max-age=86400";
       setIsAuthed(true);
       setError("");
