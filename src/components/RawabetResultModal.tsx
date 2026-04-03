@@ -190,7 +190,7 @@ export default function RawabetResultModal({
         <div className="px-5 pb-5 flex gap-2">
           <button
             onClick={handleShare}
-            className="flex-1 bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl transition-colors text-sm"
+            className="flex-1 bg-primary hover:bg-primary-dark text-[#0A0A0A] font-bold py-3 rounded-xl transition-colors text-sm"
           >
             {copied ? "✓ تم النسخ!" : "مشاركة النتيجة"}
           </button>
