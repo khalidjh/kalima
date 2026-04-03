@@ -61,6 +61,8 @@ export default function RawabetPage() {
   const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost">("playing");
   const [shakingTiles, setShakingTiles] = useState<string[]>([]);
   const [flippingTiles, setFlippingTiles] = useState<string[]>([]);
+  const [flashWrongTiles, setFlashWrongTiles] = useState<string[]>([]);
+  const [bounceCorrectTiles, setBounceCorrectTiles] = useState<string[]>([]);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -129,7 +131,11 @@ export default function RawabetPage() {
     );
 
     if (matched) {
-      // Flip animation
+      // Step 1: bounce up
+      setBounceCorrectTiles([...selected]);
+      setTimeout(() => {
+        setBounceCorrectTiles([]);
+        // Step 2: flip to reveal
       setFlippingTiles([...selected]);
       setTimeout(() => {
         const newFound = [...foundCategories, matched];
@@ -162,6 +168,7 @@ export default function RawabetPage() {
         }
         setIsChecking(false);
       }, 500);
+      }, 300);
     } else {
       // Check if one away
       const oneAway = puzzle.categories.some((cat) => {
@@ -172,10 +179,12 @@ export default function RawabetPage() {
 
       if (oneAway) showToast("واحد قريب! 🤏");
 
-      // Shake animation
+      // Flash red + shake
+      setFlashWrongTiles([...selected]);
       setShakingTiles([...selected]);
       setTimeout(() => {
         setShakingTiles([]);
+        setFlashWrongTiles([]);
         const newMistakes = mistakes + 1;
         setMistakes(newMistakes);
         setSelected([]);
@@ -273,6 +282,8 @@ export default function RawabetPage() {
               const isSelected = selected.includes(word);
               const isShaking = shakingTiles.includes(word);
               const isFlipping = flippingTiles.includes(word);
+              const isFlashWrong = flashWrongTiles.includes(word);
+              const isBounceCorrect = bounceCorrectTiles.includes(word);
 
               return (
                 <button
@@ -288,6 +299,8 @@ export default function RawabetPage() {
                       : "bg-surface border-2 border-border hover:border-primary/40",
                     isShaking ? "animate-rawabet-shake" : "",
                     isFlipping ? "animate-tile-flip" : "",
+                    isFlashWrong ? "animate-flash-wrong" : "",
+                    isBounceCorrect ? "animate-bounce-correct" : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
