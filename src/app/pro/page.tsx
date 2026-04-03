@@ -22,12 +22,15 @@ export default function ProPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const PAYMENTS_LIVE = false; // flip to true when Moyasar is approved
+
   const handleSubscribe = async () => {
     if (!user) return;
-    setError("🚧 الدفع قريباً! سيتم إطلاق الاشتراك قريباً — ترقبوا الإعلان.");
-    return;
+    if (!PAYMENTS_LIVE) {
+      setError("🚧 الدفع قريباً! سيتم إطلاق الاشتراك قريباً — ترقبوا الإعلان.");
+      return;
+    }
     setCheckoutLoading(true);
-    // eslint-disable-next-line no-unreachable
     try {
       const res = await fetch("/api/moyasar/checkout", {
         method: "POST",
