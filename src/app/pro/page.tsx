@@ -24,8 +24,10 @@ export default function ProPage() {
 
   const handleSubscribe = async () => {
     if (!user) return;
+    setError("🚧 الدفع قريباً! سيتم إطلاق الاشتراك قريباً — ترقبوا الإعلان.");
+    return;
     setCheckoutLoading(true);
-    setError(null);
+    // eslint-disable-next-line no-unreachable
     try {
       const res = await fetch("/api/moyasar/checkout", {
         method: "POST",
