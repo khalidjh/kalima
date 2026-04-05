@@ -25,8 +25,8 @@ const config: Config = {
         "border-filled": "#3A3A3A",
       },
       fontFamily: {
-        arabic: ["Cairo", "sans-serif"],
-        sans: ["Cairo", "sans-serif"],
+        arabic: ["var(--font-cairo)", "Cairo", "sans-serif"],
+        sans: ["var(--font-cairo)", "Cairo", "sans-serif"],
       },
     },
   },

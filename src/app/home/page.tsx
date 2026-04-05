@@ -55,6 +55,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const stats = loadStats();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStreak(stats.currentStreak);
 
     const saved = loadGameState();

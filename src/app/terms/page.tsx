@@ -143,7 +143,7 @@ export default function TermsPage() {
             </h2>
             <p className="text-muted text-sm leading-relaxed">
               تُقدَّم الخدمة{" "}
-              <span className="text-white font-semibold">"كما هي"</span> دون أي
+              <span className="text-white font-semibold">&quot;كما هي&quot;</span> دون أي
               ضمانات صريحة أو ضمنية. لا نضمن توفر الخدمة بشكل مستمر أو خلوها
               من الأخطاء. لا نتحمل المسؤولية عن أي خسائر ناتجة عن استخدام أو
               عدم القدرة على استخدام الخدمة.

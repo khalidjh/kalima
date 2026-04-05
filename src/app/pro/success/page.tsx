@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { Sparkles } from "lucide-react";
@@ -8,28 +7,9 @@ import { Sparkles } from "lucide-react";
 function SuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [status, setStatus] = useState<"loading" | "success" | "failed">("loading");
 
   const paymentStatus = searchParams.get("status");
-
-  useEffect(() => {
-    if (paymentStatus === "paid") {
-      setStatus("success");
-    } else {
-      setStatus("failed");
-    }
-  }, [paymentStatus]);
-
-  if (status === "loading") {
-    return (
-      <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center mx-auto mb-6 animate-pulse">
-          <span className="text-2xl">⏳</span>
-        </div>
-        <p className="text-muted">جارٍ التحقق من الدفع...</p>
-      </div>
-    );
-  }
+  const status = paymentStatus === "paid" ? "success" : "failed";
 
   if (status === "failed") {
     return (

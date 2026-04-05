@@ -55,6 +55,7 @@ export default function Home() {
   useEffect(() => {
     const word = getDailyWord();
     const pNum = getPuzzleNumber();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAnswer(word);
     setPuzzleNumber(pNum);
 

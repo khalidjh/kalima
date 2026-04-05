@@ -12,7 +12,6 @@ export default function Toast({ message, duration = 2000, onDismiss }: ToastProp
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    setVisible(true);
     const timer = setTimeout(() => {
       setVisible(false);
       setTimeout(onDismiss, 300);

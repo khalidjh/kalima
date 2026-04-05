@@ -41,14 +41,12 @@ export async function getSubscription(uid: string): Promise<SubscriptionData> {
 
 export function useIsPro(user: User | null): { isPro: boolean; proLoading: boolean } {
   const [isPro, setIsPro] = useState(false);
-  const [proLoading, setProLoading] = useState(true);
+  const [proLoading, setProLoading] = useState(!!user);
 
   useEffect(() => {
-    if (!user) {
-      setIsPro(false);
-      setProLoading(false);
-      return;
-    }
+    if (!user) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setProLoading(true);
     checkIsPro(user).then((result) => {
       setIsPro(result);
       setProLoading(false);

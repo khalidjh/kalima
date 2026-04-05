@@ -82,7 +82,7 @@ export default function HeaderAuth() {
           )}
           <button
             onPointerDown={() => { signOut(); setOpen(false); }}
-            className="w-full text-right px-4 py-2.5 text-sm text-text hover:bg-primary/10 transition-colors flex items-center gap-2"
+            className="w-full text-right px-4 py-2.5 text-sm text-white hover:bg-primary/10 transition-colors flex items-center gap-2"
           >
             <LogOut size={14} />
             تسجيل الخروج

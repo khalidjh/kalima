@@ -40,8 +40,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
 }
 
 export default function AdminPage() {
-  const [isAuthed, setIsAuthed] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(() => getCookie("kalima_admin") === "1");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [stats, setStats] = useState<Stats | null>(null);
@@ -49,18 +48,13 @@ export default function AdminPage() {
   const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
-    const cookie = getCookie("kalima_admin");
-    if (cookie === "1") setIsAuthed(true);
-    setChecked(true);
-  }, []);
-
-  useEffect(() => {
     if (!isAuthed) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setFetchError("");
     fetch("/api/admin/stats", {
       headers: {
-        "x-admin-secret": "kalima_admin_secret_2026",
+        "x-admin-secret": process.env.NEXT_PUBLIC_ADMIN_SECRET ?? "kalima_admin_secret_2026",
       },
     })
       .then((r) => {
@@ -88,8 +82,6 @@ export default function AdminPage() {
     setIsAuthed(false);
     setStats(null);
   }
-
-  if (!checked) return null;
 
   if (!isAuthed) {
     return (

@@ -1,6 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { Cairo } from "next/font/google";
 import "./globals.css";
+
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-cairo",
+  display: "swap",
+});
 
 import FirebaseInit from "@/components/FirebaseInit";
 import { AuthProvider } from "@/lib/auth";
@@ -44,16 +52,6 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cairo+Play:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <meta name="theme-color" content="#0A0A0A" />
@@ -63,6 +61,7 @@ export default function RootLayout({
           src="https://plausible.io/js/script.js"
         ></script>
         {/* Google Analytics */}
+        {/* eslint-disable-next-line @next/next/next-script-for-ga */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-9R0XYH9YQG"></script>
         <script dangerouslySetInnerHTML={{ __html: `
           window.dataLayer = window.dataLayer || [];
@@ -78,7 +77,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="كلمة" />
       </head>
       <body
-        className="bg-background text-white font-arabic antialiased overflow-hidden flex flex-col h-dvh"
+        className={`${cairo.variable} bg-background text-white font-arabic antialiased overflow-hidden flex flex-col h-dvh`}
       >
         <AuthProvider>
           {/* Kalima brand header */}
