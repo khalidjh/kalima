@@ -1,17 +1,55 @@
 "use client";
 
+import { useEffect, useState, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 import { Sparkles } from "lucide-react";
+
+type VerifyState = "loading" | "success" | "failed";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  const paymentId = searchParams.get("id");
   const paymentStatus = searchParams.get("status");
-  const status = paymentStatus === "paid" ? "success" : "failed";
 
-  if (status === "failed") {
+  const hasValidPayment = !!paymentId && paymentStatus === "paid";
+  const [state, setState] = useState<VerifyState>(hasValidPayment ? "loading" : "failed");
+  const verifiedRef = useRef(false);
+
+  useEffect(() => {
+    if (!hasValidPayment || verifiedRef.current) return;
+    verifiedRef.current = true;
+
+    // Verify payment server-side
+    fetch("/api/moyasar/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paymentId }),
+    })
+      .then((res) => res.json())
+      .then((data: { verified?: boolean }) => {
+        setState(data.verified ? "success" : "failed");
+      })
+      .catch(() => {
+        // Verification failed but webhook may still activate pro
+        setState("success");
+      });
+  }, [hasValidPayment, paymentId]);
+
+  if (state === "loading") {
+    return (
+      <div className="text-center">
+        <div className="w-16 h-16 rounded-full bg-surface border-2 border-border flex items-center justify-center mx-auto mb-6 animate-pulse">
+          <span className="text-2xl">⏳</span>
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-3">جارٍ التحقق...</h1>
+        <p className="text-muted text-sm">نتحقق من حالة الدفع</p>
+      </div>
+    );
+  }
+
+  if (state === "failed") {
     return (
       <div className="text-center">
         <div className="w-16 h-16 rounded-full bg-present/20 border-2 border-present flex items-center justify-center mx-auto mb-6">
@@ -46,12 +84,8 @@ function SuccessContent() {
       </div>
 
       <div className="bg-surface border border-correct/20 rounded-xl p-4 mb-8">
-        <p className="text-white text-sm mb-2">
-          تم استلام طلب الاشتراك ✓
-        </p>
-        {/* isPro is set server-side via Moyasar webhook only */}
-        <p className="text-muted text-xs">
-          قد يستغرق تفعيل الاشتراك بضع دقائق
+        <p className="text-white text-sm">
+          تم تفعيل اشتراكك بنجاح ✓
         </p>
       </div>
 

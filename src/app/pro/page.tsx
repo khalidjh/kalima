@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import { useAuth } from "@/lib/auth";
-import { useIsPro } from "@/lib/subscription";
+import { useIsPro, MOYASAR_PUBLISHABLE_KEY } from "@/lib/subscription";
 import { Sparkles } from "lucide-react";
 
 const FEATURES = [
@@ -15,43 +16,67 @@ const FEATURES = [
   { text: "تزامن التقدم عبر الأجهزة" },
 ];
 
+const AMOUNT_HALALAS = 999; // 9.99 SAR
+
+declare global {
+  interface Window {
+    Moyasar?: {
+      init: (config: Record<string, unknown>) => void;
+    };
+  }
+}
+
 export default function ProPage() {
   const { user, loading: authLoading, signInWithGoogle } = useAuth();
   const { isPro, proLoading } = useIsPro(user);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  const PAYMENTS_LIVE = true;
-
-  const handleSubscribe = async () => {
-    if (!user) return;
-    if (!PAYMENTS_LIVE) {
-      setError("🚧 الدفع قريباً! سيتم إطلاق الاشتراك قريباً — ترقبوا الإعلان.");
-      return;
-    }
-    setCheckoutLoading(true);
-    try {
-      const res = await fetch("/api/moyasar/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid: user.uid }),
-      });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) {
-        throw new Error(data.error ?? "حدث خطأ في الاتصال");
-      }
-      window.location.href = data.url;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "حدث خطأ غير متوقع");
-      setCheckoutLoading(false);
-    }
-  };
+  const formRef = useRef<HTMLDivElement>(null);
+  const formInitRef = useRef<string | null>(null);
+  const [moyasarReady, setMoyasarReady] = useState(false);
 
   const isLoading = (authLoading && !user) || proLoading;
+  const showForm = user && !isPro && !isLoading && moyasarReady;
+
+  // Initialize Moyasar form when SDK is loaded and user is ready
+  useEffect(() => {
+    if (!showForm || !formRef.current || !window.Moyasar) return;
+    if (!MOYASAR_PUBLISHABLE_KEY) return;
+    // Only init once per user
+    if (formInitRef.current === user?.uid) return;
+    formInitRef.current = user?.uid ?? null;
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://kalima.fun";
+
+    window.Moyasar.init({
+      element: formRef.current,
+      amount: AMOUNT_HALALAS,
+      currency: "SAR",
+      description: "كلمة برو - اشتراك شهري",
+      publishable_api_key: MOYASAR_PUBLISHABLE_KEY,
+      callback_url: `${appUrl}/pro/success`,
+      methods: ["creditcard"],
+      supported_networks: ["mada", "visa", "mastercard"],
+      language: "ar",
+      metadata: { uid: user?.uid ?? "" },
+      on_completed: async (payment: Record<string, unknown>) => {
+        if (payment?.id) {
+          sessionStorage.setItem("moyasar_payment_id", payment.id as string);
+        }
+      },
+    });
+  }, [showForm, user?.uid]);
 
   return (
     <div className="h-full overflow-y-auto" dir="rtl">
+      {/* Moyasar CSS */}
+      <link rel="stylesheet" href="https://cdn.moyasar.com/mpf/1.14.0/moyasar.css" />
+      {/* Moyasar JS */}
+      <Script
+        src="https://cdn.moyasar.com/mpf/1.14.0/moyasar.js"
+        strategy="afterInteractive"
+        onReady={() => setMoyasarReady(true)}
+      />
+
       <div className="max-w-lg mx-auto px-4 py-6">
         {/* Back button */}
         <button
@@ -136,16 +161,11 @@ export default function ProPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {error && (
-                <p className="text-present text-center text-sm">{error}</p>
+              {/* Moyasar payment form renders here */}
+              <div ref={formRef} className="moyasar-form" />
+              {!moyasarReady && (
+                <div className="h-14 bg-surface rounded-xl animate-pulse" />
               )}
-              <button
-                onClick={handleSubscribe}
-                disabled={checkoutLoading}
-                className="w-full h-14 rounded-xl bg-primary hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed text-[#0A0A0A] font-bold text-lg transition-opacity"
-              >
-                {checkoutLoading ? "جاري التحويل..." : "اشترك الآن"}
-              </button>
               <p className="text-muted text-center text-xs">
                 يمكنك الإلغاء في أي وقت · دفع آمن عبر Moyasar
               </p>
