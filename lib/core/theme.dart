@@ -5,6 +5,16 @@ class KalimaTheme {
   // Brutalist colors
   static const Color background = Color(0xFFFFFFFF);  // white
   static const Color surface = Color(0xFFFFFFFF);     // white
+
+  static Color lighten(Color c, double amount) {
+    final hsl = HSLColor.fromColor(c);
+    return hsl.withLightness((hsl.lightness + amount).clamp(0, 1)).toColor();
+  }
+
+  static Color darken(Color c, double amount) {
+    final hsl = HSLColor.fromColor(c);
+    return hsl.withLightness((hsl.lightness - amount).clamp(0, 1)).toColor();
+  }
   static const Color accent = Color(0xFFCCFF00);      // lime
   static const Color correct = Color(0xFF000000);     // black
   static const Color present = Color(0xFF999999);     // gray
