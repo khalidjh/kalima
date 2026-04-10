@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class KalimaTheme {
-  // Brutalist colors
-  static const Color background = Color(0xFFFFFFFF);  // white
-  static const Color surface = Color(0xFFFFFFFF);     // white
+  // Dark vibrant colors
+  static const Color background = Color(0xFF0F0C00);
+  static const Color surface = Color(0xFF1A1A2E);
+  static const Color accent = Color(0xFFCCFF00);
+  static const Color correct = Color(0xFF22A65A);
+  static const Color present = Color(0xFFF5820A);
+  static const Color absent = Color(0xFF3A3A3C);
+  static const Color border = Color(0xFF2A2A3C);
+  static const Color borderFilled = Color(0xFF565656);
+  static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color textMuted = Color(0xFF818384);
 
   static Color lighten(Color c, double amount) {
     final hsl = HSLColor.fromColor(c);
@@ -15,95 +23,97 @@ class KalimaTheme {
     final hsl = HSLColor.fromColor(c);
     return hsl.withLightness((hsl.lightness - amount).clamp(0, 1)).toColor();
   }
-  static const Color accent = Color(0xFFCCFF00);      // lime
-  static const Color correct = Color(0xFF000000);     // black
-  static const Color present = Color(0xFF999999);     // gray
-  static const Color absent = Color(0xFFCCCCCC);      // light gray
-  static const Color border = Color(0xFF000000);      // black
-  static const Color borderFilled = Color(0xFF000000);
-  static const Color textPrimary = Color(0xFF000000); // black
-  static const Color textMuted = Color(0xFF666666);   // dark gray
 
-  // Brutalist: no gradients, solid colors only
+  // Subtle radial gradient for atmosphere
   static RadialGradient get radialBackground => const RadialGradient(
         center: Alignment.center,
         radius: 0.8,
         colors: [
-          Color(0xFFFFFFFF), // white throughout
-          Color(0xFFFFFFFF),
-          Color(0xFFFFFFFF),
+          Color(0xFF1A1A2E),
+          Color(0xFF0F0C00),
         ],
       );
 
-  // Brutal key decoration: 3px border, 4px offset shadow, no gradient
+  // Keyboard key decoration
   static BoxDecoration keyDecoration(Color bg) {
     return BoxDecoration(
       color: bg,
-      border: Border.all(color: Colors.black, width: 3),
+      borderRadius: BorderRadius.circular(8),
       boxShadow: [
         BoxShadow(
-          color: Colors.black,
-          blurRadius: 0,  // NO BLUR
-          offset: const Offset(4, 4),
+          color: Colors.black.withValues(alpha: 0.3),
+          blurRadius: 2,
+          offset: const Offset(0, 2),
         ),
       ],
     );
   }
 
-  // Game card decoration: 3px border, offset shadow
+  // Game card decoration
   static BoxDecoration gameCardDecoration(Color color, {bool isLocked = false}) {
     return BoxDecoration(
-      color: Colors.white,
-      border: Border.all(
-        color: isLocked ? Colors.black.withValues(alpha: 0.3) : Color(0xFFCCFF00),
-        width: 3,
+      color: surface,
+      borderRadius: BorderRadius.circular(14),
+      border: Border(
+        left: BorderSide(
+          color: isLocked ? color.withValues(alpha: 0.2) : accent,
+          width: 3,
+        ),
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black,
-          blurRadius: 0,  // NO BLUR
-          offset: const Offset(4, 4),
+          color: Colors.black.withValues(alpha: 0.2),
+          blurRadius: 8,
+          offset: const Offset(0, 4),
         ),
       ],
     );
   }
 
-  // Tile decoration: 3px border, 4px shadow
+  // Tile decoration — vibrant flat, rounded
   static BoxDecoration tile3D({
     required Color color,
     required bool isRevealed,
     required bool hasLetter,
   }) {
     return BoxDecoration(
-      color: isRevealed ? color : Colors.white,
-      border: Border.all(color: Colors.black, width: 3),
+      color: isRevealed ? color : (hasLetter ? surface : surface.withValues(alpha: 0.5)),
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(
+        color: isRevealed
+            ? lighten(color, 0.2)
+            : hasLetter
+                ? borderFilled
+                : border.withValues(alpha: 0.5),
+        width: 2,
+      ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black,
-          blurRadius: 0,
-          offset: const Offset(4, 4),
+          color: Colors.black.withValues(alpha: 0.25),
+          blurRadius: 3,
+          offset: const Offset(0, 2),
         ),
       ],
     );
   }
 
-  // NO gloss overlay
-  static BoxDecoration get tileGlossOverlay => BoxDecoration();
+  // No gloss overlay
+  static BoxDecoration get tileGlossOverlay => const BoxDecoration();
 
   static ThemeData get darkTheme {
     return ThemeData(
-      brightness: Brightness.light,
+      brightness: Brightness.dark,
       scaffoldBackgroundColor: background,
-      colorScheme: const ColorScheme.light(
+      colorScheme: const ColorScheme.dark(
         primary: accent,
         surface: surface,
-        error: Color(0xFFFF0000),
+        error: Color(0xFFFF4444),
       ),
       textTheme: GoogleFonts.cairoTextTheme(
-        ThemeData.light().textTheme,
+        ThemeData.dark().textTheme,
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.white,
+        backgroundColor: background,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.cairo(
@@ -114,25 +124,17 @@ class KalimaTheme {
         iconTheme: const IconThemeData(color: textPrimary),
       ),
       cardTheme: CardThemeData(
-        color: Colors.white,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
-          side: const BorderSide(color: Colors.black, width: 3),
-        ),
+        color: surface,
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFFCCFF00),
-          foregroundColor: Colors.black,
+          backgroundColor: accent,
+          foregroundColor: const Color(0xFF0F0C00),
           textStyle: GoogleFonts.cairo(fontWeight: FontWeight.w900, fontSize: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-            side: const BorderSide(color: Colors.black, width: 3),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          elevation: 0,
-          shadowColor: Colors.transparent,
         ),
       ),
     );

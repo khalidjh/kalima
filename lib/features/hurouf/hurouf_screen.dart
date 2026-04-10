@@ -391,8 +391,8 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
               height: 48,
               decoration: BoxDecoration(
                 color: bg,
-                border: Border.all(color: Colors.black, width: 2),
-                boxShadow: [BoxShadow(color: Colors.black, offset: Offset(3, 3))],
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 2, offset: Offset(0, 2))],
               ),
               child: Center(
                 child: Text(
