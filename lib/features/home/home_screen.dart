@@ -36,13 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         children: [
           const SizedBox(height: 24),
-          // Clean title — no glow, no shimmer
           Text(
             'كلمة',
             style: GoogleFonts.cairo(
               fontSize: 48,
               fontWeight: FontWeight.w900,
-              color: KalimaTheme.accent,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 4),
@@ -54,32 +53,35 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 36),
-          // Game cards
           _GameCard(
             title: 'حروف',
             subtitle: 'خمّن الكلمة المخفية',
             icon: Icons.text_fields_rounded,
-            color: KalimaTheme.correct,
+            tileColor: const Color(0xFF4ECDC4), // teal
             badge: 'حزورة #${_getPuzzleNumber()}',
+            badgeColor: const Color(0xFF4ECDC4),
             onTap: () => context.push('/hurouf'),
-          ).animate().fadeIn(duration: 400.ms),
-          const SizedBox(height: 12),
+          ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.05, end: 0),
+          const SizedBox(height: 14),
           _GameCard(
             title: 'روابط',
             subtitle: 'صنّف الكلمات إلى مجموعات',
             icon: Icons.grid_view_rounded,
-            color: KalimaTheme.present,
+            tileColor: const Color(0xFFFF6B6B), // coral/pink
             badge: 'تحدي يومي',
+            badgeColor: const Color(0xFFFF6B6B),
             onTap: () => context.push('/rawabet'),
-          ).animate(delay: 100.ms).fadeIn(duration: 400.ms),
-          const SizedBox(height: 12),
+          ).animate(delay: 100.ms).fadeIn(duration: 400.ms).slideY(begin: 0.05, end: 0),
+          const SizedBox(height: 14),
           _GameCard(
             title: 'قريباً',
             subtitle: 'ألعاب جديدة في الطريق',
             icon: Icons.lock_outline_rounded,
-            color: KalimaTheme.absent,
+            tileColor: const Color(0xFF3A3A3C),
+            badge: null,
+            badgeColor: Colors.grey,
             onTap: null,
-          ).animate(delay: 200.ms).fadeIn(duration: 400.ms),
+          ).animate(delay: 200.ms).fadeIn(duration: 400.ms).slideY(begin: 0.05, end: 0),
         ],
       ),
     );
@@ -138,16 +140,18 @@ class _GameCard extends StatefulWidget {
   final String title;
   final String subtitle;
   final IconData icon;
-  final Color color;
+  final Color tileColor;
   final String? badge;
+  final Color badgeColor;
   final VoidCallback? onTap;
 
   const _GameCard({
     required this.title,
     required this.subtitle,
     required this.icon,
-    required this.color,
+    required this.tileColor,
     this.badge,
+    required this.badgeColor,
     this.onTap,
   });
 
@@ -166,22 +170,23 @@ class _GameCardState extends State<_GameCard> {
       onTapUp: widget.onTap != null ? (_) { setState(() => _pressed = false); widget.onTap!(); } : null,
       onTapCancel: widget.onTap != null ? () => setState(() => _pressed = false) : null,
       child: AnimatedScale(
-        scale: _pressed ? 0.97 : 1.0,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOut,
+        scale: _pressed ? 0.96 : 1.0,
+        duration: const Duration(milliseconds: 100),
         child: Container(
           height: 130,
           decoration: BoxDecoration(
-            color: KalimaTheme.surface,
-            borderRadius: BorderRadius.circular(14),
-            border: isLocked
-                ? Border.all(color: KalimaTheme.border, width: 1)
-                : Border.all(color: widget.color.withValues(alpha: 0.5), width: 2),
+            // Vibrant colored background instead of dark
+            color: isLocked
+                ? KalimaTheme.surface
+                : widget.tileColor,
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+                color: isLocked
+                    ? Colors.black.withValues(alpha: 0.1)
+                    : widget.tileColor.withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
               ),
             ],
           ),
@@ -197,7 +202,7 @@ class _GameCardState extends State<_GameCard> {
                       Text(
                         widget.title,
                         style: GoogleFonts.cairo(
-                          fontSize: 26,
+                          fontSize: 28,
                           fontWeight: FontWeight.w900,
                           color: isLocked ? KalimaTheme.textMuted : Colors.white,
                         ),
@@ -207,7 +212,9 @@ class _GameCardState extends State<_GameCard> {
                         widget.subtitle,
                         style: GoogleFonts.cairo(
                           fontSize: 13,
-                          color: KalimaTheme.textMuted,
+                          color: isLocked
+                              ? KalimaTheme.textMuted
+                              : Colors.white.withValues(alpha: 0.85),
                         ),
                       ),
                       if (widget.badge != null && !isLocked) ...[
@@ -215,15 +222,15 @@ class _GameCardState extends State<_GameCard> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: widget.color.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(6),
+                            color: Colors.black.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             widget.badge!,
                             style: GoogleFonts.cairo(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
-                              color: widget.color,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -232,15 +239,17 @@ class _GameCardState extends State<_GameCard> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: widget.color.withValues(alpha: isLocked ? 0.08 : 0.15),
-                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white.withValues(alpha: isLocked ? 0.05 : 0.2),
+                    borderRadius: BorderRadius.circular(14),
                   ),
                   child: Icon(
                     widget.icon,
-                    size: 28,
-                    color: widget.color.withValues(alpha: isLocked ? 0.3 : 0.9),
+                    size: 30,
+                    color: isLocked
+                        ? KalimaTheme.textMuted
+                        : Colors.white,
                   ),
                 ),
               ],

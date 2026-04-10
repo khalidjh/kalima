@@ -6,9 +6,9 @@ class KalimaTheme {
   static const Color background = Color(0xFF0F0C00);
   static const Color surface = Color(0xFF1A1A2E);
   static const Color accent = Color(0xFFCCFF00);
-  static const Color correct = Color(0xFF22A65A);
-  static const Color present = Color(0xFFF5820A);
-  static const Color absent = Color(0xFF3A3A3C);
+  static const Color correct = Color(0xFF4ECDC4);   // vibrant teal
+  static const Color present = Color(0xFFFFE66D);   // bright yellow
+  static const Color absent = Color(0xFF45B7D1);    // sky blue
   static const Color border = Color(0xFF2A2A3C);
   static const Color borderFilled = Color(0xFF565656);
   static const Color textPrimary = Color(0xFFFFFFFF);
