@@ -366,8 +366,9 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
 
     Widget buildKey(String letter, {double flex = 1}) {
       final st = keyStates[letter];
-      Color bg;
+      Color bg = KalimaTheme.surface;
       Color fg = Colors.white;
+
       if (st == LetterState.correct) {
         bg = KalimaTheme.correct;
       } else if (st == LetterState.present) {
@@ -375,36 +376,30 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
       } else if (st == LetterState.absent) {
         bg = const Color(0xFF1A1500);
         fg = const Color(0xFF4A3F00);
-      } else {
-        bg = KalimaTheme.surface;
       }
 
       return Expanded(
         flex: (flex * 10).round(),
-        child: GestureDetector(
-          onTapDown: disabled
-              ? null
-              : (_) {
-                  HapticFeedback.lightImpact();
-                  notifier.onKey(letter);
-                },
-          child: _KeyPressBuilder(
-            builder: (pressed, child) {
-              return Transform.scale(
-                scale: pressed ? 0.9 : 1.0,
-                child: child,
-              );
+        child: Padding(
+          padding: const EdgeInsets.all(2),
+          child: GestureDetector(
+            onTapDown: disabled ? null : (_) {
+              HapticFeedback.lightImpact();
+              notifier.onKey(letter);
             },
             child: Container(
               height: 48,
-              margin: const EdgeInsets.all(2),
-              decoration: KalimaTheme.keyDecoration(bg),
+              decoration: BoxDecoration(
+                color: bg,
+                border: Border.all(color: Colors.black, width: 2),
+                boxShadow: [BoxShadow(color: Colors.black, offset: Offset(3, 3))],
+              ),
               child: Center(
                 child: Text(
                   letter,
                   style: GoogleFonts.cairo(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                     color: fg,
                   ),
                 ),
@@ -467,26 +462,7 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
   }
 }
 
-class _KeyPressBuilder extends StatefulWidget {
-  final Widget Function(bool pressed, Widget child) builder;
-  final Widget child;
-  const _KeyPressBuilder({required this.builder, required this.child});
-  @override
-  State<_KeyPressBuilder> createState() => _KeyPressBuilderState();
-}
 
-class _KeyPressBuilderState extends State<_KeyPressBuilder> {
-  bool _pressed = false;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      child: widget.builder(_pressed, widget.child),
-    );
-  }
-}
 
 class _RowData {
   final List<String> letters;
