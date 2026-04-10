@@ -20,13 +20,13 @@ const ROW4 = ["ة", "ى", "إ", "أ", "آ", "ء", "ئ", "ؤ"];
 function getKeyStyle(state: LetterState | undefined): string {
   switch (state) {
     case "correct":
-      return "bg-correct text-white";
+      return "bg-black text-[#CCFF00] border-[#CCFF00]";
     case "present":
-      return "bg-present text-white";
+      return "bg-gray-400 text-black border-gray-400";
     case "absent":
-      return "bg-[#1A1500] text-[#4A3F00] border border-[#2A2200]";
+      return "bg-gray-300 text-gray-500 border-gray-300 opacity-50";
     default:
-      return "bg-surface text-[#FFF8DC]";
+      return "bg-white text-black border-black";
   }
 }
 
@@ -45,7 +45,7 @@ function LetterKey({ letter, state, onKey, disabled }: LetterKeyProps) {
         if (!disabled) { playTap(); onKey(letter); }
       }}
       disabled={disabled}
-      className={`h-10 sm:h-12 w-full rounded text-sm font-bold select-none touch-manipulation transition-colors ${getKeyStyle(state)}`}
+      className={`h-10 sm:h-12 w-full rounded-none text-sm font-brutal select-none touch-manipulation transition-all border-2 shadow-brutal-sm active:shadow-brutal-sm active:translate-x-0.5 active:translate-y-0.5 ${getKeyStyle(state)}`}
     >
       {letter}
     </button>

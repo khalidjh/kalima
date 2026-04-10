@@ -89,7 +89,7 @@ export default function HomePage() {
         <div className="flex flex-col gap-3">
           {/* حروف card — active */}
           <Link href="/" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
+            <div className="border-brutal-accent shadow-brutal bg-white text-black p-6 rounded-none group-hover:shadow-brutal-lg transition-shadow">
               <div className="flex items-start gap-4">
                 {/* Icon */}
                 <HoroufIcon />
@@ -97,18 +97,18 @@ export default function HomePage() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">حروف</h3>
+                    <h3 className="text-lg font-brutal text-black">حروف</h3>
                     {gameCompleted ? (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
                         ✓ أنهيت اليوم
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                      <span className="inline-flex items-center gap-1 text-xs font-brutal text-[#CCFF00] bg-black px-2.5 py-0.5 rounded-none border-2 border-[#CCFF00] flex-shrink-0">
                         جاهزة
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-muted leading-relaxed">
+                  <p className="text-sm text-gray-700 leading-relaxed">
                     خمّن الكلمة اليومية في ٦ محاولات
                   </p>
                 </div>
@@ -118,7 +118,7 @@ export default function HomePage() {
 
           {/* روابط card — active */}
           <Link href="/rawabet" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
+            <div className="border-brutal-accent shadow-brutal bg-white text-black p-6 rounded-none group-hover:shadow-brutal-lg transition-shadow">
               <div className="flex items-start gap-4">
                 {/* Icon */}
                 <RawabetIcon />
@@ -126,18 +126,18 @@ export default function HomePage() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">روابط</h3>
+                    <h3 className="text-lg font-brutal text-black">روابط</h3>
                     {rawabetCompleted ? (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
                         ✓ أنهيت اليوم
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                      <span className="inline-flex items-center gap-1 text-xs font-brutal text-[#CCFF00] bg-black px-2.5 py-0.5 rounded-none border-2 border-[#CCFF00] flex-shrink-0">
                         العب
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-muted leading-relaxed">
+                  <p className="text-sm text-gray-700 leading-relaxed">
                     اربط الكلمات المتشابهة في مجموعات
                   </p>
                 </div>

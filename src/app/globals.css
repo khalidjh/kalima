@@ -196,3 +196,98 @@ html, body {
 .animate-fire-pulse {
   animation: fire-pulse 1.4s ease-in-out infinite;
 }
+
+/* Brutalist Design System */
+
+/* Borders */
+.border-brutal {
+  border: 3px solid #000;
+}
+
+.border-brutal-accent {
+  border: 3px solid #CCFF00;
+}
+
+.border-brutal-left-accent {
+  border-left: 4px solid #CCFF00;
+}
+
+/* Shadows */
+.shadow-brutal {
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+}
+
+.shadow-brutal-lg {
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+}
+
+.shadow-brutal-sm {
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+}
+
+/* Typography */
+.font-brutal {
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+/* Interaction States */
+.pressed {
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 1) !important;
+  transform: translate(2px, 2px);
+}
+
+.hover-lift:hover {
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+  transform: translate(0, 0);
+}
+
+/* Remove all glows */
+.no-glow {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* Cards */
+.card-brutal {
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+  background: #fff;
+  padding: 20px;
+}
+
+.card-brutal.accent {
+  border: 3px solid #CCFF00;
+}
+
+/* Buttons */
+.btn-brutal {
+  border: 3px solid #000;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 1);
+  font-weight: 900;
+  padding: 12px 24px;
+  cursor: pointer;
+  background: #fff;
+  color: #000;
+  transition: all 0.1s ease;
+}
+
+.btn-brutal:active,
+.btn-brutal.pressed {
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 1);
+  transform: translate(2px, 2px);
+}
+
+.btn-brutal.accent {
+  border-color: #CCFF00;
+  background: #000;
+  color: #CCFF00;
+}
+
+/* Remove neon glows from existing elements */
+[class*="glow"],
+[class*="neon"],
+.gradient {
+  box-shadow: none !important;
+  background: none !important;
+}

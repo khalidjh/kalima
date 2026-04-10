@@ -8,15 +8,15 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="flex-shrink-0 h-14 bg-surface border-t border-border"
+      className="flex-shrink-0 h-14 bg-white border-t-4 border-t-[#CCFF00]"
       dir="rtl"
     >
-      <div className="flex items-center justify-around h-full max-w-lg mx-auto px-4">
+      <div className="flex items-center justify-around h-full max-w-lg mx-auto px-4 text-black">
         {/* الرئيسية — Home hub */}
         <Link
           href="/home"
-          className={`flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-0 ${
-            pathname === "/home" ? "text-primary-light" : "text-muted"
+          className={`flex flex-col items-center gap-0.5 text-xs font-brutal transition-colors min-w-0 ${
+            pathname === "/home" ? "text-[#CCFF00]" : "text-gray-600"
           }`}
         >
           <svg
@@ -34,8 +34,8 @@ export default function BottomNav() {
         {/* حروف — Wordle game */}
         <Link
           href="/"
-          className={`flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-0 ${
-            pathname === "/" ? "text-primary-light" : "text-muted"
+          className={`flex flex-col items-center gap-0.5 text-xs font-brutal transition-colors min-w-0 ${
+            pathname === "/" ? "text-[#CCFF00]" : "text-gray-600"
           }`}
         >
           <svg
@@ -56,8 +56,8 @@ export default function BottomNav() {
         {/* روابط — Connections */}
         <Link
           href="/rawabet"
-          className={`flex flex-col items-center gap-0.5 text-xs font-medium transition-colors min-w-0 ${
-            pathname === "/rawabet" ? "text-primary-light" : "text-muted"
+          className={`flex flex-col items-center gap-0.5 text-xs font-brutal transition-colors min-w-0 ${
+            pathname === "/rawabet" ? "text-[#CCFF00]" : "text-gray-600"
           }`}
         >
           <svg
