@@ -1,3 +1,4 @@
+
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -100,68 +101,41 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               const SizedBox(height: 28),
-              // Title — layered glow + gradient chrome effect
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Outer wide glow
-                  Text(
+              // Title with glow shadow
+              Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: KalimaTheme.accent.withValues(alpha: 0.3),
+                      blurRadius: 30,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFFFFFFFF),
+                      Color(0xFFEEFFCC),
+                      Color(0xFFCCFF00),
+                      Color(0xFFFFFFDD),
+                    ],
+                    stops: [0.0, 0.3, 0.65, 1.0],
+                  ).createShader(bounds),
+                  child: Text(
                     'كلمة',
                     style: GoogleFonts.cairo(
-                      fontSize: 72,
+                      fontSize: 56,
                       fontWeight: FontWeight.w900,
-                      foreground: Paint()
-                        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 40)
-                        ..color = KalimaTheme.accent.withValues(alpha: 0.25),
-                    ),
-                  ),
-                  // Inner tight glow
-                  Text(
-                    'كلمة',
-                    style: GoogleFonts.cairo(
-                      fontSize: 72,
-                      fontWeight: FontWeight.w900,
-                      foreground: Paint()
-                        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14)
-                        ..color = KalimaTheme.accent.withValues(alpha: 0.45),
-                    ),
-                  ),
-                  // Main chrome-gradient text
-                  ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFFFFFFFF),
-                        Color(0xFFEEFFCC),
-                        Color(0xFFCCFF00),
-                        Color(0xFFFFFFDD),
+                      color: Colors.white,
+                      shadows: const [
+                        Shadow(color: Colors.black, blurRadius: 8, offset: Offset(0, 4)),
                       ],
-                      stops: [0.0, 0.3, 0.65, 1.0],
-                    ).createShader(bounds),
-                    child: Text(
-                      'كلمة',
-                      style: GoogleFonts.cairo(
-                        fontSize: 72,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                        letterSpacing: -1,
-                        shadows: const [
-                          Shadow(
-                            color: Colors.black,
-                            blurRadius: 10,
-                            offset: Offset(0, 5),
-                          ),
-                          Shadow(
-                            color: Colors.black,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
-                ],
+                ),
               )
                   .animate()
                   .fadeIn(duration: 500.ms)

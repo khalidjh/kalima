@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" width="280" height="64">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ade80"/>
+      <stop offset="100%" style="stop-color:#16a34a"/>
+    </linearGradient>
+    <linearGradient id="yellowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <linearGradient id="grayGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6b7280"/>
+      <stop offset="100%" style="stop-color:#4b5563"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 5 tiles, size 36, gap 5 -->
+  <rect x="0"   y="14" width="36" height="36" rx="7" fill="url(#greenGrad)"/>
+  <rect x="41"  y="14" width="36" height="36" rx="7" fill="url(#grayGrad)"/>
+  <rect x="82"  y="14" width="36" height="36" rx="7" fill="url(#yellowGrad)"/>
+  <rect x="123" y="14" width="36" height="36" rx="7" fill="url(#grayGrad)"/>
+  <rect x="164" y="14" width="36" height="36" rx="7" fill="url(#greenGrad)"/>
+
+  <!-- كلمة Arabic text -->
+  <text
+    x="214"
+    y="44"
+    font-family="'Cairo, Traditional Arabic, Arial',sans-serif"
+    font-size="34"
+    font-weight="900"
+    fill="white"
+    filter="url(#glow)"
+  >كلمة</text>
+</svg>
