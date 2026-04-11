@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -31,96 +32,192 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeContent() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Column(
-        children: [
-          const SizedBox(height: 24),
-          // Title with layered glow
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              // Glow layer
-              Text(
-                'كلمة',
-                style: GoogleFonts.cairo(
-                  fontSize: 56,
-                  fontWeight: FontWeight.w900,
-                  foreground: Paint()
-                    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 20)
-                    ..color = KalimaTheme.accent.withValues(alpha: 0.3),
-                ),
-              ),
-              // Main text with shadow depth
-              Text(
-                'كلمة',
-                style: GoogleFonts.cairo(
-                  fontSize: 56,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      color: KalimaTheme.accent.withValues(alpha: 0.5),
-                      blurRadius: 30,
+    return Stack(
+      children: [
+        // Decorative background orbs — colored glow blobs for depth
+        IgnorePointer(
+          child: Positioned.fill(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -30,
+                  right: -70,
+                  child: Container(
+                    width: 280,
+                    height: 280,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          KalimaTheme.cardTeal.withValues(alpha: 0.14),
+                          KalimaTheme.cardTeal.withValues(alpha: 0.0),
+                        ],
+                      ),
                     ),
-                    const Shadow(
-                      color: Colors.black,
-                      blurRadius: 4,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'ألعاب كلمات يومية',
-            style: GoogleFonts.cairo(
-              fontSize: 15,
-              color: KalimaTheme.textMuted,
-              fontWeight: FontWeight.w500,
+                Positioned(
+                  top: 200,
+                  left: -90,
+                  child: Container(
+                    width: 300,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          KalimaTheme.cardCoral.withValues(alpha: 0.11),
+                          KalimaTheme.cardCoral.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 40,
+                  right: -50,
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          KalimaTheme.accent.withValues(alpha: 0.07),
+                          KalimaTheme.accent.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 40),
-          // Game cards with premium 3D elevation
-          _GameCard(
-            title: 'حروف',
-            subtitle: 'خمّن الكلمة المخفية',
-            icon: Icons.text_fields_rounded,
-            color: KalimaTheme.cardTeal,
-            badge: 'حزورة #${_getPuzzleNumber()}',
-            onTap: () => context.push('/hurouf'),
-          )
-              .animate()
-              .fadeIn(duration: 600.ms, curve: Curves.easeOut)
-              .slideY(begin: 0.15, end: 0, duration: 700.ms, curve: Curves.elasticOut),
-          const SizedBox(height: 16),
-          _GameCard(
-            title: 'روابط',
-            subtitle: 'صنّف الكلمات إلى مجموعات',
-            icon: Icons.grid_view_rounded,
-            color: KalimaTheme.cardCoral,
-            badge: 'تحدي يومي',
-            onTap: () => context.push('/rawabet'),
-          )
-              .animate(delay: 120.ms)
-              .fadeIn(duration: 600.ms, curve: Curves.easeOut)
-              .slideY(begin: 0.15, end: 0, duration: 700.ms, curve: Curves.elasticOut),
-          const SizedBox(height: 16),
-          _GameCard(
-            title: 'قريباً',
-            subtitle: 'ألعاب جديدة في الطريق',
-            icon: Icons.lock_outline_rounded,
-            color: KalimaTheme.surface,
-            badge: null,
-            onTap: null,
-          )
-              .animate(delay: 240.ms)
-              .fadeIn(duration: 600.ms, curve: Curves.easeOut)
-              .slideY(begin: 0.15, end: 0, duration: 700.ms, curve: Curves.elasticOut),
-        ],
-      ),
+        ),
+        // Main scrollable content
+        SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            children: [
+              const SizedBox(height: 28),
+              // Title — layered glow + gradient chrome effect
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Outer wide glow
+                  Text(
+                    'كلمة',
+                    style: GoogleFonts.cairo(
+                      fontSize: 72,
+                      fontWeight: FontWeight.w900,
+                      foreground: Paint()
+                        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 40)
+                        ..color = KalimaTheme.accent.withValues(alpha: 0.25),
+                    ),
+                  ),
+                  // Inner tight glow
+                  Text(
+                    'كلمة',
+                    style: GoogleFonts.cairo(
+                      fontSize: 72,
+                      fontWeight: FontWeight.w900,
+                      foreground: Paint()
+                        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14)
+                        ..color = KalimaTheme.accent.withValues(alpha: 0.45),
+                    ),
+                  ),
+                  // Main chrome-gradient text
+                  ShaderMask(
+                    shaderCallback: (bounds) => const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFFFFFFFF),
+                        Color(0xFFEEFFCC),
+                        Color(0xFFCCFF00),
+                        Color(0xFFFFFFDD),
+                      ],
+                      stops: [0.0, 0.3, 0.65, 1.0],
+                    ).createShader(bounds),
+                    child: Text(
+                      'كلمة',
+                      style: GoogleFonts.cairo(
+                        fontSize: 72,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        letterSpacing: -1,
+                        shadows: const [
+                          Shadow(
+                            color: Colors.black,
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                          ),
+                          Shadow(
+                            color: Colors.black,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+                  .animate()
+                  .fadeIn(duration: 500.ms)
+                  .scale(begin: const Offset(0.85, 0.85), end: const Offset(1.0, 1.0), duration: 600.ms, curve: Curves.elasticOut),
+              const SizedBox(height: 6),
+              Text(
+                'ألعاب كلمات يومية',
+                style: GoogleFonts.cairo(
+                  fontSize: 15,
+                  color: KalimaTheme.textMuted,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
+              ).animate(delay: 200.ms).fadeIn(duration: 400.ms),
+              const SizedBox(height: 44),
+              // Game cards
+              _GameCard(
+                title: 'حروف',
+                subtitle: 'خمّن الكلمة المخفية',
+                icon: Icons.text_fields_rounded,
+                color: KalimaTheme.cardTeal,
+                badge: 'حزورة #${_getPuzzleNumber()}',
+                onTap: () => context.push('/hurouf'),
+              )
+                  .animate()
+                  .fadeIn(duration: 500.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.25, end: 0, duration: 650.ms, curve: Curves.elasticOut),
+              const SizedBox(height: 18),
+              _GameCard(
+                title: 'روابط',
+                subtitle: 'صنّف الكلمات إلى مجموعات',
+                icon: Icons.grid_view_rounded,
+                color: KalimaTheme.cardCoral,
+                badge: 'تحدي يومي',
+                onTap: () => context.push('/rawabet'),
+              )
+                  .animate(delay: 100.ms)
+                  .fadeIn(duration: 500.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.25, end: 0, duration: 650.ms, curve: Curves.elasticOut),
+              const SizedBox(height: 18),
+              _GameCard(
+                title: 'قريباً',
+                subtitle: 'ألعاب جديدة في الطريق',
+                icon: Icons.lock_outline_rounded,
+                color: KalimaTheme.surface,
+                badge: null,
+                onTap: null,
+              )
+                  .animate(delay: 200.ms)
+                  .fadeIn(duration: 500.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.25, end: 0, duration: 650.ms, curve: Curves.elasticOut),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -141,40 +238,50 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBottomNav() {
-    return Container(
-      decoration: BoxDecoration(
-        color: KalimaTheme.surface.withValues(alpha: 0.92),
-        border: Border(top: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.5), width: 0.5)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
-            blurRadius: 16,
-            offset: const Offset(0, -4),
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: KalimaTheme.background.withValues(alpha: 0.82),
+            border: Border(
+              top: BorderSide(
+                color: KalimaTheme.border.withValues(alpha: 0.6),
+                width: 0.5,
+              ),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.5),
+                blurRadius: 20,
+                offset: const Offset(0, -4),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: NavigationBar(
-        backgroundColor: Colors.transparent,
-        indicatorColor: KalimaTheme.accent.withValues(alpha: 0.15),
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (i) => setState(() => _currentIndex = i),
-        destinations: [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined, color: KalimaTheme.textMuted),
-            selectedIcon: Icon(Icons.home_rounded, color: KalimaTheme.accent),
-            label: 'الرئيسية',
+          child: NavigationBar(
+            backgroundColor: Colors.transparent,
+            indicatorColor: KalimaTheme.accent.withValues(alpha: 0.18),
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (i) => setState(() => _currentIndex = i),
+            destinations: [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined, color: KalimaTheme.textMuted),
+                selectedIcon: Icon(Icons.home_rounded, color: KalimaTheme.accent),
+                label: 'الرئيسية',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.bar_chart_outlined, color: KalimaTheme.textMuted),
+                selectedIcon: Icon(Icons.bar_chart_rounded, color: KalimaTheme.accent),
+                label: 'الإحصائيات',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.settings_outlined, color: KalimaTheme.textMuted),
+                selectedIcon: Icon(Icons.settings_rounded, color: KalimaTheme.accent),
+                label: 'الإعدادات',
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined, color: KalimaTheme.textMuted),
-            selectedIcon: Icon(Icons.bar_chart_rounded, color: KalimaTheme.accent),
-            label: 'الإحصائيات',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined, color: KalimaTheme.textMuted),
-            selectedIcon: Icon(Icons.settings_rounded, color: KalimaTheme.accent),
-            label: 'الإعدادات',
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -209,35 +316,68 @@ class _GameCardState extends State<_GameCard> {
     final isLocked = widget.onTap == null;
     return GestureDetector(
       onTapDown: widget.onTap != null ? (_) => setState(() => _pressed = true) : null,
-      onTapUp: widget.onTap != null ? (_) { setState(() => _pressed = false); widget.onTap!(); } : null,
+      onTapUp: widget.onTap != null
+          ? (_) {
+              setState(() => _pressed = false);
+              widget.onTap!();
+            }
+          : null,
       onTapCancel: widget.onTap != null ? () => setState(() => _pressed = false) : null,
       child: AnimatedScale(
-        scale: _pressed ? 0.95 : 1.0,
-        duration: const Duration(milliseconds: 120),
+        scale: _pressed ? 0.93 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
         child: Container(
-          height: 140,
+          height: 155,
           decoration: KalimaTheme.gameCardDecoration(widget.color, isLocked: isLocked),
           child: Stack(
             children: [
-              // Gloss overlay on active cards
+              // Diagonal gloss streak — specular reflection
               if (!isLocked)
                 Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: const Alignment(0.5, 1.0),
-                        colors: [
-                          Colors.white.withValues(alpha: 0.15),
-                          Colors.white.withValues(alpha: 0.0),
-                        ],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(22),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: const Alignment(0.4, 0.9),
+                          colors: [
+                            Colors.white.withValues(alpha: 0.22),
+                            Colors.white.withValues(alpha: 0.08),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
+                          stops: const [0.0, 0.3, 0.7],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              // Specular spot highlight
+              if (!isLocked)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+                    child: Container(
+                      height: 60,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.12),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(22),
                 child: Row(
                   children: [
                     Expanded(
@@ -248,35 +388,64 @@ class _GameCardState extends State<_GameCard> {
                           Text(
                             widget.title,
                             style: GoogleFonts.cairo(
-                              fontSize: 30,
+                              fontSize: 34,
                               fontWeight: FontWeight.w900,
                               color: isLocked ? KalimaTheme.textMuted : Colors.white,
-                              shadows: isLocked ? null : [
-                                Shadow(color: Colors.black.withValues(alpha: 0.4), blurRadius: 4, offset: const Offset(0, 2)),
-                              ],
+                              letterSpacing: -0.5,
+                              shadows: isLocked
+                                  ? null
+                                  : const [
+                                      Shadow(
+                                        color: Colors.black,
+                                        blurRadius: 8,
+                                        offset: Offset(0, 3),
+                                      ),
+                                    ],
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           Text(
                             widget.subtitle,
                             style: GoogleFonts.cairo(
                               fontSize: 13,
+                              fontWeight: FontWeight.w600,
                               color: isLocked
                                   ? KalimaTheme.textMuted
-                                  : Colors.white.withValues(alpha: 0.9),
+                                  : Colors.white.withValues(alpha: 0.88),
+                              shadows: isLocked
+                                  ? null
+                                  : [
+                                      Shadow(
+                                        color: Colors.black.withValues(alpha: 0.4),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
                             ),
                           ),
                           if (widget.badge != null && !isLocked) ...[
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 12),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                               decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                  width: 0.5,
+                                color: Colors.black.withValues(alpha: 0.35),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border(
+                                  top: BorderSide(
+                                    color: Colors.white.withValues(alpha: 0.16),
+                                    width: 1,
+                                  ),
+                                  bottom: BorderSide(
+                                    color: Colors.black.withValues(alpha: 0.3),
+                                    width: 1,
+                                  ),
                                 ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.3),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               child: Text(
                                 widget.badge!,
@@ -284,6 +453,7 @@ class _GameCardState extends State<_GameCard> {
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
+                                  letterSpacing: 0.3,
                                 ),
                               ),
                             ),
@@ -291,33 +461,69 @@ class _GameCardState extends State<_GameCard> {
                         ],
                       ),
                     ),
-                    // Icon with glow ring
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: isLocked ? 0.05 : 0.12),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: isLocked ? 0.03 : 0.15),
-                          width: 1,
+                    const SizedBox(width: 16),
+                    // Icon container with layered glow
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: isLocked
+                                ? null
+                                : LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.white.withValues(alpha: 0.22),
+                                      Colors.white.withValues(alpha: 0.08),
+                                    ],
+                                  ),
+                            color: isLocked
+                                ? Colors.white.withValues(alpha: 0.04)
+                                : null,
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: isLocked ? 0.04 : 0.20),
+                              width: 1.5,
+                            ),
+                            boxShadow: isLocked
+                                ? null
+                                : [
+                                    BoxShadow(
+                                      color: widget.color.withValues(alpha: 0.45),
+                                      blurRadius: 20,
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.white.withValues(alpha: 0.10),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, -2),
+                                    ),
+                                  ],
+                          ),
+                          child: Icon(
+                            widget.icon,
+                            size: 34,
+                            color: isLocked ? KalimaTheme.textMuted : Colors.white,
+                            shadows: isLocked
+                                ? null
+                                : [
+                                    Shadow(
+                                      color: Colors.black.withValues(alpha: 0.4),
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                          ),
                         ),
-                        boxShadow: isLocked ? null : [
-                          BoxShadow(
-                            color: widget.color.withValues(alpha: 0.3),
-                            blurRadius: 12,
+                        if (!isLocked) ...[
+                          const SizedBox(height: 8),
+                          Icon(
+                            Icons.chevron_left_rounded,
+                            color: Colors.white.withValues(alpha: 0.6),
+                            size: 20,
                           ),
                         ],
-                      ),
-                      child: Icon(
-                        widget.icon,
-                        size: 32,
-                        color: isLocked
-                            ? KalimaTheme.textMuted
-                            : Colors.white,
-                        shadows: isLocked ? null : [
-                          Shadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 4),
-                        ],
-                      ),
+                      ],
                     ),
                   ],
                 ),

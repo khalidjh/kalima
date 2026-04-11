@@ -284,7 +284,8 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
                 fontWeight: FontWeight.w900,
                 color: KalimaTheme.cardTeal,
                 shadows: [
-                  Shadow(color: KalimaTheme.cardTeal.withValues(alpha: 0.4), blurRadius: 12),
+                  Shadow(color: KalimaTheme.cardTeal.withValues(alpha: 0.5), blurRadius: 16),
+                  Shadow(color: KalimaTheme.cardTeal.withValues(alpha: 0.2), blurRadius: 32),
                 ],
               ),
             ),
@@ -369,7 +370,7 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
 
     Widget buildKey(String letter, {double flex = 1}) {
       final st = keyStates[letter];
-      Color bg = const Color(0xFF22223A);
+      Color bg = const Color(0xFF20203E);
       Color fg = Colors.white;
       bool isAbsent = false;
 
@@ -378,8 +379,8 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
       } else if (st == LetterState.present) {
         bg = KalimaTheme.present;
       } else if (st == LetterState.absent) {
-        bg = const Color(0xFF151520);
-        fg = const Color(0xFF4A4A5E);
+        bg = const Color(0xFF111124);
+        fg = const Color(0xFF3A3A58);
         isAbsent = true;
       }
 
@@ -387,8 +388,8 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
         flex: (flex * 10).round(),
         child: Padding(
           padding: const EdgeInsets.all(2),
-          child: GestureDetector(
-            onTapDown: disabled ? null : (_) {
+          child: _KeyButton(
+            onTap: disabled ? null : () {
               HapticFeedback.lightImpact();
               notifier.onKey(letter);
             },
@@ -397,18 +398,47 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
               decoration: isAbsent
                   ? KalimaTheme.keyDecorationFlat(bg)
                   : KalimaTheme.keyDecoration(bg),
-              child: Center(
-                child: Text(
-                  letter,
-                  style: GoogleFonts.cairo(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w900,
-                    color: fg,
-                    shadows: isAbsent ? null : [
-                      Shadow(color: Colors.black.withValues(alpha: 0.4), blurRadius: 2, offset: const Offset(0, 1)),
-                    ],
+              child: Stack(
+                children: [
+                  // Top gloss on non-absent keys
+                  if (!isAbsent)
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 20,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(9)),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.white.withValues(alpha: 0.18),
+                              Colors.white.withValues(alpha: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  Center(
+                    child: Text(
+                      letter,
+                      style: GoogleFonts.cairo(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w900,
+                        color: fg,
+                        shadows: isAbsent ? null : [
+                          Shadow(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
@@ -418,28 +448,56 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
 
     Widget buildActionKey(String label, VoidCallback onTap, {Color? bg}) {
       final isEnter = label == 'إدخال';
+      final keyBg = bg ?? KalimaTheme.surface;
       return Expanded(
         flex: 16,
-        child: GestureDetector(
-          onTapDown: disabled ? null : (_) {
-            HapticFeedback.lightImpact();
-            onTap();
-          },
-          child: Container(
-            height: 50,
-            margin: const EdgeInsets.all(2),
-            decoration: KalimaTheme.keyDecoration(bg ?? KalimaTheme.surface),
-            child: Center(
-              child: Text(
-                label,
-                style: GoogleFonts.cairo(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w900,
-                  color: isEnter ? const Color(0xFF0A0A0A) : KalimaTheme.textPrimary,
-                  shadows: [
-                    Shadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 2, offset: const Offset(0, 1)),
-                  ],
-                ),
+        child: Padding(
+          padding: const EdgeInsets.all(2),
+          child: _KeyButton(
+            onTap: disabled ? null : onTap,
+            child: Container(
+              height: 50,
+              decoration: KalimaTheme.keyDecoration(keyBg),
+              child: Stack(
+                children: [
+                  // Top gloss
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(9)),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withValues(alpha: isEnter ? 0.25 : 0.15),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      label,
+                      style: GoogleFonts.cairo(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        color: isEnter ? const Color(0xFF0A0A0A) : KalimaTheme.textPrimary,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withValues(alpha: 0.4),
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -472,7 +530,42 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
   }
 }
 
+// Stateful keyboard key with pressed visual feedback
+class _KeyButton extends StatefulWidget {
+  final Widget child;
+  final VoidCallback? onTap;
 
+  const _KeyButton({required this.child, this.onTap});
+
+  @override
+  State<_KeyButton> createState() => _KeyButtonState();
+}
+
+class _KeyButtonState extends State<_KeyButton> {
+  bool _pressed = false;
+
+  void _handlePress() {
+    if (widget.onTap == null) return;
+    setState(() => _pressed = true);
+    widget.onTap!();
+    Future.delayed(const Duration(milliseconds: 120), () {
+      if (mounted) setState(() => _pressed = false);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: widget.onTap != null ? (_) => _handlePress() : null,
+      child: AnimatedScale(
+        scale: _pressed ? 0.86 : 1.0,
+        duration: const Duration(milliseconds: 70),
+        curve: Curves.easeOut,
+        child: widget.child,
+      ),
+    );
+  }
+}
 
 class _RowData {
   final List<String> letters;
@@ -543,8 +636,10 @@ class _Tile extends StatefulWidget {
   State<_Tile> createState() => _TileState();
 }
 
-class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
+class _TileState extends State<_Tile> with TickerProviderStateMixin {
   late AnimationController _flipController;
+  late AnimationController _popController;
+  late Animation<double> _popScale;
 
   @override
   void initState() {
@@ -553,6 +648,17 @@ class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
+
+    _popController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+
+    _popScale = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.18), weight: 40),
+      TweenSequenceItem(tween: Tween(begin: 1.18, end: 0.94), weight: 30),
+      TweenSequenceItem(tween: Tween(begin: 0.94, end: 1.0), weight: 30),
+    ]).animate(CurvedAnimation(parent: _popController, curve: Curves.easeOut));
 
     if (widget.animate && widget.state != LetterState.empty && widget.state != LetterState.tbd) {
       Future.delayed(Duration(milliseconds: widget.delay), () {
@@ -571,11 +677,16 @@ class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
         if (mounted) _flipController.forward();
       });
     }
+    // Pop animation when letter is typed
+    if (widget.letter.isNotEmpty && old.letter.isEmpty && widget.state == LetterState.tbd) {
+      _popController.forward(from: 0);
+    }
   }
 
   @override
   void dispose() {
     _flipController.dispose();
+    _popController.dispose();
     super.dispose();
   }
 
@@ -617,17 +728,22 @@ class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
             Positioned.fill(
               child: Container(decoration: KalimaTheme.tileGlossOverlay),
             ),
+          // Specular spot highlight on revealed tiles
+          if (isRevealed)
+            Positioned.fill(
+              child: Container(decoration: KalimaTheme.tileSpecularSpot),
+            ),
           Center(
             child: Text(
               widget.letter,
               style: GoogleFonts.cairo(
-                fontSize: tileSize * 0.45,
+                fontSize: tileSize * 0.46,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
                 shadows: [
                   Shadow(
-                    color: Colors.black.withValues(alpha: isRevealed ? 0.5 : 0.3),
-                    blurRadius: 3,
+                    color: Colors.black.withValues(alpha: isRevealed ? 0.6 : 0.35),
+                    blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
                 ],
@@ -638,7 +754,12 @@ class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
       ),
     );
 
-    // Flip animation
+    // Letter pop animation on type
+    if (widget.state == LetterState.tbd) {
+      tile = ScaleTransition(scale: _popScale, child: tile);
+    }
+
+    // Flip animation on reveal
     if (widget.animate && widget.state != LetterState.empty && widget.state != LetterState.tbd) {
       tile = AnimatedBuilder(
         animation: _flipController,
@@ -655,22 +776,22 @@ class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
       );
     }
 
-    // Win bounce with elastic curve
+    // Win bounce with elastic curve — more dramatic
     if (widget.isWinBounce) {
       tile = tile
           .animate()
           .scale(
             begin: const Offset(1.0, 1.0),
-            end: const Offset(1.2, 1.2),
-            duration: 300.ms,
+            end: const Offset(1.28, 1.28),
+            duration: 280.ms,
             delay: Duration(milliseconds: widget.winDelay),
-            curve: Curves.elasticOut,
+            curve: Curves.easeOut,
           )
           .then()
           .scale(
-            begin: const Offset(1.2, 1.2),
+            begin: const Offset(1.28, 1.28),
             end: const Offset(1.0, 1.0),
-            duration: 400.ms,
+            duration: 420.ms,
             curve: Curves.elasticOut,
           );
     }

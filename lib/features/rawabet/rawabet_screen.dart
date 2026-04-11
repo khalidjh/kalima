@@ -383,7 +383,8 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
                 fontWeight: FontWeight.w900,
                 color: KalimaTheme.cardCoral,
                 shadows: [
-                  Shadow(color: KalimaTheme.cardCoral.withValues(alpha: 0.4), blurRadius: 12),
+                  Shadow(color: KalimaTheme.cardCoral.withValues(alpha: 0.5), blurRadius: 16),
+                  Shadow(color: KalimaTheme.cardCoral.withValues(alpha: 0.2), blurRadius: 32),
                 ],
               ),
             ),
@@ -392,18 +393,23 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
             children: [
               for (var i = 0; i < maxMistakes; i++)
                 Container(
-                  width: 10,
-                  height: 10,
-                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  width: 11,
+                  height: 11,
+                  margin: const EdgeInsets.symmetric(horizontal: 2.5),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: i < state.mistakes
                         ? KalimaTheme.cardCoral
                         : KalimaTheme.border,
+                    border: i < state.mistakes ? null : Border.all(
+                      color: KalimaTheme.border.withValues(alpha: 0.5),
+                      width: 1,
+                    ),
                     boxShadow: i < state.mistakes ? [
                       BoxShadow(
-                        color: KalimaTheme.cardCoral.withValues(alpha: 0.4),
-                        blurRadius: 4,
+                        color: KalimaTheme.cardCoral.withValues(alpha: 0.55),
+                        blurRadius: 8,
+                        spreadRadius: 1,
                       ),
                     ] : null,
                   ),
@@ -424,7 +430,7 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
       physics: const NeverScrollableScrollPhysics(),
       crossAxisSpacing: 8,
       mainAxisSpacing: 8,
-      childAspectRatio: 1.4,
+      childAspectRatio: 1.35,
       children: state.tiles.map((word) {
         final isSelected = state.selected.contains(word);
         final isShaking = state.shakingTiles.contains(word);
@@ -433,68 +439,81 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
 
         return GestureDetector(
           onTap: () => ref.read(rawabetProvider.notifier).toggleTile(word),
-          child: AnimatedScale(
-            scale: isSelected ? 1.05 : 1.0,
-            duration: const Duration(milliseconds: 150),
+          child: AnimatedSlide(
+            // Lift upward when selected
+            offset: isSelected ? const Offset(0, -0.08) : Offset.zero,
+            duration: const Duration(milliseconds: 180),
             curve: Curves.easeOut,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              decoration: KalimaTheme.wordChip3D(
-                isSelected: isSelected,
-                isFlash: isFlash,
-              ),
-              child: Stack(
-                children: [
-                  // Gloss overlay
-                  if (isSelected)
-                    Positioned.fill(
+            child: AnimatedScale(
+              scale: isSelected ? 1.08 : 1.0,
+              duration: const Duration(milliseconds: 160),
+              curve: Curves.easeOut,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                decoration: KalimaTheme.wordChip3D(
+                  isSelected: isSelected,
+                  isFlash: isFlash,
+                ),
+                child: Stack(
+                  children: [
+                    // Top gloss overlay on all chips
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
                       child: Container(
+                        height: 18,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
-                            end: Alignment.center,
+                            end: Alignment.bottomCenter,
                             colors: [
-                              Colors.white.withValues(alpha: 0.12),
+                              Colors.white.withValues(alpha: isSelected ? 0.30 : 0.12),
                               Colors.white.withValues(alpha: 0.0),
                             ],
                           ),
                         ),
                       ),
                     ),
-                  Center(
-                    child: state.flippingTiles.contains(word)
-                        ? Opacity(
-                            opacity: 0,
-                            child: Text(
+                    Center(
+                      child: state.flippingTiles.contains(word)
+                          ? Opacity(
+                              opacity: 0,
+                              child: Text(
+                                word,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.cairo(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          : Text(
                               word,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.cairo(
                                 fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                color: isSelected
+                                    ? const Color(0xFF0A0A0A)
+                                    : Colors.white,
+                                shadows: isSelected
+                                    ? null
+                                    : [
+                                        Shadow(
+                                          color: Colors.black.withValues(alpha: 0.5),
+                                          blurRadius: 3,
+                                          offset: const Offset(0, 1),
+                                        ),
+                                      ],
                               ),
                             ),
-                          )
-                        : Text(
-                            word,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.cairo(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: isSelected ? const Color(0xFF0A0A0A) : Colors.white,
-                              shadows: isSelected ? null : [
-                                Shadow(
-                                  color: Colors.black.withValues(alpha: 0.4),
-                                  blurRadius: 2,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                          ),
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -503,19 +522,20 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
             .shake(hz: 5, offset: const Offset(6, 0))
             .then()
             .animate(target: isBounce ? 1 : 0)
-            .scale(begin: const Offset(1, 1), end: const Offset(1.08, 1.08), duration: 200.ms);
+            .scale(begin: const Offset(1, 1), end: const Offset(1.1, 1.1), duration: 200.ms);
       }).toList(),
     );
   }
 
   Widget _buildActions(RawabetState state, RawabetNotifier notifier) {
+    final isReady = state.selected.length == 4;
     return Row(
       children: [
         Expanded(
           child: OutlinedButton(
             onPressed: () => notifier.shuffle(),
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.6)),
+              side: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.8), width: 1),
               foregroundColor: KalimaTheme.textMuted,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -525,7 +545,7 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
               children: [
                 const Icon(Icons.shuffle, size: 16),
                 const SizedBox(width: 6),
-                Text('خلط', style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w600)),
+                Text('خلط', style: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -535,32 +555,53 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
           child: OutlinedButton(
             onPressed: state.selected.isNotEmpty ? () => notifier.deselectAll() : null,
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.6)),
+              side: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.8), width: 1),
               foregroundColor: KalimaTheme.textMuted,
               disabledForegroundColor: KalimaTheme.textMuted.withValues(alpha: 0.3),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: Text('إلغاء التحديد', style: GoogleFonts.cairo(fontSize: 13, fontWeight: FontWeight.w600)),
+            child: Text('إلغاء التحديد', style: GoogleFonts.cairo(fontSize: 13, fontWeight: FontWeight.w700)),
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
           flex: 2,
-          child: ElevatedButton(
-            onPressed: state.selected.length == 4 ? () => notifier.check() : null,
-            style: ElevatedButton.styleFrom(
-              disabledBackgroundColor: KalimaTheme.accent.withValues(alpha: 0.3),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              padding: const EdgeInsets.symmetric(vertical: 12),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: isReady
+                  ? [
+                      BoxShadow(
+                        color: KalimaTheme.accent.withValues(alpha: 0.50),
+                        blurRadius: 20,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 4),
+                      ),
+                      BoxShadow(
+                        color: KalimaTheme.accent.withValues(alpha: 0.22),
+                        blurRadius: 36,
+                        spreadRadius: 4,
+                      ),
+                    ]
+                  : [],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.check_circle, size: 18),
-                const SizedBox(width: 6),
-                Text('تحقق', style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w900)),
-              ],
+            child: ElevatedButton(
+              onPressed: isReady ? () => notifier.check() : null,
+              style: ElevatedButton.styleFrom(
+                disabledBackgroundColor: KalimaTheme.accent.withValues(alpha: 0.25),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.check_circle, size: 18),
+                  const SizedBox(width: 6),
+                  Text('تحقق', style: GoogleFonts.cairo(fontSize: 15, fontWeight: FontWeight.w900)),
+                ],
+              ),
             ),
           ),
         ),
@@ -655,50 +696,55 @@ class _FoundCategoryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _bgColor();
+    final topColor = Color.lerp(Colors.white, color, 0.5)!;
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            KalimaTheme.lighten(color, dimmed ? 0.0 : 0.1),
-            color,
-          ],
-        ).lerpTo(
-          LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [color, color],
-          ),
-          dimmed ? 1.0 : 0.0,
-        ),
-        borderRadius: BorderRadius.circular(12),
+        gradient: dimmed
+            ? LinearGradient(colors: [color.withValues(alpha: 0.6), color.withValues(alpha: 0.5)])
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [topColor, color, KalimaTheme.darken(color, 0.12)],
+                stops: const [0.0, 0.4, 1.0],
+              ),
+        borderRadius: BorderRadius.circular(14),
         border: Border(
           top: BorderSide(
-            color: dimmed ? Colors.transparent : Colors.white.withValues(alpha: 0.2),
+            color: dimmed ? Colors.transparent : Colors.white.withValues(alpha: 0.35),
             width: 1.5,
+          ),
+          left: BorderSide(
+            color: dimmed ? Colors.transparent : Colors.white.withValues(alpha: 0.15),
+            width: 1,
           ),
           right: BorderSide(color: color, width: 4),
           bottom: BorderSide(
-            color: Colors.black.withValues(alpha: dimmed ? 0.1 : 0.25),
-            width: 2,
+            color: Colors.black.withValues(alpha: dimmed ? 0.1 : 0.30),
+            width: 2.5,
           ),
         ),
-        boxShadow: dimmed ? null : [
-          BoxShadow(
-            color: color.withValues(alpha: 0.25),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 6,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: dimmed
+            ? null
+            : [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.40),
+                  blurRadius: 14,
+                  offset: const Offset(0, 5),
+                ),
+                BoxShadow(
+                  color: color.withValues(alpha: 0.18),
+                  blurRadius: 24,
+                  spreadRadius: 2,
+                ),
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.25),
+                  blurRadius: 8,
+                  offset: const Offset(0, 6),
+                ),
+              ],
       ),
       child: Opacity(
         opacity: dimmed ? 0.5 : 1.0,
@@ -711,13 +757,23 @@ class _FoundCategoryRow extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w900,
                 color: Colors.black,
+                shadows: dimmed
+                    ? null
+                    : [
+                        Shadow(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          blurRadius: 4,
+                        ),
+                      ],
               ),
             ),
+            const SizedBox(height: 2),
             Text(
               category.words.join(' · '),
               style: GoogleFonts.cairo(
                 fontSize: 12,
-                color: Colors.black.withValues(alpha: 0.7),
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withValues(alpha: 0.75),
               ),
             ),
           ],
