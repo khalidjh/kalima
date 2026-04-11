@@ -22,7 +22,7 @@ export default function ProPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const PAYMENTS_LIVE = false; // flip to true when Moyasar is approved
+  const PAYMENTS_LIVE = true;
 
   const handleSubscribe = async () => {
     if (!user) return;
