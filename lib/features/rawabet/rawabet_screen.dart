@@ -329,11 +329,20 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
-                      color: KalimaTheme.surface,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          KalimaTheme.lighten(KalimaTheme.surface, 0.05),
+                          KalimaTheme.surface,
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: KalimaTheme.border),
+                      border: Border(
+                        top: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
+                      ),
                       boxShadow: [
-                        BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10),
+                        BoxShadow(color: Colors.black.withValues(alpha: 0.6), blurRadius: 16, offset: const Offset(0, 4)),
                       ],
                     ),
                     child: Text(
@@ -357,7 +366,7 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: KalimaTheme.border)),
+        border: Border(bottom: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.5))),
       ),
       child: Row(
         children: [
@@ -372,7 +381,10 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
               style: GoogleFonts.cairo(
                 fontSize: 24,
                 fontWeight: FontWeight.w900,
-                color: KalimaTheme.present,
+                color: KalimaTheme.cardCoral,
+                shadows: [
+                  Shadow(color: KalimaTheme.cardCoral.withValues(alpha: 0.4), blurRadius: 12),
+                ],
               ),
             ),
           ),
@@ -386,8 +398,14 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: i < state.mistakes
-                        ? KalimaTheme.present
+                        ? KalimaTheme.cardCoral
                         : KalimaTheme.border,
+                    boxShadow: i < state.mistakes ? [
+                      BoxShadow(
+                        color: KalimaTheme.cardCoral.withValues(alpha: 0.4),
+                        blurRadius: 4,
+                      ),
+                    ] : null,
                   ),
                 ),
               const SizedBox(width: 8),
@@ -415,70 +433,69 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
 
         return GestureDetector(
           onTap: () => ref.read(rawabetProvider.notifier).toggleTile(word),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isSelected
-                    ? [
-                        KalimaTheme.accent.withValues(alpha: 0.2),
-                        KalimaTheme.accent.withValues(alpha: 0.08),
-                      ]
-                    : isFlash
-                        ? [Colors.red.withValues(alpha: 0.35), Colors.red.withValues(alpha: 0.15)]
-                        : [
-                            KalimaTheme.surface,
-                            KalimaTheme.darken(KalimaTheme.surface, 0.1),
-                          ],
+          child: AnimatedScale(
+            scale: isSelected ? 1.05 : 1.0,
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeOut,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              decoration: KalimaTheme.wordChip3D(
+                isSelected: isSelected,
+                isFlash: isFlash,
               ),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected
-                    ? KalimaTheme.accent.withValues(alpha: 0.8)
-                    : isFlash
-                        ? Colors.red
-                        : KalimaTheme.border.withValues(alpha: 0.6),
-                width: isSelected ? 2 : 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                ),
-                if (isSelected)
-                  BoxShadow(
-                    color: KalimaTheme.accent.withValues(alpha: 0.25),
-                    blurRadius: 16,
-                  ),
-              ],
-            ),
-            child: Center(
-              child: state.flippingTiles.contains(word)
-                  ? Opacity(
-                      opacity: 0,
-                      child: Text(
-                        word,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.cairo(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              child: Stack(
+                children: [
+                  // Gloss overlay
+                  if (isSelected)
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.center,
+                            colors: [
+                              Colors.white.withValues(alpha: 0.12),
+                              Colors.white.withValues(alpha: 0.0),
+                            ],
+                          ),
                         ),
                       ),
-                    )
-                  : Text(
-                      word,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.cairo(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
                     ),
+                  Center(
+                    child: state.flippingTiles.contains(word)
+                        ? Opacity(
+                            opacity: 0,
+                            child: Text(
+                              word,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.cairo(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : Text(
+                            word,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.cairo(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: isSelected ? const Color(0xFF0A0A0A) : Colors.white,
+                              shadows: isSelected ? null : [
+                                Shadow(
+                                  color: Colors.black.withValues(alpha: 0.4),
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
         )
@@ -486,7 +503,7 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
             .shake(hz: 5, offset: const Offset(6, 0))
             .then()
             .animate(target: isBounce ? 1 : 0)
-            .scale(begin: const Offset(1, 1), end: const Offset(1.05, 1.05), duration: 200.ms);
+            .scale(begin: const Offset(1, 1), end: const Offset(1.08, 1.08), duration: 200.ms);
       }).toList(),
     );
   }
@@ -498,7 +515,7 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
           child: OutlinedButton(
             onPressed: () => notifier.shuffle(),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: KalimaTheme.border),
+              side: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.6)),
               foregroundColor: KalimaTheme.textMuted,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -518,7 +535,7 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
           child: OutlinedButton(
             onPressed: state.selected.isNotEmpty ? () => notifier.deselectAll() : null,
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: KalimaTheme.border),
+              side: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.6)),
               foregroundColor: KalimaTheme.textMuted,
               disabledForegroundColor: KalimaTheme.textMuted.withValues(alpha: 0.3),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -561,8 +578,25 @@ class _RawabetScreenState extends ConsumerState<RawabetScreen> {
             width: MediaQuery.of(context).size.width * 0.9,
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: KalimaTheme.surface,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  KalimaTheme.lighten(KalimaTheme.surface, 0.05),
+                  KalimaTheme.surface,
+                ],
+              ),
               borderRadius: BorderRadius.circular(20),
+              border: Border(
+                top: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.6),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -620,36 +654,74 @@ class _FoundCategoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = _bgColor();
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: _bgColor().withValues(alpha: dimmed ? 0.4 : 1.0),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            KalimaTheme.lighten(color, dimmed ? 0.0 : 0.1),
+            color,
+          ],
+        ).lerpTo(
+          LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [color, color],
+          ),
+          dimmed ? 1.0 : 0.0,
+        ),
         borderRadius: BorderRadius.circular(12),
         border: Border(
-          right: BorderSide(color: _bgColor(), width: 4),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            category.name,
-            style: GoogleFonts.cairo(
-              fontSize: 14,
-              fontWeight: FontWeight.w900,
-              color: Colors.black,
-            ),
+          top: BorderSide(
+            color: dimmed ? Colors.transparent : Colors.white.withValues(alpha: 0.2),
+            width: 1.5,
           ),
-          Text(
-            category.words.join(' · '),
-            style: GoogleFonts.cairo(
-              fontSize: 12,
-              color: Colors.black.withValues(alpha: 0.7),
-            ),
+          right: BorderSide(color: color, width: 4),
+          bottom: BorderSide(
+            color: Colors.black.withValues(alpha: dimmed ? 0.1 : 0.25),
+            width: 2,
+          ),
+        ),
+        boxShadow: dimmed ? null : [
+          BoxShadow(
+            color: color.withValues(alpha: 0.25),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 4),
           ),
         ],
+      ),
+      child: Opacity(
+        opacity: dimmed ? 0.5 : 1.0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              category.name,
+              style: GoogleFonts.cairo(
+                fontSize: 14,
+                fontWeight: FontWeight.w900,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              category.words.join(' · '),
+              style: GoogleFonts.cairo(
+                fontSize: 12,
+                color: Colors.black.withValues(alpha: 0.7),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

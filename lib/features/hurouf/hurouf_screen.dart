@@ -267,7 +267,7 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: KalimaTheme.border)),
+        border: Border(bottom: BorderSide(color: KalimaTheme.border.withValues(alpha: 0.5))),
       ),
       child: Row(
         children: [
@@ -282,7 +282,10 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
               style: GoogleFonts.cairo(
                 fontSize: 24,
                 fontWeight: FontWeight.w900,
-                color: KalimaTheme.accent,
+                color: KalimaTheme.cardTeal,
+                shadows: [
+                  Shadow(color: KalimaTheme.cardTeal.withValues(alpha: 0.4), blurRadius: 12),
+                ],
               ),
             ),
           ),
@@ -366,16 +369,18 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
 
     Widget buildKey(String letter, {double flex = 1}) {
       final st = keyStates[letter];
-      Color bg = const Color(0xFF2A2A4A);
+      Color bg = const Color(0xFF22223A);
       Color fg = Colors.white;
+      bool isAbsent = false;
 
       if (st == LetterState.correct) {
         bg = KalimaTheme.correct;
       } else if (st == LetterState.present) {
         bg = KalimaTheme.present;
       } else if (st == LetterState.absent) {
-        bg = const Color(0xFF1A1A2E);
-        fg = const Color(0xFF5A5A6E);
+        bg = const Color(0xFF151520);
+        fg = const Color(0xFF4A4A5E);
+        isAbsent = true;
       }
 
       return Expanded(
@@ -389,7 +394,9 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
             },
             child: Container(
               height: 50,
-              decoration: KalimaTheme.keyDecoration(bg),
+              decoration: isAbsent
+                  ? KalimaTheme.keyDecorationFlat(bg)
+                  : KalimaTheme.keyDecoration(bg),
               child: Center(
                 child: Text(
                   letter,
@@ -397,6 +404,9 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
                     fontSize: 17,
                     fontWeight: FontWeight.w900,
                     color: fg,
+                    shadows: isAbsent ? null : [
+                      Shadow(color: Colors.black.withValues(alpha: 0.4), blurRadius: 2, offset: const Offset(0, 1)),
+                    ],
                   ),
                 ),
               ),
@@ -418,10 +428,7 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
           child: Container(
             height: 50,
             margin: const EdgeInsets.all(2),
-            decoration: KalimaTheme.keyDecoration(bg ?? KalimaTheme.surface).copyWith(
-              color: bg ?? KalimaTheme.surface,
-              borderRadius: BorderRadius.circular(10),
-            ),
+            decoration: KalimaTheme.keyDecoration(bg ?? KalimaTheme.surface),
             child: Center(
               child: Text(
                 label,
@@ -429,6 +436,9 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
                   fontSize: 12,
                   fontWeight: FontWeight.w900,
                   color: isEnter ? const Color(0xFF0A0A0A) : KalimaTheme.textPrimary,
+                  shadows: [
+                    Shadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 2, offset: const Offset(0, 1)),
+                  ],
                 ),
               ),
             ),
@@ -602,7 +612,11 @@ class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
       ),
       child: Stack(
         children: [
-          if (isRevealed) Container(decoration: KalimaTheme.tileGlossOverlay),
+          // Gloss light reflection overlay
+          if (isRevealed || widget.letter.isNotEmpty)
+            Positioned.fill(
+              child: Container(decoration: KalimaTheme.tileGlossOverlay),
+            ),
           Center(
             child: Text(
               widget.letter,
@@ -610,9 +624,13 @@ class _TileState extends State<_Tile> with SingleTickerProviderStateMixin {
                 fontSize: tileSize * 0.45,
                 fontWeight: FontWeight.w900,
                 color: Colors.white,
-                shadows: isRevealed
-                    ? [Shadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 2)]
-                    : null,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withValues(alpha: isRevealed ? 0.5 : 0.3),
+                    blurRadius: 3,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
             ),
           ),
@@ -723,8 +741,25 @@ class _StatsModal extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.9,
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: KalimaTheme.surface,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    KalimaTheme.lighten(KalimaTheme.surface, 0.05),
+                    KalimaTheme.surface,
+                  ],
+                ),
                 borderRadius: BorderRadius.circular(20),
+                border: Border(
+                  top: BorderSide(color: Colors.white.withValues(alpha: 0.1), width: 1),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.6),
+                    blurRadius: 24,
+                    offset: const Offset(0, 12),
+                  ),
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -826,11 +861,11 @@ class StarPath extends CustomPainter {
     final paint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
-    
+
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
     final points = <Offset>[];
-    
+
     for (int i = 0; i < 10; i++) {
       final angle = (i * 36 - 90) * pi / 180;
       final r = i % 2 == 0 ? radius : radius * 0.4;
@@ -839,12 +874,12 @@ class StarPath extends CustomPainter {
         center.dy + r * sin(angle),
       ));
     }
-    
+
     final path = Path();
     path.addPolygon(points, true);
     canvas.drawPath(path, paint);
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
