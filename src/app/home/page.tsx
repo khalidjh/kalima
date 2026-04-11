@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { loadStats, loadGameState } from "@/lib/gameState";
 import { loadRawabetGameState } from "@/lib/rawabetState";
+import { TrendingUp } from "lucide-react";
 
 // حروف icon: 2×3 mini tile grid, Minted / Slate / Saffron pattern
 function HoroufIcon() {
@@ -15,6 +16,17 @@ function HoroufIcon() {
       <div className="rounded-sm bg-correct opacity-90" />
       <div className="rounded-sm bg-correct opacity-90" />
       <div className="rounded-sm bg-absent opacity-80" />
+    </div>
+  );
+}
+
+// ترتيب icon: two bars (higher/lower)
+function TarteebIcon() {
+  return (
+    <div className="flex items-end gap-1 w-12 h-12 flex-shrink-0 pb-1">
+      <div className="flex-1 rounded-sm bg-correct opacity-90" style={{ height: "60%" }} />
+      <div className="flex-1 rounded-sm bg-primary opacity-90" style={{ height: "100%" }} />
+      <TrendingUp size={14} className="text-primary mb-0.5 flex-shrink-0" strokeWidth={2} />
     </div>
   );
 }
@@ -67,6 +79,7 @@ export default function HomePage() {
     if (rawabetSaved) {
       setRawabetStatus(rawabetSaved.gameStatus);
     }
+
   }, []);
 
   const gameCompleted = gameStatus === "won" || gameStatus === "lost";
@@ -139,6 +152,29 @@ export default function HomePage() {
                   </div>
                   <p className="text-sm text-muted leading-relaxed">
                     اربط الكلمات المتشابهة في مجموعات
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* ترتيب card */}
+          <Link href="/tarteeb" className="block group">
+            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
+              <div className="flex items-start gap-4">
+                {/* Icon */}
+                <TarteebIcon />
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h3 className="text-lg font-semibold text-white">ترتيب</h3>
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                      العب
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted leading-relaxed">
+                    خمّن أيهما أعلى قيمة في ١٠ جولات
                   </p>
                 </div>
               </div>
