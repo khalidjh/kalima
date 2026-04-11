@@ -158,8 +158,6 @@ export default function HomePage() {
             </div>
           </Link>
 
-<<<<<<< Updated upstream
-=======
           {/* نحلة card */}
           <Link href="/nahla" className="block group">
             <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
@@ -181,8 +179,28 @@ export default function HomePage() {
               </div>
             </div>
           </Link>
+          {/* خربشة card */}
+          <Link href="/kharbasha" className="block group">
+            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
+              <div className="flex items-start gap-4">
+                <div className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center">
+                  <span className="text-3xl">🔄</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h3 className="text-lg font-semibold text-white">خربشة</h3>
+                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                      العب
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted leading-relaxed">
+                    رتّب الأحرف واكتشف الكلمة المخفية
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
 
->>>>>>> Stashed changes
           {/* ترتيب card */}
           <Link href="/tarteeb" className="block group">
             <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
