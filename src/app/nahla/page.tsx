@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { BackToHome } from "@/components/BackToHome";
+import BackToHome from "@/components/BackToHome";
 import { getDailyNahlaPuzzle, getNahlaPuzzleNumber, calculateWordScore, getRank, isPangram } from "@/data/nahla";
 import { playTap, playCorrect, playWrong } from "@/lib/sounds";
 
