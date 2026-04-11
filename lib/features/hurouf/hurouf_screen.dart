@@ -366,7 +366,7 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
 
     Widget buildKey(String letter, {double flex = 1}) {
       final st = keyStates[letter];
-      Color bg = KalimaTheme.surface;
+      Color bg = const Color(0xFF2A2A4A);
       Color fg = Colors.white;
 
       if (st == LetterState.correct) {
@@ -374,8 +374,8 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
       } else if (st == LetterState.present) {
         bg = KalimaTheme.present;
       } else if (st == LetterState.absent) {
-        bg = const Color(0xFF1A1500);
-        fg = const Color(0xFF4A3F00);
+        bg = const Color(0xFF1A1A2E);
+        fg = const Color(0xFF5A5A6E);
       }
 
       return Expanded(
@@ -388,17 +388,13 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
               notifier.onKey(letter);
             },
             child: Container(
-              height: 48,
-              decoration: BoxDecoration(
-                color: bg,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 2, offset: Offset(0, 2))],
-              ),
+              height: 50,
+              decoration: KalimaTheme.keyDecoration(bg),
               child: Center(
                 child: Text(
                   letter,
                   style: GoogleFonts.cairo(
-                    fontSize: 16,
+                    fontSize: 17,
                     fontWeight: FontWeight.w900,
                     color: fg,
                   ),
@@ -411,24 +407,28 @@ class _HuroufScreenState extends ConsumerState<HuroufScreen> {
     }
 
     Widget buildActionKey(String label, VoidCallback onTap, {Color? bg}) {
+      final isEnter = label == 'إدخال';
       return Expanded(
         flex: 16,
         child: GestureDetector(
-          onTapDown: disabled ? null : (_) => onTap(),
+          onTapDown: disabled ? null : (_) {
+            HapticFeedback.lightImpact();
+            onTap();
+          },
           child: Container(
-            height: 48,
+            height: 50,
             margin: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
+            decoration: KalimaTheme.keyDecoration(bg ?? KalimaTheme.surface).copyWith(
               color: bg ?? KalimaTheme.surface,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Center(
               child: Text(
                 label,
                 style: GoogleFonts.cairo(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: label == 'إدخال' ? const Color(0xFF0A0A0A) : KalimaTheme.textPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  color: isEnter ? const Color(0xFF0A0A0A) : KalimaTheme.textPrimary,
                 ),
               ),
             ),
@@ -491,7 +491,7 @@ class _TileRow extends StatelessWidget {
       children: [
         for (var i = 0; i < 5; i++)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: _Tile(
               letter: data.letters[i],
               state: data.states[i],

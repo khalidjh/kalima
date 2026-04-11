@@ -9,10 +9,16 @@ class StatsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('الإحصائيات')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+      appBar: AppBar(
+        title: const Text('الإحصائيات'),
+        backgroundColor: KalimaTheme.background,
+        elevation: 2,
+      ),
+      body: Container(
+        decoration: BoxDecoration(gradient: KalimaTheme.radialBackground),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Overview stats
@@ -56,8 +62,15 @@ class StatsScreen extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: KalimaTheme.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: KalimaTheme.border),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: KalimaTheme.border.withValues(alpha: 0.5)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
               child: Center(
                 child: Text(
@@ -67,6 +80,7 @@ class StatsScreen extends StatelessWidget {
               ),
             ).animate().fadeIn(duration: 600.ms, delay: 400.ms),
           ],
+        ),
         ),
       ),
     );
@@ -85,8 +99,15 @@ class _StatCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         color: KalimaTheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: KalimaTheme.border),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: KalimaTheme.border.withValues(alpha: 0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -128,8 +149,8 @@ class _GuessBar extends StatelessWidget {
             child: Container(
               height: 22,
               decoration: BoxDecoration(
-                color: KalimaTheme.absent,
-                borderRadius: BorderRadius.circular(4),
+                color: KalimaTheme.absent.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Align(
                 alignment: Alignment.centerRight,
@@ -138,7 +159,14 @@ class _GuessBar extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: isCurrent ? KalimaTheme.correct : KalimaTheme.borderFilled,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(6),
+                      boxShadow: [
+                        BoxShadow(
+                          color: (isCurrent ? KalimaTheme.correct : KalimaTheme.borderFilled).withValues(alpha: 0.4),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     alignment: Alignment.center,
                     child: count > 0

@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class KalimaTheme {
-  // Dark vibrant colors
-  static const Color background = Color(0xFF0F0C00);
-  static const Color surface = Color(0xFF1A1A2E);
-  static const Color accent = Color(0xFFCCFF00);
-  static const Color correct = Color(0xFF4ECDC4);   // vibrant teal
-  static const Color present = Color(0xFFFFE66D);   // bright yellow
-  static const Color absent = Color(0xFF45B7D1);    // sky blue
+  // 3D Polished Mobile Game Aesthetic
+  
+  // Backgrounds & Surface
+  static const Color background = Color(0xFF0A0A1A);    // deep dark navy
+  static const Color surface = Color(0xFF1C1C3A);       // elevated surface
+  
+  // Game Tile States — vibrant 3D
+  static const Color correct = Color(0xFF2DD4A8);       // vibrant teal-green
+  static const Color present = Color(0xFFFBBF24);       // warm golden yellow
+  static const Color absent = Color(0xFF4B5563);        // muted dark slate
+  
+  // Accent & Card Colors
+  static const Color accent = Color(0xFFCCFF00);        // lime brand
+  static const Color cardTeal = Color(0xFF06B6D4);      // cyan for حروف
+  static const Color cardCoral = Color(0xFFF97316);     // coral for روابط
+  
+  // 3D Effects
+  static const Color highlightTop = Color(0xFFFFFFFF);  // top edge light
+  static const Color shadowBottom = Color(0xFF000000);  // bottom shadow
   static const Color border = Color(0xFF2A2A3C);
   static const Color borderFilled = Color(0xFF565656);
   static const Color textPrimary = Color(0xFFFFFFFF);
@@ -25,44 +37,64 @@ class KalimaTheme {
   }
 
   // Subtle radial gradient for atmosphere
-  static RadialGradient get radialBackground => const RadialGradient(
+  static RadialGradient get radialBackground => RadialGradient(
         center: Alignment.center,
-        radius: 0.8,
+        radius: 1.2,
         colors: [
-          Color(0xFF1A1A2E),
-          Color(0xFF0F0C00),
+          const Color(0xFF1A1A3A),
+          background,
         ],
       );
 
-  // Keyboard key decoration
-  static BoxDecoration keyDecoration(Color bg) {
-    return BoxDecoration(
-      color: bg,
-      borderRadius: BorderRadius.circular(8),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.3),
-          blurRadius: 2,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    );
-  }
+  // 3D Tile Decoration — main game element
+  static BoxDecoration tile3D({
+    required Color color,
+    required bool isRevealed,
+    required bool hasLetter,
+  }) {
+    if (!hasLetter && !isRevealed) {
+      // Empty tile — subtle concave look
+      return BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: border, width: 1.5),
+        boxShadow: [
+          // Outer subtle shadow
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      );
+    }
 
-  // Game card decoration
-  static BoxDecoration gameCardDecoration(Color color, {bool isLocked = false}) {
+    // Filled or revealed tile — 3D convex look
     return BoxDecoration(
-      color: surface,
-      borderRadius: BorderRadius.circular(14),
+      color: color,
+      borderRadius: BorderRadius.circular(12),
+      // Top highlight for 3D effect
       border: Border(
+        top: BorderSide(
+          color: highlightTop.withValues(alpha: isRevealed ? 0.15 : 0.08),
+          width: 2,
+        ),
         left: BorderSide(
-          color: isLocked ? color.withValues(alpha: 0.2) : accent,
-          width: 3,
+          color: highlightTop.withValues(alpha: 0.05),
+          width: 1,
         ),
       ),
       boxShadow: [
+        // Top edge light
+        if (isRevealed)
+          BoxShadow(
+            color: color.withValues(alpha: 0.4),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
+          ),
+        // Bottom & outer shadow (3D depth)
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.2),
+          color: Colors.black.withValues(alpha: 0.4),
           blurRadius: 8,
           offset: const Offset(0, 4),
         ),
@@ -70,28 +102,65 @@ class KalimaTheme {
     );
   }
 
-  // Tile decoration — vibrant flat, rounded
-  static BoxDecoration tile3D({
-    required Color color,
-    required bool isRevealed,
-    required bool hasLetter,
-  }) {
+  // 3D Keyboard Key Decoration — raised button look
+  static BoxDecoration keyDecoration(Color bg) {
     return BoxDecoration(
-      color: isRevealed ? color : (hasLetter ? surface : surface.withValues(alpha: 0.5)),
+      color: bg,
       borderRadius: BorderRadius.circular(10),
+      // Top highlight
+      border: Border(
+        top: BorderSide(
+          color: highlightTop.withValues(alpha: 0.2),
+          width: 1.5,
+        ),
+      ),
+      boxShadow: [
+        // Outer shadow for raised look
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.35),
+          blurRadius: 6,
+          offset: const Offset(0, 3),
+        ),
+
+      ],
+    );
+  }
+
+  // 3D Game Card Decoration — elevated with gradient
+  static BoxDecoration gameCardDecoration(Color color, {bool isLocked = false}) {
+    return BoxDecoration(
+      gradient: isLocked
+          ? null
+          : LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                lighten(color, 0.15),
+                color,
+              ],
+            ),
+      color: isLocked ? surface : null,
+      borderRadius: BorderRadius.circular(18),
+      // Border accent
       border: Border.all(
-        color: isRevealed
-            ? lighten(color, 0.2)
-            : hasLetter
-                ? borderFilled
-                : border.withValues(alpha: 0.5),
+        color: isLocked
+            ? border.withValues(alpha: 0.3)
+            : color.withValues(alpha: 0.6),
         width: 2,
       ),
       boxShadow: [
+        // Color glow (subtle)
+        if (!isLocked)
+          BoxShadow(
+            color: color.withValues(alpha: 0.2),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        // Main shadow
         BoxShadow(
           color: Colors.black.withValues(alpha: 0.25),
-          blurRadius: 3,
-          offset: const Offset(0, 2),
+          blurRadius: 12,
+          offset: const Offset(0, 6),
         ),
       ],
     );
@@ -125,16 +194,18 @@ class KalimaTheme {
       ),
       cardTheme: CardThemeData(
         color: surface,
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: accent,
-          foregroundColor: const Color(0xFF0F0C00),
+          foregroundColor: const Color(0xFF0A0A1A),
           textStyle: GoogleFonts.cairo(fontWeight: FontWeight.w900, fontSize: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          elevation: 4,
+          shadowColor: accent.withValues(alpha: 0.3),
         ),
       ),
     );
