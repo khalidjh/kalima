@@ -19,14 +19,6 @@ Planned: Spelling Bee, Mini Crossword, Strands
 - **Hosting:** Vercel (static + serverless)
 - **Status:** Live, maintained
 
-### Mobile App — NEW (target: 1M downloads)
-- **Framework:** Flutter (Dart)
-- **Target:** iOS + Android
-- **Backend:** Same Firebase (kalima-85c92)
-- **Game logic:** Ported from Next.js, UI rebuilt in Flutter
-- **RTL/Arabic:** First-class support
-- **Animations:** 60fps tile flips, keyboard, color reveals
-
 ### Shared
 - **Auth:** Firebase (Google login)
 - **Database:** Firestore
@@ -91,19 +83,15 @@ Build the daily habit for Arabic speakers. 10K DAU → Ramadan 2027 push → 50K
 
 ## North Star
 
-**1,000,000 downloads** — everything we build, ship, and market serves this number.
+**50,000 Weekly Active Puzzlers** — everything we build, ship, and market serves this number.
 
-Two platforms, one goal:
-- **Web** (kalima.fun) — discovery, SEO, viral sharing
-- **Mobile app** (Flutter) — daily habit, push notifications, App Store/Play Store downloads
-
-The web version drives awareness. The mobile app drives retention and the 1M number.
+Kalima is a web-first PWA at **kalima.fun** — discovery via SEO, viral sharing, push notifications via service worker, and installable on any device via Add to Home Screen.
 
 Milestone path:
 - **Month 1-2:** Optimize existing games, fix retention, soft launch
 - **Month 3-4:** Add Spelling Bee + Mini Crossword → content flywheel
-- **Month 5-6:** TikTok viral push, influencer partnerships → 100K downloads
-- **Month 7-9:** Ramadan 2027 campaign → 500K downloads
-- **Month 10-12:** Scale to 1M, monetize with Kalima Pro
+- **Month 5-6:** TikTok viral push, influencer partnerships → 10K WAP
+- **Month 7-9:** Ramadan 2027 campaign → 30K WAP
+- **Month 10-12:** Scale to 50K WAP, monetize with Kalima Pro
 
-Every feature decision filters through: "Does this help us reach 1M downloads?"
+Every feature decision filters through: "Does this help us reach 50K WAP?"

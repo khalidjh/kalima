@@ -1,75 +1,73 @@
-# Kalima Flutter — Tech Stack & Libraries
+# Kalima Web — Tech Stack & Libraries
 
 ## Core Framework
-- **Flutter 3.x** (Dart) — iOS + Android + Web
-- **Firebase** — auth, Firestore, FCM, analytics (same project: kalima-85c92)
+- **Next.js 14** (TypeScript) — React framework, static + serverless on Vercel
+- **Tailwind CSS** — utility-first styling
+- **Firebase** — auth, Firestore, FCM, analytics (project: kalima-85c92)
 
-## Animation & Interaction Libraries
+## Animation & Interaction
 Every pixel matters. These make the difference between "meh" and "wow":
 
 ### Tile / Card Animations (Wordle grid, Connections cards)
-- **`flutter_animate`** — declarative animations, chainable, zero boilerplate
-- Built-in `AnimatedContainer`, `AnimatedSwitcher`, `TweenAnimationBuilder` for tile flips
-- Custom `Transform.flip` + `AnimatedBuilder` for Wordle-style 3D tile reveal
+- **Framer Motion** or CSS keyframes — tile flips, color reveals, shake on wrong guess
+- CSS `transform` + `transition` for 3D tile reveal effects
 
 ### Celebration / Win Effects
-- **`confetti`** package — burst on puzzle solve, color-matched to Kalima brand (#CCFF00)
-- **`flutter_sparkler`** or custom particle effects for streaks
-
-### Haptic Feedback
-- **`haptic_feedback`** package — consistent iOS + Android haptics
-  - `lightImpact` — key press
-  - `mediumImpact` — tile flip
-  - `heavyImpact` — wrong answer
-  - `success` pattern — puzzle solved
+- CSS confetti or lightweight JS confetti library — burst on puzzle solve, color-matched to Kalima brand (#6B35C8)
+- Custom particle effects for streaks
 
 ### Micro-interactions
-- **`rive`** — stateful interactive animations (loading spinner, mascot, onboarding)
-- Built-in `GestureDetector` for swipe-to-reveal, long-press hints
+- CSS transitions for hover states, focus rings, button presses
+- `GestureEvent` / touch handlers for swipe-to-reveal, long-press hints
 
 ### Page Transitions
-- **`page_transition`** or custom `PageRoute` with shared element transitions
-- Hero animations between game select → game play
+- Next.js layout transitions with CSS animations
+- Shared element transitions between game select and game play
 
 ### Shimmer & Loading
-- **`shimmer`** — skeleton loading for puzzle fetch
+- CSS shimmer / skeleton loading for puzzle fetch
 
 ## State Management
-- **`riverpod`** — reactive, testable, scalable
-- **`flutter_hooks`** + `hooks_riverpod` — clean widget lifecycle
+- **React Context** + **useState/useReducer** — lightweight, built-in
+- Server components where applicable (Next.js App Router)
 
 ## Navigation
-- **`go_router`** — declarative routing, deep links
+- **Next.js App Router** — file-based routing, deep links, SEO-friendly URLs
 
 ## RTL / Arabic
-- Flutter's built-in `TextDirection.rtl` + `Directionality` widget
-- **`bidi`** package for complex bidi text if needed
-- Cairo font loaded via `google_fonts` or bundled assets
+- `dir="rtl"` at document level
+- Tailwind RTL utilities (`rtl:` variant)
+- IBM Plex Arabic via Google Fonts
 
 ## Data & Auth
-- **`cloud_firestore`** — puzzles, stats, user data
-- **`firebase_auth`** — Google login
-- **`shared_preferences`** — local cache, offline play
-- **`firebase_messaging`** — push notifications (daily puzzle reminders)
+- **Firebase Auth** — Google login
+- **Cloud Firestore** — puzzles, stats, user data
+- **localStorage** — local cache, offline play
+- **Firebase Cloud Messaging** — push notifications (daily puzzle reminders via service worker)
 
 ## Payments
-- **`moyasar`** SDK or WebView checkout for Kalima Pro
-- RevenueCat if expanding to App Store subscriptions later
+- **Moyasar** SDK / checkout for Kalima Pro (mada, STC Pay)
 
 ## Analytics
-- **`firebase_analytics`** — events, funnels
-- **`plausible`** — privacy-friendly web analytics
+- **Google Analytics** (via Firebase) — events, funnels
+- **Plausible** — privacy-friendly web analytics
+
+## PWA
+- Service worker for offline support and push notifications
+- Web app manifest for installability (Add to Home Screen)
+- Designed as a Progressive Web App — no native app needed
 
 ## Testing
-- **`flutter_test`** — unit + widget tests
-- **`integration_test`** — full game flow tests
-- **`golden_toolkit`** — pixel-perfect screenshot tests
+- **Jest** / **Vitest** — unit tests
+- **React Testing Library** — component tests
+- **Playwright** or **Cypress** — end-to-end game flow tests
 
 ## Design Tokens
-- **Background:** #0F0F1A (dark)
-- **Accent:** #CCFF00 (lime yellow)
-- **Correct (green):** #538D4E
-- **Present (yellow):** #B59F3B
-- **Absent (gray):** #3A3A3C
-- **Font:** Cairo (Arabic-optimized)
+- **Background:** #141218 (dark) / #FAF9F7 (light)
+- **Primary:** #6B35C8 (Kalima Purple)
+- **Correct (green):** #3DAA7A (Minted)
+- **Present (yellow):** #D4A017 (Saffron)
+- **Absent (gray):** #6B6475 (Slate)
+- **Accent:** #E8604C (Coral)
+- **Font:** IBM Plex Arabic (Arabic), Inter (English)
 - **Corner radius:** 8px tiles, 12px cards, 16px modals
