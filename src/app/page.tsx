@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { HelpCircle, BarChart2, Lock } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { HelpCircle, BarChart2, Shield, Archive } from "lucide-react";
 import { playCorrect, playWrong } from "@/lib/sounds";
 import BackToHome from "@/components/BackToHome";
 import GameHeader from "@/components/GameHeader";
@@ -15,13 +15,19 @@ import NotificationPrompt from "@/components/NotificationPrompt";
 import {
   loadGameState,
   saveGameState,
+  loadArchiveGameState,
+  saveArchiveGameState,
   loadStats,
   updateStatsOnWin,
   updateStatsOnLoss,
   getKeyboardLetterStates,
   Stats,
+  loadHardMode,
+  saveHardMode,
+  validateHardMode,
+  hardModeViolationMessage,
 } from "@/lib/gameState";
-import { getDailyWord, isValidGuess, getPuzzleNumber } from "@/data/words";
+import { getDailyWord, isValidGuess, getPuzzleNumber, getWordByPuzzleNumber } from "@/data/words";
 import { track } from "@/lib/analytics";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
 import { useAuth } from "@/lib/auth";
@@ -33,10 +39,17 @@ const ARABIC_LETTERS = new Set([
   "ك", "ل", "م", "ن", "ه", "و", "ي", "ة", "ى", "ئ", "ؤ", "ء",
 ]);
 
-export default function Home() {
+import { Suspense } from "react";
+
+function HomeInner() {
   const { user } = useAuth();
   const { isPro } = useIsPro(user);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const archivePuzzleParam = searchParams.get("puzzle");
+  const isArchiveMode = archivePuzzleParam !== null && isPro;
+  const archivePuzzleNum = archivePuzzleParam ? parseInt(archivePuzzleParam, 10) : null;
+
   const [answer, setAnswer] = useState("");
   const [puzzleNumber, setPuzzleNumber] = useState(1);
   const [guesses, setGuesses] = useState<string[]>([]);
@@ -48,35 +61,57 @@ export default function Home() {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const [initialized, setInitialized] = useState(false);
-  const [showArchiveModal, setShowArchiveModal] = useState(false);
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
+  const [hardMode, setHardMode] = useState(false);
 
   // Initialize game
   useEffect(() => {
-    const word = getDailyWord();
-    const pNum = getPuzzleNumber();
+    let word: string;
+    let pNum: number;
+
+    if (isArchiveMode && archivePuzzleNum && archivePuzzleNum > 0) {
+      word = getWordByPuzzleNumber(archivePuzzleNum);
+      pNum = archivePuzzleNum;
+    } else {
+      word = getDailyWord();
+      pNum = getPuzzleNumber();
+    }
+
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setAnswer(word);
     setPuzzleNumber(pNum);
 
-    const saved = loadGameState();
-    if (saved) {
-      setGuesses(saved.guesses);
-      setGameStatus(saved.gameStatus);
-      if (saved.gameStatus !== "playing") {
-        setTimeout(() => setShowStats(true), 500);
+    if (isArchiveMode && archivePuzzleNum) {
+      const saved = loadArchiveGameState(archivePuzzleNum);
+      if (saved) {
+        setGuesses(saved.guesses);
+        setGameStatus(saved.gameStatus);
+        if (saved.gameStatus !== "playing") {
+          setTimeout(() => setShowStats(true), 500);
+        }
       }
     } else {
-      // First visit check
-      const hasPlayed = localStorage.getItem("kalima_has_played");
-      if (!hasPlayed) {
-        setShowHowToPlay(true);
-        localStorage.setItem("kalima_has_played", "true");
+      const saved = loadGameState();
+      if (saved) {
+        setGuesses(saved.guesses);
+        setGameStatus(saved.gameStatus);
+        if (saved.gameStatus !== "playing") {
+          setTimeout(() => setShowStats(true), 500);
+        }
+      } else {
+        // First visit check
+        const hasPlayed = localStorage.getItem("kalima_has_played");
+        if (!hasPlayed) {
+          setShowHowToPlay(true);
+          localStorage.setItem("kalima_has_played", "true");
+        }
       }
     }
 
     setStats(loadStats());
+    setHardMode(loadHardMode());
     setInitialized(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const showToast = useCallback((msg: string, duration = 2000) => {
@@ -90,6 +125,19 @@ export default function Home() {
     setTimeout(() => setShake(false), 500);
   }, []);
 
+  const toggleHardMode = useCallback(() => {
+    if (guesses.length > 0) {
+      showToast("لا يمكن تغيير الوضع الصعب بعد بدء اللعب");
+      return;
+    }
+    setHardMode((prev) => {
+      const next = !prev;
+      saveHardMode(next);
+      showToast(next ? "تم تفعيل الوضع الصعب 🔴" : "تم إيقاف الوضع الصعب");
+      return next;
+    });
+  }, [guesses.length, showToast]);
+
   const submitGuess = useCallback(() => {
     if (gameStatus !== "playing") return;
     if (Array.from(currentGuess).length !== 5) {
@@ -97,8 +145,20 @@ export default function Home() {
       triggerShake();
       return;
     }
-    // Word list validation removed — accept any 5 Arabic letters
-    void isValidGuess;
+    if (!isValidGuess(currentGuess)) {
+      showToast("الكلمة غير موجودة في القائمة");
+      triggerShake();
+      return;
+    }
+
+    if (hardMode && guesses.length > 0) {
+      const violation = validateHardMode(currentGuess, guesses, answer);
+      if (violation) {
+        showToast(hardModeViolationMessage(violation));
+        triggerShake();
+        return;
+      }
+    }
 
     const newGuesses = [...guesses, currentGuess];
     setGuesses(newGuesses);
@@ -107,33 +167,39 @@ export default function Home() {
     const won = currentGuess === answer;
     const lost = !won && newGuesses.length >= 6;
 
+    const saveFn = isArchiveMode ? saveArchiveGameState : saveGameState;
+
     if (won) {
       playCorrect();
-      const newStats = updateStatsOnWin(newGuesses.length);
-      setStats(newStats);
-      track("game_won", { puzzle: puzzleNumber, guesses: newGuesses.length, streak: newStats.currentStreak });
-      writeStatsToFirestore();
+      if (!isArchiveMode) {
+        const newStats = updateStatsOnWin(newGuesses.length);
+        setStats(newStats);
+        track("game_won", { puzzle: puzzleNumber, guesses: newGuesses.length, streak: newStats.currentStreak });
+        writeStatsToFirestore();
+      }
       const messages = ["ممتاز! 🌟", "رائع! 🎉", "أحسنت! 👏", "جيد جداً! 😊", "حسناً 😌", "بالكاد! 😅"];
       showToast(messages[newGuesses.length - 1] ?? "أحسنت!");
       setTimeout(() => {
         setShowStats(true);
       }, 1800);
-      saveGameState({ puzzleNumber, guesses: newGuesses, gameStatus: "won" });
+      saveFn({ puzzleNumber, guesses: newGuesses, gameStatus: "won" });
       setGameStatus("won");
     } else if (lost) {
       playWrong();
-      const newStats = updateStatsOnLoss();
-      setStats(newStats);
-      track("game_lost", { puzzle: puzzleNumber });
-      writeStatsToFirestore();
+      if (!isArchiveMode) {
+        const newStats = updateStatsOnLoss();
+        setStats(newStats);
+        track("game_lost", { puzzle: puzzleNumber });
+        writeStatsToFirestore();
+      }
       showToast(`الإجابة: ${answer}`, 3000);
       setTimeout(() => setShowStats(true), 2000);
-      saveGameState({ puzzleNumber, guesses: newGuesses, gameStatus: "lost" });
+      saveFn({ puzzleNumber, guesses: newGuesses, gameStatus: "lost" });
       setGameStatus("lost");
     } else {
-      saveGameState({ puzzleNumber, guesses: newGuesses, gameStatus: "playing" });
+      saveFn({ puzzleNumber, guesses: newGuesses, gameStatus: "playing" });
     }
-  }, [gameStatus, currentGuess, guesses, answer, puzzleNumber, showToast, triggerShake]);
+  }, [gameStatus, currentGuess, guesses, answer, puzzleNumber, showToast, triggerShake, hardMode, isArchiveMode]);
 
   const handleKey = useCallback(
     (key: string) => {
@@ -196,6 +262,11 @@ export default function Home() {
       <GameHeader
         center={
           <div className="flex items-center gap-2">
+            {isArchiveMode && (
+              <span className="text-xs font-bold text-primary bg-primary/15 px-2 py-0.5 rounded-full border border-primary/30">
+                أرشيف
+              </span>
+            )}
             <span className="text-muted text-sm font-bold">#{puzzleNumber}</span>
             {stats.currentStreak > 0 && (
               <button
@@ -209,8 +280,17 @@ export default function Home() {
         }
         right={
           <div className="flex items-center gap-1">
-            <button onClick={() => isPro ? setShowArchiveModal(true) : router.push("/pro")} className="text-muted hover:text-white transition-colors p-1">
-              <Lock size={16} strokeWidth={1.5} />
+            <button
+              onClick={toggleHardMode}
+              className={`p-1 transition-colors ${
+                hardMode ? "text-red-400 hover:text-red-300" : "text-muted hover:text-white"
+              }`}
+              title={hardMode ? "الوضع الصعب: مفعّل" : "الوضع الصعب: متوقف"}
+            >
+              <Shield size={18} strokeWidth={1.5} fill={hardMode ? "currentColor" : "none"} />
+            </button>
+            <button onClick={() => router.push("/archive")} className="text-muted hover:text-white transition-colors p-1">
+              <Archive size={16} strokeWidth={1.5} />
             </button>
             <button onClick={() => setShowStats(true)} className="text-muted hover:text-white transition-colors p-1">
               <BarChart2 size={20} strokeWidth={1.5} />
@@ -259,32 +339,8 @@ export default function Home() {
           gameStatus={gameStatus}
           guesses={guesses}
           answer={answer}
+          hardMode={hardMode}
         />
-      )}
-
-      {/* Archive Modal (Pro stub) */}
-      {showArchiveModal && (
-        <div
-          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4"
-          onClick={() => setShowArchiveModal(false)}
-          dir="rtl"
-          style={{ fontFamily: "'Cairo', sans-serif" }}
-        >
-          <div
-            className="bg-surface border border-border rounded-2xl p-8 max-w-xs w-full text-center shadow-xl animate-slide-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="text-4xl mb-4">📅</div>
-            <h2 className="text-xl font-bold text-white mb-2">أرشيف الألغاز</h2>
-            <p className="text-muted text-sm mb-6">قريباً — العب أي لغز من الأيام السابقة</p>
-            <button
-              onClick={() => setShowArchiveModal(false)}
-              className="w-full h-10 rounded-lg bg-primary text-[#0A0A0A] font-bold text-sm hover:opacity-90 transition-opacity"
-            >
-              حسناً
-            </button>
-          </div>
-        </div>
       )}
 
       {/* Toast */}
@@ -304,5 +360,17 @@ export default function Home() {
         />
       )}
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="h-full bg-background flex items-center justify-center">
+        <div className="text-white text-2xl font-bold">كلمة</div>
+      </div>
+    }>
+      <HomeInner />
+    </Suspense>
   );
 }

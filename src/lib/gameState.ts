@@ -25,6 +25,103 @@ export interface GameState {
 
 const GAME_STATE_KEY = "kalima_game_state";
 const STATS_KEY = "kalima_stats";
+const HARD_MODE_KEY = "kalima-hard-mode";
+
+// ── Hard Mode ──
+
+export function loadHardMode(): boolean {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(HARD_MODE_KEY) === "true";
+}
+
+export function saveHardMode(enabled: boolean): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(HARD_MODE_KEY, enabled ? "true" : "false");
+}
+
+export interface HardModeViolation {
+  type: "correct_position" | "present_required" | "absent_used";
+  letter: string;
+  position?: number; // 1-based, for correct_position
+}
+
+/**
+ * Validate a guess against hard mode rules based on all previous guesses.
+ * Returns null if valid, or a HardModeViolation describing the first rule broken.
+ */
+export function validateHardMode(
+  guess: string,
+  previousGuesses: string[],
+  answer: string
+): HardModeViolation | null {
+  const guessChars = Array.from(guess);
+
+  // Build cumulative constraints from all previous guesses
+  // correctPositions: position -> letter (must be in that exact spot)
+  // requiredLetters: set of letters that must appear somewhere
+  // absentLetters: set of letters known to be absent (not in answer at all)
+  const correctPositions: Map<number, string> = new Map();
+  const requiredLetters: Set<string> = new Set();
+  const absentLetters: Set<string> = new Set();
+
+  for (const prev of previousGuesses) {
+    const states = evaluateGuess(prev, answer);
+    const prevChars = Array.from(prev);
+    for (let i = 0; i < prevChars.length; i++) {
+      if (states[i] === "correct") {
+        correctPositions.set(i, prevChars[i]);
+        requiredLetters.add(prevChars[i]);
+      } else if (states[i] === "present") {
+        requiredLetters.add(prevChars[i]);
+      } else if (states[i] === "absent") {
+        // Only mark as absent if this letter isn't also correct/present elsewhere
+        // (handles duplicate letters where one instance is absent but another is present)
+        if (!requiredLetters.has(prevChars[i]) && !correctPositions.has(i)) {
+          absentLetters.add(prevChars[i]);
+        }
+      }
+    }
+  }
+
+  // Remove letters from absent if they're actually required (duplicates edge case)
+  for (const letter of requiredLetters) {
+    absentLetters.delete(letter);
+  }
+
+  // Check 1: correct positions must be maintained
+  for (const [pos, letter] of correctPositions) {
+    if (guessChars[pos] !== letter) {
+      return { type: "correct_position", letter, position: pos + 1 };
+    }
+  }
+
+  // Check 2: present letters must appear somewhere
+  for (const letter of requiredLetters) {
+    if (!guessChars.includes(letter)) {
+      return { type: "present_required", letter };
+    }
+  }
+
+  // Check 3: absent letters should not be used
+  for (let i = 0; i < guessChars.length; i++) {
+    if (absentLetters.has(guessChars[i])) {
+      return { type: "absent_used", letter: guessChars[i] };
+    }
+  }
+
+  return null;
+}
+
+export function hardModeViolationMessage(v: HardModeViolation): string {
+  switch (v.type) {
+    case "correct_position":
+      return `الحرف ${v.letter} يجب أن يكون في الموضع ${v.position}`;
+    case "present_required":
+      return `يجب استخدام الحرف ${v.letter}`;
+    case "absent_used":
+      return `الحرف ${v.letter} غير موجود في الكلمة`;
+  }
+}
 
 export function loadGameState(): GameState | null {
   if (typeof window === "undefined") return null;
@@ -43,6 +140,28 @@ export function loadGameState(): GameState | null {
 export function saveGameState(state: GameState): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(GAME_STATE_KEY, JSON.stringify(state));
+}
+
+// ── Archive Mode (separate storage, no stats impact) ──
+
+function archiveGameKey(puzzleNum: number): string {
+  return `kalima_archive_game_${puzzleNum}`;
+}
+
+export function loadArchiveGameState(puzzleNum: number): GameState | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(archiveGameKey(puzzleNum));
+    if (!raw) return null;
+    return JSON.parse(raw) as GameState;
+  } catch {
+    return null;
+  }
+}
+
+export function saveArchiveGameState(state: GameState): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(archiveGameKey(state.puzzleNumber), JSON.stringify(state));
 }
 
 export function loadStats(): Stats {

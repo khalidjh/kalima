@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Archive } from "lucide-react";
 import { loadStats, loadGameState } from "@/lib/gameState";
 import { loadRawabetGameState } from "@/lib/rawabetState";
 import { TrendingUp } from "lucide-react";
+import { useAuth } from "@/lib/auth";
+import { useIsPro } from "@/lib/subscription";
 
 // حروف icon: 2×3 mini tile grid, Minted / Slate / Saffron pattern
 function HoroufIcon() {
@@ -61,6 +64,8 @@ function RawabetIcon() {
 }
 
 export default function HomePage() {
+  const { user } = useAuth();
+  const { isPro } = useIsPro(user);
   const [streak, setStreak] = useState(0);
   const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost" | null>(null);
   const [rawabetStatus, setRawabetStatus] = useState<"playing" | "won" | "lost" | null>(null);
@@ -218,6 +223,28 @@ export default function HomePage() {
                   </div>
                   <p className="text-sm text-muted leading-relaxed">
                     خمّن أيهما أعلى قيمة في ١٠ جولات
+          {/* Archive card */}
+          <Link href="/archive" className="block group">
+            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+                  <Archive size={22} className="text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <h3 className="text-lg font-semibold text-white">الأرشيف</h3>
+                    {isPro ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                        Pro
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-muted bg-surface px-2.5 py-0.5 rounded-full border border-border flex-shrink-0">
+                        Pro
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted leading-relaxed">
+                    العب ألغاز الأيام السابقة
                   </p>
                 </div>
               </div>

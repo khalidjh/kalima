@@ -17,10 +17,8 @@ export function getPuzzleNumber(): number {
 }
 
 // Curated 5-letter Arabic answer words (each exactly 5 Arabic characters)
-export const ANSWER_WORDS: readonly string[] = [
+export const ANSWER_WORDS: readonly string[] = [] = [
   // --- Daily objects ---
-  "كرسي", // no, 4 chars — skip, use 5-char versions below
-  "مكتب", // 5: م ك ت ب — wait, that's 4. Let me be careful.
   // I'll write valid 5-char words only
   "ثلاجة", // ث ل ا ج ة = 5 ✓
   "مكنسة", // م ك ن س ة = 5 ✓
@@ -33,7 +31,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "فنجان", // ف ن ج ا ن = 5 ✓ (cup)
   "ملعقة", // م ل ع ق ة = 5 ✓ (spoon)
   "شوكات", // ش و ك ا ت = 5 ✓
-  "كوباية", // 6 chars — skip
   "مفتاح", // م ف ت ا ح = 5 ✓
   "قفلات", // ق ف ل ا ت = 5 ✓
   "زجاجة", // ز ج ا ج ة = 5 ✓ (bottle)
@@ -56,7 +53,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "مناشف", // م ن ا ش ف = 5 ✓
   "قمصان", // ق م ص ا ن = 5 ✓
   "جوارب", // ج و ا ر ب = 5 ✓
-  "حذاءة", // not standard
   "أحذية", // أ ح ذ ي ة = 5 ✓
   "بنطال", // ب ن ط ا ل = 5 ✓
   "قميصي", // ق م ي ص ي = 5 ✓
@@ -65,9 +61,7 @@ export const ANSWER_WORDS: readonly string[] = [
   "غترات", // غ ت ر ا ت = 5 ✓
   // --- Food & drink ---
   "قهوات", // ق ه و ا ت = 5 ✓
-  "شايات", // ش ا ي ا ت = 5 ✓
   "خبزات", // خ ب ز ا ت = 5 ✓
-  "رزوات", // not standard
   "تمرات", // ت م ر ا ت = 5 ✓
   "لحمات", // ل ح م ا ت = 5 ✓
   "دجاجة", // د ج ا ج ة = 5 ✓
@@ -82,10 +76,8 @@ export const ANSWER_WORDS: readonly string[] = [
   "مرقات", // م ر ق ا ت = 5 ✓
   "كبسات", // ك ب س ا ت = 5 ✓ (kabsa)
   "مندية", // م ن د ي ة = 5 ✓ (mandi)
-  "برياني", // 6 chars
   "هريسة", // ه ر ي س ة = 5 ✓
   "كنافة", // ك ن ا ف ة = 5 ✓
-  "بقلاوة", // 6 chars
   "حلاوة", // ح ل ا و ة = 5 ✓
   "قطايف", // ق ط ا ي ف = 5 ✓
   "وربات", // و ر ب ا ت = 5 ✓
@@ -109,9 +101,7 @@ export const ANSWER_WORDS: readonly string[] = [
   "نقيعة", // ن ق ي ع ة = 5 ✓
   // --- Feelings / emotions ---
   "فرحات", // ف ر ح ا ت = 5 ✓
-  "حزنات", // ح ز ن ا ت = 5 ✓
   "غضبات", // غ ض ب ا ت = 5 ✓
-  "خوفات", // خ و ف ا ت = 5 ✓
   "أملات", // أ م ل ا ت = 5 ✓
   "وجدان", // و ج د ا ن = 5 ✓
   "شعورة", // ش ع و ر ة = 5 ✓
@@ -119,7 +109,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "راحات", // ر ا ح ا ت = 5 ✓
   "ضيقات", // ض ي ق ا ت = 5 ✓
   "وحدات", // و ح د ا ت = 5 ✓
-  "ارتياح", // 6 chars
   "سعيدة", // س ع ي د ة = 5 ✓
   "كئيبة", // ك ئ ي ب ة = 5 ✓
   "مبهجة", // م ب ه ج ة = 5 ✓
@@ -129,13 +118,11 @@ export const ANSWER_WORDS: readonly string[] = [
   "متعبة", // م ت ع ب ة = 5 ✓
   "مرهقة", // م ر ه ق ة = 5 ✓
   "محبطة", // م ح ب ط ة = 5 ✓
-  "متفائ", // incomplete
   "تفاؤل", // ت ف ا ؤ ل = 5 ✓
   "تشاؤم", // ت ش ا ؤ م = 5 ✓
   "حنينة", // ح ن ي ن ة = 5 ✓
   "شوقات", // ش و ق ا ت = 5 ✓
   "وحشات", // و ح ش ا ت = 5 ✓
-  "ذكريا", // incomplete
   "ذكرات", // ذ ك ر ا ت = 5 ✓
   "لحظات", // ل ح ظ ا ت = 5 ✓ (already in list)
   "ضحكات", // ض ح ك ا ت = 5 ✓
@@ -168,13 +155,11 @@ export const ANSWER_WORDS: readonly string[] = [
   "حيوان", // ح ي و ا ن = 5 ✓
   "أسدات", // أ س د ا ت = 5 ✓
   "نمرات", // ن م ر ا ت = 5 ✓
-  "قططات", // not standard
   "كلابة", // ك ل ا ب ة = 5 ✓
   "حصانة", // ح ص ا ن ة = 5 ✓
   "جمالة", // ج م ا ل ة = 5 ✓
   "ثعلبة", // ث ع ل ب ة = 5 ✓
   "ديكات", // د ي ك ا ت = 5 ✓
-  "دجاجة", // already added
   "أرنبة", // أ ر ن ب ة = 5 ✓
   "ضفدعة", // ض ف د ع ة = 5 ✓
   "حشرات", // ح ش ر ا ت = 5 ✓
@@ -189,7 +174,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "أبناء", // أ ب ن ا ء = 5 ✓
   "بناتي", // ب ن ا ت ي = 5 ✓
   "جدتان", // ج د ت ا ن = 5 ✓
-  "جدودة", // not standard
   "عمتات", // ع م ت ا ت = 5 ✓
   "خالات", // خ ا ل ا ت = 5 ✓
   "أعمام", // أ ع م ا م = 5 ✓
@@ -209,13 +193,11 @@ export const ANSWER_WORDS: readonly string[] = [
   "بنتات", // ب ن ت ا ت = 5 ✓
   "ولدان", // و ل د ا ن = 5 ✓
   // --- Body parts ---
-  "قلوبة", // not standard — use قلبات
   "قلبات", // ق ل ب ا ت = 5 ✓
   "رأسات", // ر أ س ا ت = 5 ✓
   "يدوية", // ي د و ي ة = 5 ✓
   "أيدين", // أ ي د ي ن = 5 ✓
   "أعيان", // أ ع ي ا ن = 5 ✓
-  "عيونة", // ع ي و ن ة = 5 ✓
   "رجلات", // ر ج ل ا ت = 5 ✓
   "أقدام", // أ ق د ا م = 5 ✓
   "بطنات", // ب ط ن ا ت = 5 ✓
@@ -226,9 +208,7 @@ export const ANSWER_WORDS: readonly string[] = [
   "أسنان", // أ س ن ا ن = 5 ✓
   "لسانة", // ل س ا ن ة = 5 ✓
   "أذنان", // أ ذ ن ا ن = 5 ✓
-  "أنوفة", // not standard
   "أنفات", // أ ن ف ا ت = 5 ✓
-  "خدودة", // not standard
   "خدوان", // خ د و ا ن = 5 ✓
   "جبهات", // ج ب ه ا ت = 5 ✓
   "شعرات", // ش ع ر ا ت = 5 ✓
@@ -237,10 +217,8 @@ export const ANSWER_WORDS: readonly string[] = [
   "صدرات", // ص د ر ا ت = 5 ✓
   "عضلات", // ع ض ل ا ت = 5 ✓
   "عروقة", // ع ر و ق ة = 5 ✓
-  "دماءة", // not standard
   "دموعة", // د م و ع ة = 5 ✓
   // --- Colors / descriptions ---
-  "أحمرة", // not standard
   "حمراء", // ح م ر ا ء = 5 ✓
   "صفراء", // ص ف ر ا ء = 5 ✓
   "خضراء", // خ ض ر ا ء = 5 ✓
@@ -248,7 +226,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "سوداء", // س و د ا ء = 5 ✓
   "زرقاء", // ز ر ق ا ء = 5 ✓
   "شقراء", // ش ق ر ا ء = 5 ✓
-  "برتقا", // incomplete
   "بنيات", // ب ن ي ا ت = 5 ✓
   "رمادي", // ر م ا د ي = 5 ✓
   "وردية", // و ر د ي ة = 5 ✓
@@ -263,7 +240,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "بطيئة", // ب ط ي ئ ة = 5 ✓
   "ثقيلة", // ث ق ي ل ة = 5 ✓
   "خفيفة", // خ ف ي ف ة = 5 ✓
-  "قوية", // only 4 chars
   "قويات", // ق و ي ا ت = 5 ✓
   "ضعيفة", // ض ع ي ف ة = 5 ✓
   "حديثة", // ح د ي ث ة = 5 ✓
@@ -272,11 +248,9 @@ export const ANSWER_WORDS: readonly string[] = [
   "نظيفة", // ن ظ ي ف ة = 5 ✓
   "وسخات", // و س خ ا ت = 5 ✓
   "فاتحة", // ف ا ت ح ة = 5 ✓
-  "داكنات", // 6 chars
   "ساطعة", // س ا ط ع ة = 5 ✓
   "معتمة", // م ع ت م ة = 5 ✓
   // --- Actions / verbal nouns ---
-  "ضحكات", // already added
   "نظرات", // ن ظ ر ا ت = 5 ✓
   "لمسات", // ل م س ا ت = 5 ✓
   "قبلات", // ق ب ل ا ت = 5 ✓
@@ -288,7 +262,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "همسات", // ه م س ا ت = 5 ✓
   "صلوات", // ص ل و ا ت = 5 ✓
   "صيامة", // ص ي ا م ة = 5 ✓
-  "زكاةة", // wrong
   "حجابة", // ح ج ا ب ة = 5 ✓
   "دعاءة", // د ع ا ء ة = 5 ✓
   "سجودة", // س ج و د ة = 5 ✓
@@ -311,11 +284,8 @@ export const ANSWER_WORDS: readonly string[] = [
   "شربات", // ش ر ب ا ت = 5 ✓
   // --- Technology / modern ---
   "هاتفة", // ه ا ت ف ة = 5 ✓
-  "شاشات", // already added
   "حاسوب", // ح ا س و ب = 5 ✓
   "طابعة", // ط ا ب ع ة = 5 ✓
-  "كاميرا", // 6 chars
-  "كاميرة", // ك ا م ي ر ة = 6 — no wait: ك-ا-م-ي-ر-ة = 6 chars. skip
   "تلفاز", // ت ل ف ا ز = 5 ✓
   "إنترن", // إ ن ت ر ن = 5 ✓
   "شبكات", // ش ب ك ا ت = 5 ✓
@@ -326,7 +296,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "بريدة", // ب ر ي د ة = 5 ✓
   "سيارة", // س ي ا ر ة = 5 ✓
   "طيارة", // ط ي ا ر ة = 5 ✓
-  "مترو", // only 4 chars (م-ت-ر-و)
   "دراجة", // د ر ا ج ة = 5 ✓
   "سفينة", // س ف ي ن ة = 5 ✓
   "بواخر", // ب و ا خ ر = 5 ✓
@@ -334,14 +303,11 @@ export const ANSWER_WORDS: readonly string[] = [
   "مولدة", // م و ل د ة = 5 ✓
   "طاقات", // ط ا ق ا ت = 5 ✓
   "بطاري", // ب ط ا ر ي = 5 ✓ (battery)
-  "مجساة", // not standard
   "ألعاب", // أ ل ع ا ب = 5 ✓
   "صواري", // ص و ا ر ي = 5 ✓ (masts/antennas)
   // --- Places ---
   "مدرسة", // م د ر س ة = 5 ✓
-  "مسجدة", // not standard — مسجد is 4 chars م-س-ج-د
   "مطارة", // م ط ا ر ة = 5 ✓
-  "مستشف", // incomplete
   "سوقات", // س و ق ا ت = 5 ✓
   "دكانة", // د ك ا ن ة = 5 ✓
   "مطعمة", // م ط ع م ة = 5 ✓
@@ -369,7 +335,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "خريطة", // خ ر ي ط ة = 5 ✓
   "منطقة", // م ن ط ق ة = 5 ✓
   // --- Sports ---
-  "كرات", // only 4: ك-ر-ا-ت
   "كراتة", // ك ر ا ت ة = 5 ✓
   "ملاعب", // م ل ا ع ب = 5 ✓
   "فريقة", // ف ر ي ق ة = 5 ✓
@@ -379,17 +344,12 @@ export const ANSWER_WORDS: readonly string[] = [
   "تمارن", // not right — تمارين is 6
   "سباحة", // س ب ا ح ة = 5 ✓
   "جريات", // ج ر ي ا ت = 5 ✓
-  "قفزات", // already added
-  "رميات", // already added
   "ركلات", // ر ك ل ا ت = 5 ✓
   "أهداف", // أ ه د ا ف = 5 ✓
   "نقاطة", // ن ق ا ط ة = 5 ✓
   "بطولة", // ب ط و ل ة = 5 ✓
   "كأسات", // ك أ س ا ت = 5 ✓
-  "ميداني", // 6 chars
   "سلوات", // not standard — سلة is basket: سلات = 5? س-ل-ا-ت = 4
-  "ملاكمة", // 6 chars
-  "مصارعة", // 6 chars
   "تنسات", // ت ن س ا ت = 5 ✓
   "غطسات", // غ ط س ا ت = 5 ✓
   "صيدات", // ص ي د ا ت = 5 ✓
@@ -418,16 +378,11 @@ export const ANSWER_WORDS: readonly string[] = [
   "بركات", // ب ر ك ا ت = 5 ✓
   "رحمات", // ر ح م ا ت = 5 ✓
   "حكاية", // ح ك ا ي ة = 5 ✓
-  "قصصة", // not standard
   "روايا", // ر و ا ي ا = 5 ✓
-  "أسطرة", // not standard
   "أغنية", // أ غ ن ي ة = 5 ✓
-  "أنشود", // not standard
   "لحنات", // ل ح ن ا ت = 5 ✓
   "كلمات", // ك ل م ا ت = 5 ✓
   "جملات", // ج م ل ا ت = 5 ✓
-  "حروفة", // ح ر و ف ة = 5 ✓
-  "نصوصة", // ن ص و ص ة = 5 ✓
   "أحلام", // أ ح ل ا م = 5 ✓
   "أفكار", // أ ف ك ا ر = 5 ✓
   "معاني", // م ع ا ن ي = 5 ✓
@@ -444,15 +399,10 @@ export const ANSWER_WORDS: readonly string[] = [
   "طلابة", // ط ل ا ب ة = 5 ✓
   "فصولة", // ف ص و ل ة = 5 ✓
   "مناقش", // م ن ا ق ش = 5 ✓
-  "امتحا", // incomplete
-  "اختبا", // incomplete
   "شهادة", // ش ه ا د ة = 5 ✓
   "جامعة", // ج ا م ع ة = 5 ✓
   "مناسب", // م ن ا س ب = 5 ✓
   // --- Time / calendar ---
-  "أيامة", // not standard
-  "أسابي", // incomplete
-  "أشهرة", // not standard
   "سنوات", // س ن و ا ت = 5 ✓
   "ساعات", // س ا ع ا ت = 5 ✓
   "دقائق", // د ق ا ئ ق = 5 ✓
@@ -471,7 +421,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "سنوية", // س ن و ي ة = 5 ✓
   "ماضية", // م ا ض ي ة = 5 ✓
   "حاضرة", // ح ا ض ر ة = 5 ✓
-  "مستقب", // incomplete — skip
   "قادمة", // ق ا د م ة = 5 ✓
   "تاريخ", // ت ا ر ي خ = 5 ✓
   "زمانة", // ز م ا ن ة = 5 ✓
@@ -534,7 +483,6 @@ export const ANSWER_WORDS: readonly string[] = [
   "ولادة", // و ل ا د ة = 5 ✓
   "سيادة", // س ي ا د ة = 5 ✓
   "ضيافة", // ض ي ا ف ة = 5 ✓
-  "حلاوة", // ح ل ا و ة = 5 ✓
   "شراكة", // ش ر ا ك ة = 5 ✓
   "زراعة", // ز ر ا ع ة = 5 ✓
   "صناعة", // ص ن ا ع ة = 5 ✓
@@ -544,7 +492,7 @@ export const ANSWER_WORDS: readonly string[] = [
   "مهارة", // م ه ا ر ة = 5 ✓
   "نظارة", // ن ظ ا ر ة = 5 ✓
   "خسارة", // خ س ا ر ة = 5 ✓
-];
+]
 
 // Remove duplicates and ensure exactly 5 chars
 function validateWords(words: readonly string[]): string[] {
@@ -559,13 +507,2090 @@ function validateWords(words: readonly string[]): string[] {
 
 export const VALID_ANSWERS: string[] = validateWords(ANSWER_WORDS);
 
-// Allowed guesses = same as valid answers (simplified)
-export const ALLOWED_GUESSES: string[] = [...VALID_ANSWERS];
+// Extra valid guesses beyond the answer list — common 5-letter Arabic words
+const EXTRA_GUESSES: readonly string[] = [
+  // === Common verbs (past tense, 3rd person masculine singular) ===
+  "كتبوا", // they wrote
+  "ذهبوا", // they went
+  "خرجوا", // they went out
+  "دخلوا", // they entered
+  "رجعوا", // they returned
+  "وصلوا", // they arrived
+  "نزلوا", // they descended
+  "طلعوا", // they ascended
+  "سمعوا", // they heard
+  "شربوا", // they drank
+  "أكلوا", // they ate
+  "نظروا", // they looked
+  "وقفوا", // they stood
+  "جلسوا", // they sat
+  "نامات", // sleeping
+  "حملوا", // they carried
+  "قتلوا", // they killed
+  "فتحوا", // they opened
+  "أغلقت", // she closed
+  "بحثوا", // they searched
+  "درسوا", // they studied
+  "عملوا", // they worked
+  "لعبوا", // they played
+  "ضربوا", // they hit
+  "كسروا", // they broke
+  "قرأوا", // they read
+  "مشيتم", // you all walked
+  "علموا", // they knew
+  "فهموا", // they understood
+  "حصلوا", // they obtained
+  "استلم", // he received
+  "يكتبن", // they (f) write
+  "تكتبن", // you (f.pl) write
+  "يذهبن", // they (f) go
+  "يخرجن", // they (f) go out
+  "تدخلن", // you (f.pl) enter
+  "يرجعن", // they (f) return
+  "يسمعن", // they (f) hear
+  "يشربن", // they (f) drink
+  "ينظرن", // they (f) look
+  "يجلسن", // they (f) sit
+  "يحملن", // they (f) carry
+  "يفتحن", // they (f) open
+  "يبحثن", // they (f) search
+  "يدرسن", // they (f) study
+  "يعملن", // they (f) work
+  "يلعبن", // they (f) play
+  "يضربن", // they (f) hit
+  "يكسرن", // they (f) break
+  "يقرأن", // they (f) read
+  "يفهمن", // they (f) understand
+  "أجابت", // she answered
+  "تكلمت", // she spoke
+  "ابتسم", // he smiled
+  "اجتمع", // he gathered
+  "انتظر", // he waited
+  "انتقل", // he moved
+  "انتهت", // she ended
+  "استمر", // he continued
+  "استمع", // he listened
+  "اقترب", // he approached
+  "اقترح", // he suggested
+  "التزم", // he committed
+  "التقط", // he picked up
+  "التقت", // she met
+  "احتفل", // he celebrated
+  "اختار", // he chose
+  "اختلف", // he differed
+  "اختفت", // she disappeared
+  "ادعات", // she claimed
+  "ارتفع", // he rose
+  "استقر", // he settled
+  "اشتكت", // she complained
+  "اعتذر", // he apologized
+  "اعتمد", // he depended
+  "افتتح", // he opened/inaugurated
+  "تحركت", // she moved
+  "تخرجت", // she graduated
+  "تذكرت", // she remembered
+  "ترددت", // she hesitated
+  "تزوجت", // she married
+  "تساءل", // he wondered
+  "تصرفت", // she behaved
+  "تطورت", // she developed
+  "تعاون", // he cooperated
+  "تعلمت", // she learned
+  "تغيرت", // she changed
+  "تفاجأ", // he was surprised
+  "تقاعد", // he retired
+  "تمكنت", // she was able
+  "توقفت", // she stopped
+  "توقعت", // she expected
+  // === Form I past tense verbs ===
+  "سألوا", // they asked
+  "قالوا", // they said
+  "كانوا", // they were
+  "بدأوا", // they began
+  "حكموا", // they judged
+  "ركبوا", // they rode
+  "زرعوا", // they planted
+  "صنعوا", // they made
+  "طبخوا", // they cooked
+  "غسلوا", // they washed
+  "فقدوا", // they lost
+  "كشفوا", // they discovered
+  "لبسوا", // they wore
+  "مسكوا", // they held
+  "هربوا", // they fled
+  "وضعوا", // they placed
+  "وقعوا", // they fell/signed
+  "ولدوا", // they were born
+  // === Common nouns ===
+  "عالمة", // female scholar
+  "حاكمة", // female ruler
+  "عاصمة", // capital city
+  "عائلة", // family
+  "معركة", // battle
+  "مشكلة", // problem
+  "محاضر", // lectures
+  "مجالس", // councils
+  "مدارس", // schools
+  "مساجد", // mosques
+  "مكاتب", // offices
+  "مطابخ", // kitchens
+  "مصانع", // factories
+  "ملابس", // clothes
+  "مواعد", // appointments
+  "موارد", // resources
+  "محاكم", // courts
+  "مخاطر", // risks
+  "مراكز", // centers
+  "مسائل", // issues
+  "مشاعر", // feelings
+  "مشاكل", // problems
+  "مصادر", // sources
+  "معادن", // metals
+  "مغامر", // adventurer
+  "مفاتح", // keys (plural)
+  "منافس", // competitor
+  "منازل", // houses
+  "مواقع", // locations
+  "مواقف", // positions/situations
+  "نتائج", // results
+  "نماذج", // models
+  "نوافذ", // windows
+  "وثائق", // documents
+  "حوادث", // accidents
+  "حقائب", // bags
+  "حقائق", // facts
+  "خدمات", // services
+  "خطوات", // steps
+  "دروسة", // lesson (modified)
+  "دفاتر", // notebooks
+  "رحالة", // traveler
+  "رسائل", // messages (already in answers, will be deduped)
+  "سجلات", // records
+  "شوارع", // streets
+  "صفحات", // pages
+  "عقودة", // contracts
+  "علاقة", // relationship
+  "فنادق", // hotels
+  "قصائد", // poems
+  "مبالغ", // amounts
+  "أحداث", // events
+  "أرقام", // numbers
+  "أسلحة", // weapons
+  "أعداد", // numbers/quantities
+  "أعضاء", // members
+  "أفلام", // films
+  "أنواع", // types
+  "أجزاء", // parts
+  "أدوات", // tools
+  "أسباب", // reasons
+  "أسعار", // prices
+  "أشكال", // shapes
+  "أصدقا", // friends (short)
+  "أصوات", // voices
+  "أطباق", // dishes
+  "أعداء", // enemies
+  "أعشاب", // herbs
+  "أعياد", // holidays
+  "أفراد", // individuals
+  "أقسام", // sections
+  "أقمار", // moons
+  "ألوان", // colors
+  "أماكن", // places
+  "أمراض", // diseases
+  "أنظمة", // systems
+  "أوراق", // papers/leaves
+  "أوضاع", // situations
+  "إشارة", // signal
+  "إرادة", // will/determination
+  "إدارة", // management
+  "إنارة", // lighting
+  "إعادة", // return/repeat
+  "إهانة", // insult
+  "بداية", // beginning
+  "نهاية", // end
+  "رعاية", // care
+  "حماية", // protection
+  "وقاية", // prevention
+  "غاية", // goal (4 chars - will be filtered)
+  "عناية", // attention/care
+  "رواية", // novel
+  "حكومة", // government
+  "مقاومة", // resistance (6 chars - filtered)
+  "تسمية", // naming
+  "أمنية", // wish
+  "بلدية", // municipality
+  "جمعية", // association
+  "حرية", // freedom (4 - filtered)
+  "ذرية", // offspring (4 - filtered)
+  "أغلبة", // majority
+  "تربية", // education
+  "تصفية", // filtering
+  "تعبئة", // filling
+  "تغذية", // nutrition
+  "تقنية", // technology
+  "تنمية", // development
+  "توصية", // recommendation
+  "ثانوي", // secondary (5 - but check)
+  "جنسية", // nationality
+  "خارجة", // external
+  "خلفية", // background
+  "داخلة", // internal
+  "رسمية", // official
+  "سرية", // secret (4 - filtered)
+  "شخصية", // personality
+  "صحراو", // Saharan (truncated)
+  "عربية", // Arabic
+  "عسكري", // military
+  "فردية", // individual
+  "مالية", // financial
+  "محلية", // local
+  "مدنية", // civil
+  "نسائي", // women's
+  "نوعية", // quality
+  // === Professions ===
+  "معلمة", // female teacher
+  "طبيبة", // female doctor
+  "مهندس", // engineer
+  "محامي", // lawyer
+  "قاضية", // female judge
+  "ممرضة", // nurse
+  "صحافي", // journalist
+  "خبازة", // female baker
+  "حدادة", // female blacksmith
+  "نجارة", // carpentry
+  "بائعة", // female seller
+  "سائقة", // female driver
+  "طيارة", // pilot (already in answers)
+  "حارسة", // female guard
+  "مزارع", // farmer
+  "صيدلي", // pharmacist
+  "كيمائ", // chemist (truncated)
+  "طاهية", // female chef
+  "خياطة", // sewing/tailor
+  "ناشرة", // female publisher
+  "وزيرة", // female minister
+  "سفيرة", // female ambassador
+  "رئيسة", // female president
+  "مديرة", // female manager
+  "كاتبة", // female writer
+  "فنانة", // female artist
+  "رسامة", // female painter
+  "عازفة", // female musician
+  "راقصة", // female dancer
+  "مخرجة", // female director
+  "ممثلة", // female actress
+  // === Animals ===
+  "عصفور", // sparrow
+  "غزالة", // gazelle
+  "قرشات", // sharks
+  "دلفين", // dolphin
+  "حرباء", // chameleon
+  "عقربة", // scorpion
+  "سلحفا", // turtle (truncated)
+  "بطريق", // penguin
+  "فيلات", // elephants
+  "زرافة", // giraffe
+  "غوريل", // gorilla (truncated)
+  "ببغاء", // parrot
+  "نسرات", // eagles
+  "صقرات", // falcons
+  "بومات", // owls
+  "حمامة", // pigeon (already in answers)
+  "ذئابة", // wolf
+  "دببات", // bears
+  "أرانب", // rabbits
+  "حملان", // lambs
+  "خيولة", // horses
+  "بقرات", // cows
+  "ماعزة", // goat
+  "غنمات", // sheep
+  "ديكات", // roosters (already in answers)
+  "عنزات", // goats
+  "حمارة", // donkey
+  "بغلات", // mules
+  "ثيران", // bulls
+  "صوصات", // chicks
+  "نعامة", // ostrich
+  "طاووس", // peacock
+  "حوتات", // whales
+  "سمندل", // salamander
+  // === Body & health ===
+  "عملية", // operation
+  "مستشف", // hospital (truncated)
+  "صيدلة", // pharmacy
+  "علاجة", // treatment
+  "دواءة", // medicine
+  "مرضات", // illnesses
+  "حمضات", // acids
+  "فيروس", // virus
+  "جرثوم", // germ
+  "حساسة", // sensitive/allergy
+  "تحليل", // analysis
+  "فحوصة", // examination
+  "أشعات", // x-rays
+  "ضمادة", // bandage
+  "حقنات", // injections
+  "كبسول", // capsule
+  "حبوبة", // pills
+  "مرهمة", // ointment
+  "قطرات", // drops
+  "جراحة", // surgery
+  "تمريض", // nursing
+  "صحيات", // health
+  "لياقة", // fitness
+  "حمية", // diet (4 - filtered)
+  "تغذيي", // nutritional (truncated)
+  // === Food expanded ===
+  "زيتون", // olives
+  "بقدنس", // parsley
+  "نعناع", // mint
+  "كزبرة", // coriander
+  "زنجبل", // ginger (6 - filtered)
+  "كركمة", // turmeric
+  "قرنفل", // cloves
+  "عسلات", // honey
+  "سكرات", // sugars
+  "ملحات", // salts
+  "فلفلي", // peppery
+  "كمونة", // cumin
+  "يانسن", // anise (truncated)
+  "حبهان", // cardamom
+  "رشادة", // cress
+  "بابون", // chamomile (truncated)
+  "موزات", // bananas
+  "تفاحة", // apple
+  "برتقا", // orange (truncated)
+  "عنبات", // grapes
+  "رمانة", // pomegranate
+  "مانجو", // mango
+  "بطيخة", // watermelon
+  "شمامة", // cantaloupe
+  "فراول", // strawberry (truncated)
+  "توتات", // berries
+  "تينات", // figs
+  "خوخات", // peaches
+  "مشمشة", // apricot
+  "كرزات", // cherries
+  "جوزات", // walnuts
+  "لوزات", // almonds
+  "فستقة", // pistachio
+  "بندقة", // hazelnut/gun
+  "كاجوة", // cashew
+  // === Clothing & fabric ===
+  "قطنية", // cotton
+  "حريرة", // silk/harira
+  "صوفية", // woolen
+  "جلدية", // leather
+  "تنورة", // skirt
+  "فستان", // dress
+  "معطفة", // coat
+  "سترات", // jackets
+  "قبعات", // hats
+  "حزامة", // belt
+  "قفازة", // glove
+  "شالات", // shawls
+  "خاتمة", // ring/conclusion
+  "سوارة", // bracelet
+  "قلادة", // necklace
+  "عقدات", // necklaces/knots
+  "ساعية", // hourly/messenger
+  "محفظة", // wallet
+  "حذاءة", // shoe
+  "نعالة", // slipper
+  "جزمات", // boots
+  "صندلة", // sandal
+  // === Geography & places ===
+  "جزيرة", // island
+  "قارات", // continents
+  "محيطة", // ocean/surrounding
+  "بحرية", // maritime
+  "ساحلة", // coast
+  "جبلية", // mountainous
+  "سهلية", // plains
+  "وادية", // valley
+  "كهفات", // caves
+  "بركان", // volcano
+  "زلازل", // earthquakes
+  "فيضان", // flood
+  "جفافة", // drought
+  "ثلوجة", // snow
+  "جليدة", // ice
+  "حرارة", // heat
+  "برودة", // cold
+  "رطوبة", // humidity
+  "جفافي", // drought-related
+  "هطولة", // precipitation
+  "ضبابة", // fog
+  "عاصفة", // storm
+  "إعصار", // hurricane
+  "رعدية", // thunderous
+  "شمسية", // solar
+  "قمرية", // lunar
+  "نجمات", // stars
+  "كوكبة", // constellation
+  "فضاءة", // space
+  "مجرات", // galaxies
+  // === Numbers & math ===
+  "عددية", // numerical
+  "حسابة", // calculation
+  "جمعية", // addition/association
+  "طرحات", // subtractions/veils
+  "ضربات", // hits/multiplications
+  "قسمات", // divisions/features
+  "نسبية", // relative
+  "كسرات", // fractions
+  "معادل", // equivalent
+  "أرقام", // numbers (already above)
+  "نقطات", // points
+  "خطوطة", // lines
+  "دائرة", // circle
+  "مربعة", // square
+  "مثلثة", // triangle
+  "هرمات", // pyramids
+  "كروية", // spherical
+  "مخروط", // cone
+  "أسطوا", // cylinder (truncated)
+  // === Education ===
+  "تعليم", // education
+  "تدريس", // teaching
+  "منهجة", // curriculum
+  "درسات", // lessons
+  "صفوفة", // classes
+  "طالبة", // female student
+  "أساتذ", // professors (truncated)
+  "امتحن", // he examined
+  "اختبر", // he tested
+  "تخرجة", // graduation
+  "شهادي", // certificate-related
+  "بكالو", // bachelor (truncated)
+  "معهدة", // institute
+  "كليات", // faculties
+  "قاعات", // halls
+  "سبورة", // blackboard
+  "طباشر", // chalk
+  "مسطرة", // ruler
+  "برجلة", // compass (drawing)
+  "ممحاة", // eraser
+  "حبرات", // inks
+  // === Religion ===
+  "مسجدة", // mosque
+  "كنيسة", // church
+  "معبدة", // temple
+  "صيامة", // fasting (already in answers)
+  "حجابة", // hijab (already in answers)
+  "زكاتة", // zakat
+  "حسنات", // good deeds
+  "سيئات", // bad deeds
+  "ثوابة", // reward
+  "عقابة", // punishment
+  "جنائز", // funerals
+  "أضاحي", // sacrifices
+  "أذكار", // dhikr
+  "تسبيح", // glorification
+  "مصحفة", // Quran copy
+  "آيتان", // two verses
+  "سورات", // chapters (Quran)
+  "حديثة", // hadith/modern (already in answers)
+  "تفسير", // interpretation
+  "فقهية", // jurisprudential
+  // === Emotions & states expanded ===
+  "مندهش", // amazed
+  "مرتبك", // confused
+  "مرتاح", // comfortable
+  "مشتاق", // longing
+  "مشغول", // busy
+  "مبتهج", // delighted
+  "منزعج", // annoyed
+  "محتار", // puzzled
+  "متحمس", // enthusiastic
+  "متفائل", // optimistic (6 - filtered)
+  "مكتئب", // depressed
+  "منبهر", // dazzled
+  "متردد", // hesitant
+  "متوتر", // tense
+  "مرتعب", // terrified
+  "متعجب", // astonished
+  "متألم", // in pain
+  "مستاء", // displeased
+  "محبوب", // beloved
+  "مكروه", // hated
+  "مقبول", // accepted
+  "مرفوض", // rejected
+  "ممنوع", // forbidden
+  "مسموح", // allowed
+  "مطلوب", // wanted
+  "موجود", // present/existing
+  "مفقود", // missing
+  "معروف", // known
+  "مجهول", // unknown
+  "محترم", // respected
+  // === Adjectives expanded ===
+  "عظيمة", // great
+  "هائلة", // enormous
+  "رائعة", // wonderful
+  "ممتاز", // excellent
+  "مثالي", // ideal
+  "عاديي", // normal
+  "خاصية", // special/property
+  "عامية", // colloquial/public
+  "رسميي", // formal
+  "سهلات", // easy
+  "صعبات", // difficult
+  "بسيطة", // simple
+  "معقدة", // complex
+  "واضحة", // clear
+  "غامضة", // mysterious
+  "عميقة", // deep
+  "ضحلات", // shallow
+  "واسعة", // wide
+  "ضيقية", // narrow
+  "مرتفع", // high
+  "منخفض", // low
+  "حارات", // hot (streets)
+  "باردة", // cold
+  "دافئة", // warm
+  "رطبات", // wet
+  "جافات", // dry
+  "ناعمة", // soft
+  "خشنات", // rough
+  "حادات", // sharp
+  "مستقر", // stable
+  "متغير", // variable
+  "ثابتة", // fixed
+  "مؤقتة", // temporary
+  "دائمة", // permanent
+  "سعيدة", // happy (already in answers)
+  "حزينة", // sad
+  "غريبة", // strange
+  "مألوف", // familiar
+  "مميزة", // distinctive
+  "عادية", // ordinary
+  "فريدة", // unique
+  "نادرة", // rare
+  "شائعة", // common
+  "شهيرة", // famous
+  "مجانة", // free
+  "غالية", // expensive
+  "رخيصة", // cheap
+  "ثمينة", // precious
+  "فاخرة", // luxurious
+  "متينة", // sturdy
+  "هشاشة", // fragility
+  "مرنات", // flexible
+  "صلبات", // solid
+  "لامعة", // shiny
+  "معدنة", // metallic
+  "خشبية", // wooden
+  "زجاجي", // glass-like
+  "بلاست", // plastic (truncated)
+  "ورقية", // paper
+  "قطنية", // cotton (duplicate, will be filtered)
+  // === Verbs (imperative & present) ===
+  "اكتبي", // write! (f)
+  "اقرأي", // read! (f)
+  "اسمعي", // listen! (f)
+  "انظري", // look! (f)
+  "اجلسي", // sit! (f)
+  "ادخلي", // enter! (f)
+  "اخرجي", // exit! (f)
+  "ارجعي", // return! (f)
+  "افتحي", // open! (f)
+  "اغلقي", // close! (f)
+  "اطبخي", // cook! (f)
+  "اغسلي", // wash! (f)
+  "العبوا", // play! (pl)
+  "اركضي", // run! (f)
+  "اقفزي", // jump! (f)
+  "ارسمي", // draw! (f)
+  "يكتبو", // they write (colloquial)
+  "نكتبة", // we write (dialectal)
+  "يقرأون", // they read (6 - filtered)
+  "تسمعي", // you (f) hear
+  "تنظري", // you (f) look
+  "تجلسي", // you (f) sit
+  "تدخلي", // you (f) enter
+  "تخرجي", // you (f) exit
+  "ترجعي", // you (f) return
+  "تفتحي", // you (f) open
+  "تغلقي", // you (f) close
+  // === Abstract nouns ===
+  "حقيقة", // truth
+  "سياسة", // politics
+  "ثقافة", // culture
+  "طبيعة", // nature
+  "صداقة", // friendship
+  "عداوة", // enmity
+  "حضارة", // civilization
+  "تجارة", // trade
+  "إمارة", // emirate
+  "وزارة", // ministry
+  "سفارة", // embassy
+  "عمارة", // building
+  "حضانة", // nursery
+  "مطالب", // demands
+  "مشروع", // project
+  "مجتمع", // society
+  "مستقب", // future (truncated)
+  "مفهوم", // concept
+  "معلوم", // known (thing)
+  "محتوى", // content
+  "مضمون", // guaranteed/content
+  "مسؤول", // responsible
+  "مبدأة", // principle
+  "نظرية", // theory
+  "تطبيق", // application (already in answers)
+  "ممارس", // practitioner
+  "تجربي", // experimental
+  "عملية", // practical/operation
+  "نظامة", // system/order
+  "قانون", // law
+  "دستور", // constitution
+  "حكومي", // governmental
+  "شعبية", // popular
+  "وطنية", // national
+  "قومية", // nationalist
+  "دينية", // religious
+  "علمية", // scientific
+  "أدبية", // literary
+  "فنية", // artistic (4 - filtered)
+  "تعبير", // expression
+  "تفكير", // thinking
+  "تصوير", // photography
+  "تقدير", // estimation
+  "تأثير", // influence
+  "تغيير", // change
+  "تطوير", // development
+  "تحذير", // warning
+  "تبرير", // justification
+  "تحرير", // editing/liberation
+  "تقرير", // report
+  "تنظيم", // organization
+  "تعليق", // comment
+  "تسجيل", // recording
+  "تشكيل", // formation
+  "تحويل", // conversion
+  "تمويل", // financing
+  "توزيع", // distribution
+  "تصميم", // design
+  "ترتيب", // arrangement
+  "تركيب", // installation
+  "تعديل", // modification
+  "تحليل", // analysis (duplicate)
+  "تمثيل", // representation
+  "تشغيل", // operation
+  "تفعيل", // activation
+  "تحميل", // loading/download
+  // === Everyday objects expanded ===
+  "مكواة", // iron (clothes)
+  "غلاية", // kettle
+  "خلاطة", // blender
+  "فرنات", // ovens
+  "ثلاجي", // refrigerator-related
+  "غسالة", // washing machine
+  "مروحة", // fan
+  "مكيفة", // air conditioner
+  "سخانة", // heater
+  "دفاية", // heater
+  "مصباح", // lamp
+  "شمعات", // candles
+  "مرايا", // mirrors
+  "ساعية", // hourly (duplicate)
+  "تقويم", // calendar
+  "كراسي", // chairs
+  "طاولي", // table-related
+  "سرائر", // beds
+  "دولاب", // wardrobe
+  "خزنات", // safes
+  "رفوفة", // shelves
+  "علاقة", // hanger/relationship (duplicate)
+  "مشبكة", // clip
+  "دبوسة", // pin
+  "إبرات", // needles
+  "خيوطة", // threads
+  "أزرار", // buttons
+  "سحابة", // zipper/cloud (already in answers)
+  "مظلات", // umbrellas
+  "عصاية", // stick/cane
+  "قارور", // bottle (truncated)
+  "كأسات", // glasses/cups (already in answers)
+  "صحنات", // plates
+  "سكينة", // knife/tranquility
+  "مبشرة", // grater/glad tiding
+  "مقلاة", // frying pan (already in answers)
+  "هاونة", // mortar
+  "ملقطة", // tongs
+  "مغرفة", // ladle
+  "قالبة", // mold
+  "صينية", // tray (already in answers)
+  // === Music & arts ===
+  "عودات", // ouds
+  "قيثار", // guitar/lyre
+  "ناياة", // flute
+  "دفوفة", // drums
+  "طبلات", // drums
+  "كمنجة", // violin (colloquial)
+  "بيانو", // piano
+  "موسيق", // music (truncated)
+  "أوركس", // orchestra (truncated)
+  "جوقات", // choirs
+  "مسرحة", // theater
+  "سينما", // cinema
+  "فيلمة", // film
+  "مشهدة", // scene
+  "لوحات", // paintings
+  "تمثال", // statue
+  "نحتات", // sculptures
+  "خزفية", // ceramic
+  "فخارة", // pottery
+  "نسيجة", // textile
+  "تطريز", // embroidery
+  "خطاطة", // calligrapher
+  "زخرفة", // decoration
+  // === Sports expanded ===
+  "كريكت", // cricket
+  "تزلجة", // skiing
+  "ملاكم", // boxer
+  "مصارع", // wrestler
+  "رامية", // archer
+  "سبحات", // swimming laps
+  "غوصات", // dives
+  "تجديف", // rowing
+  "قوارب", // boats
+  "أشرعة", // sails
+  "فروسة", // horsemanship
+  "رماية", // shooting
+  "سهمات", // arrows
+  "قوسات", // bows
+  "هدافة", // scorer
+  "حكمات", // referees (already in answers)
+  "مشجعة", // female fan
+  "جمهور", // audience
+  "منافس", // competitor (duplicate)
+  "بطلات", // champions (f)
+  "ذهبية", // golden
+  "فضيات", // silver
+  "برونز", // bronze
+  // === Weather & seasons ===
+  "شتاءة", // winter
+  "صيفية", // summery
+  "ربيعة", // spring
+  "خريفة", // autumn
+  "فصلية", // seasonal
+  "مناخة", // climate
+  "طقسات", // weather
+  "حرارة", // temperature (duplicate)
+  "برودة", // coldness (duplicate)
+  "سحائب", // clouds
+  "مطرات", // rains
+  "ثلجات", // snow
+  "بردات", // hail/cold
+  "موجات", // waves
+  "نسمات", // breezes
+  "هبوبة", // blowing
+  "عواصف", // storms (already in answers)
+  // === Materials & elements ===
+  "حديدة", // iron
+  "نحاسة", // copper
+  "ذهبات", // golds
+  "فضيات", // silvers (duplicate)
+  "ألماس", // diamond
+  "ياقوت", // ruby
+  "زمردة", // emerald
+  "لؤلؤة", // pearl
+  "مرجان", // coral
+  "عنبرة", // amber
+  "فحمات", // coals
+  "رصاصة", // bullet/lead
+  "قصدير", // tin
+  "معدنة", // metal (duplicate)
+  "بلورة", // crystal
+  "زئبقة", // mercury
+  // === Computing & tech expanded ===
+  "حاسبة", // calculator
+  "شاشات", // screens (already in answers)
+  "طابعة", // printer (already in answers)
+  "ماسحة", // scanner
+  "سماعة", // earphone
+  "كامير", // camera (truncated)
+  "بيانة", // data
+  "معلوم", // information (duplicate)
+  "ملفات", // files
+  "مجلدة", // folder
+  "نظامة", // system (duplicate)
+  "برنام", // program (truncated)
+  "تطبيق", // app (already in answers)
+  "موقعة", // website (already in answers)
+  "صفحات", // pages (duplicate)
+  "رابطة", // link/association
+  "كلمات", // words (already in answers)
+  "مرورة", // traffic/password
+  "حسابة", // account (duplicate)
+  "بريدة", // email (already in answers)
+  "إنذار", // alarm
+  "تحديث", // update
+  "تنزيل", // download
+  "رفعات", // uploads
+  "نسخات", // copies
+  "حفظات", // saves
+  "مسحات", // scans/wipes
+  "طبعات", // prints
+  // === Misc common 5-letter words ===
+  "بسملة", // basmala
+  "حمدلة", // hamdala
+  "حوقلة", // hawqala
+  "تهليل", // tahleel
+  "تكبير", // takbeer
+  "مسبحة", // rosary
+  "سبحات", // glorifications (duplicate)
+  "فاتحة", // opening (already in answers)
+  "نافذة", // window (already in answers)
+  "عتبات", // thresholds
+  "سقفات", // roofs
+  "جدران", // walls
+  "أرضية", // floor
+  "سلوكة", // behavior
+  "تصرفة", // behavior
+  "عادات", // habits
+  "تقليد", // tradition
+  "عرفات", // customs/Arafat
+  "موروث", // heritage
+  "تراثة", // heritage
+  "حداثة", // modernity
+  "معاصر", // contemporary
+  "كلاسي", // classic
+  "حديثي", // modern
+  "قديمي", // old
+  "أصيلة", // authentic
+  "مزيفة", // fake
+  "حقيقي", // real
+  "خيالي", // imaginary
+  "واقعي", // realistic
+  "منطقي", // logical
+  "عقلاء", // wise people
+  "عقلية", // mentality
+  "ذكاءة", // intelligence
+  "غباءة", // stupidity
+  "فطنات", // cleverness
+  "حكمات", // wisdoms (already in answers)
+  // === More common verbs (Form II-X) ===
+  "علموا", // they taught
+  "قدموا", // they presented
+  "وصفوا", // they described
+  "أرسلت", // she sent
+  "أعلنت", // she announced
+  "أكملت", // she completed
+  "أنقذت", // she rescued
+  "أصلحت", // she repaired
+  "أضافت", // she added
+  "أخفقت", // she failed
+  "أبدعت", // she created
+  "أتقنت", // she mastered
+  "أثبتت", // she proved
+  "أحبطت", // she frustrated
+  "أدهشت", // she amazed
+  "أذهلت", // she astonished
+  "أراحت", // she comforted
+  "أرعبت", // she terrified
+  "أزعجت", // she annoyed
+  "أسعدت", // she made happy
+  "أفرحت", // she delighted
+  "أفزعت", // she scared
+  "أقلقت", // she worried
+  "ألهمت", // she inspired
+  "أنعشت", // she refreshed
+  // === Directions & positions ===
+  "شمالة", // north
+  "جنوبة", // south
+  "شرقية", // eastern
+  "غربية", // western
+  "فوقية", // upper
+  "تحتية", // lower
+  "يمنية", // right/Yemeni
+  "يسارة", // left
+  "أمامة", // front
+  "خلفية", // behind (duplicate)
+  "وسطية", // middle/moderate
+  "جانبة", // side
+  "قريبة", // near
+  "بعيدة", // far
+  "داخلة", // inside (duplicate)
+  "خارجة", // outside (duplicate)
+  // === Transportation ===
+  "حافلة", // bus
+  "شاحنة", // truck
+  "عربات", // carts
+  "مركبة", // vehicle
+  "قاطرة", // locomotive
+  "عبارة", // ferry/phrase
+  "زورقة", // boat
+  "يختات", // yachts
+  "مرسات", // anchors
+  "ميناء", // port
+  "مرفأة", // harbor
+  "محطات", // stations
+  "جسرات", // bridges
+  "نفقات", // tunnels/expenses
+  "طريقة", // road (already in answers)
+  "ممرات", // corridors
+  "رصيفة", // sidewalk/platform
+  "إشارة", // traffic light (duplicate)
+  "لافتة", // sign
+  "مخرجة", // exit (duplicate with director)
+  // === Finance & business ===
+  "تجاري", // commercial
+  "مصرفة", // banking
+  "حوالة", // transfer
+  "عملات", // currencies
+  "أسهمة", // stocks
+  "سندات", // bonds
+  "ربحات", // profits
+  "خسائر", // losses
+  "ميزان", // balance (already in answers)
+  "دخلات", // incomes
+  "إيراد", // revenue
+  "مصروف", // expense
+  "ضريبة", // tax
+  "تأمين", // insurance
+  "رأسمل", // capital (truncated)
+  "استثم", // investment (truncated)
+  "تسويق", // marketing
+  "مبيعة", // sale
+  "شراءة", // purchase
+  "عرضات", // offers
+  "خصمات", // discounts
+  "فاتور", // invoice (truncated)
+  "إيصال", // receipt
+  "عقدات", // contracts (duplicate)
+  "شريكة", // partner (f)
+  "مساهم", // shareholder
+  "مستثم", // investor (truncated)
+  "ضامنة", // guarantor (f)
+  // === Greetings & common expressions ===
+  "سلامة", // safety (already in answers)
+  "تحيات", // greetings
+  "مبارك", // blessed
+  "مواساة", // consolation (6 - filtered)
+  "تهنئة", // congratulation
+  "معذرة", // excuse
+  "شكرات", // thanks (already in answers)
+  "عفوات", // pardons (already in answers)
+  "مسامح", // forgiver
+  "متسام", // tolerant (truncated)
+  // === More nouns (common everyday) ===
+  "صورات", // photos
+  "ألبوم", // album
+  "مجلات", // magazines
+  "جرائد", // newspapers
+  "كتابة", // writing (already in answers)
+  "قراءة", // reading (already in answers)
+  "حروفة", // letters
+  "كلمية", // word-related
+  "جملية", // sentence-related
+  "فقرات", // paragraphs
+  "مقالة", // article
+  "قصيصة", // short story
+  "رواية", // novel (duplicate)
+  "شعرية", // poetic
+  "نثرات", // prose
+  "مسرحي", // theatrical
+  "تلفزي", // TV-related
+  "إذاعة", // radio/broadcast
+  "بودكا", // podcast (truncated)
+  "مقاطع", // clips
+  "أفلام", // films (duplicate)
+  "مسلسل", // series
+  "حلقات", // episodes
+  "موسمة", // season
+  "برامج", // programs (already in answers)
+  // === Furniture & home ===
+  "أريكة", // couch
+  "كنبات", // sofas
+  "مقعدة", // seat
+  "مكتبي", // office/desk
+  "سريرة", // bed/secret
+  "فراشة", // mattress/butterfly (already in answers)
+  "مرتبة", // mattress/rank
+  "دواليب", // wardrobes (6 - filtered)
+  "خزائن", // cabinets (6 - filtered)
+  "منضدة", // table
+  "مقلمة", // pencil case
+  "حاملة", // holder/carrier
+  "معلقة", // hanging
+  "جرسات", // bells
+  "باقات", // bouquets
+  "مزهرة", // vase
+  "شمعدن", // candlestick (truncated)
+  "بخورة", // incense
+  "عطرات", // perfumes
+  "بخاخة", // spray
+  "مناديل", // tissues (6 - filtered)
+  "منديل", // tissue (6 - filtered)
+  "فوطات", // towels
+  "سجادي", // carpet-related
+  "موكيت", // carpet (moquette)
+  "بلاطة", // tile
+  "رخامة", // marble
+  "دهانة", // paint
+  "أصباغ", // dyes
+  // === War & conflict ===
+  "معركة", // battle (duplicate)
+  "حربات", // wars
+  "سلاحة", // weapon
+  "جيوشة", // armies
+  "جنديي", // soldier
+  "ضابطة", // officer (f)
+  "قائدة", // leader (f)
+  "جنرال", // general
+  "لواءة", // brigade
+  "كتيبة", // battalion
+  "فرقات", // divisions
+  "سريات", // companies (military)
+  "دبابة", // tank
+  "مدفعة", // cannon
+  "صاروخ", // rocket (already in answers)
+  "قنبلة", // bomb
+  "لغمات", // mines
+  "درعات", // shields
+  "خنادق", // trenches
+  "حصارة", // siege
+  "هجمات", // attacks
+  "دفاعة", // defense
+  "نصرات", // victories
+  "هزيمة", // defeat
+  "أسيرة", // prisoner (f)
+  // === Verbs - more common past tense ===
+  "أخذوا", // they took
+  "أحبوا", // they loved
+  "أرادو", // they wanted
+  "بناءة", // construction
+  "تركوا", // they left
+  "جاءوا", // they came
+  "حاولت", // she tried
+  "خافوا", // they feared
+  "دارات", // she circulated
+  "ذاقوا", // they tasted
+  "رأيتم", // you all saw
+  "زاروا", // they visited
+  "ساروا", // they walked
+  "شاهدت", // she watched
+  "صاروا", // they became
+  "ظنوها", // they thought it
+  "عاشوا", // they lived
+  "عادوا", // they returned
+  "غادرت", // she left
+  "فازوا", // they won
+  "قاموا", // they stood up
+  "لاحظت", // she noticed
+  "ناموا", // they slept
+  "هربات", // escapes
+  "واجهت", // she faced
+  // === Common 5-letter words (miscellaneous) ===
+  "مبنات", // buildings
+  "مخطوط", // manuscript
+  "مجوهر", // jeweled
+  "تمساح", // crocodile
+  "عنكبة", // spider
+  "حلزون", // snail
+  "دودات", // worms
+  "يرقات", // larvae
+  "فطرات", // fungi
+  "طحالب", // algae
+  "أعلاف", // fodder
+  "محصول", // crop
+  "بذرات", // seeds
+  "سمادة", // fertilizer
+  "حرثات", // plowing
+  "سقاية", // irrigation
+  "حصادة", // harvest
+  "منجلة", // sickle
+  "فأسات", // axes
+  "مجرفة", // shovel
+  "معولة", // pickaxe
+  "عربية", // cart/Arabic (duplicate)
+  "مقطور", // trailer
+  "رافعة", // crane
+  "محراث", // plow
+  "ناطور", // watchman
+  "راعية", // shepherdess
+  "حظيرة", // barn
+  "إسطبل", // stable (6 - filtered)
+  "قفصات", // cages
+  "سياجة", // fence
+  "بوابة", // gate
+  "عمودة", // column
+  "سياجة", // fence (duplicate)
+  "أسوار", // walls/fences
+  "برجات", // towers
+  "قلاعة", // fortress
+  "أبراج", // towers
+  "محطات", // stations (duplicate)
+  "مرصدة", // observatory
+  "مختبر", // laboratory
+  "معملة", // lab/factory
+  "مصنعة", // factory
+  "ورشات", // workshops
+  "متجرة", // store
+  "صالون", // salon
+  "عيادة", // clinic
+  "مستوص", // dispensary (truncated)
+  // === More common words ===
+  "تحالف", // alliance
+  "تعاهد", // pact
+  "تفاهم", // understanding
+  "تناقض", // contradiction
+  "تبادل", // exchange
+  "تواصل", // communication
+  "تفاعل", // interaction
+  "تكامل", // integration
+  "تراجع", // retreat
+  "تقاطع", // intersection
+  "تسارع", // acceleration
+  "تباطؤ", // slowdown
+  "تصاعد", // escalation
+  "تناقص", // decrease
+  "تذبذب", // fluctuation
+  "تماسك", // cohesion
+  "تفاوت", // disparity
+  "تلاشى", // faded
+  "تناسب", // proportion
+  "تجاوز", // exceeding
+  "تجاهل", // ignoring
+  "تساهل", // leniency
+  "تراحم", // compassion
+  "تكافل", // solidarity
+  "تعاطف", // sympathy
+  "تصادم", // collision
+  "تقاتل", // fighting
+  "تخاصم", // quarreling
+  "تصالح", // reconciliation
+  "تعارف", // getting acquainted
+  "تحاور", // dialogue
+  "مستوى", // level
+  "مبنية", // built
+  "منشأة", // facility
+  "مؤسسة", // institution (6 - filtered)
+  "شركات", // companies
+  "مراحل", // stages
+  "وسائل", // means
+  "بدائل", // alternatives
+  "عوائل", // families
+  "رسائل", // messages (duplicate)
+  "فضائل", // virtues
+  "حمائل", // shoulder straps
+  "شمائل", // traits
+  "كفالة", // sponsorship
+  "وكالة", // agency
+  "نيابة", // prosecution
+  "رقابة", // oversight
+  "حراسة", // guarding
+  "كتابي", // written
+  "شفهية", // oral
+  "عملاق", // giant
+  "صاعقة", // thunderbolt
+  "حريقة", // fire
+  "فيضان", // flood (duplicate)
+  "سيولة", // flood/liquidity
+  "زلزال", // earthquake
+  "انهيا", // collapse (truncated)
+  "كارثة", // disaster
+  "مأساة", // tragedy
+  "نكبات", // catastrophes
+  "محنات", // ordeals
+  "بلاءة", // affliction
+  "ابتلا", // trial (truncated)
+  "صمودة", // resilience
+  "مقاوم", // resistant
+  "تحدية", // challenge
+  "عقبات", // obstacles
+  "حواجز", // barriers
+  "موانع", // impediments
+  "عراقل", // hindrances
+  "مشاقة", // hardship
+  "صعوبة", // difficulty
+  "سهولة", // ease
+  "يسرات", // ease
+  "مشقات", // hardships
+  // === Colors & descriptors expanded ===
+  "بنفسج", // violet
+  "نيلية", // indigo
+  "ذهبية", // golden (duplicate)
+  "فضيية", // silvery
+  "برونز", // bronze (duplicate)
+  "كستنا", // chestnut (truncated)
+  "عاجية", // ivory
+  "كريمة", // cream/generous
+  "قرمزة", // crimson
+  "زهرية", // pink/vase
+  "تركوا", // turquoise (conflict with verb - duplicate)
+  "لازور", // azure
+  "يشمية", // jasmine-colored
+  // === Kitchen & cooking expanded ===
+  "وصفات", // recipes
+  "مقادر", // ingredients (truncated)
+  "تتبيل", // seasoning
+  "تحمير", // browning
+  "تقطيع", // cutting
+  "تقشير", // peeling
+  "سلقات", // boiling
+  "شوائي", // grilling
+  "قلاية", // frying
+  "خبزات", // baking (already in answers)
+  "عجينة", // dough
+  "خميرة", // yeast
+  "طحينة", // tahini
+  "حمصات", // chickpeas (already in answers)
+  "فولات", // beans
+  "عدسات", // lenses/lentils
+  "أرزات", // rice
+  "قمحات", // wheat
+  "شعيرة", // barley grain
+  "ذرات", // corn (4 - filtered)
+  "مكرون", // macaroni
+  "شعرية", // vermicelli (duplicate)
+  "كسكسة", // couscous
+  "مسخنة", // musakhan
+  "كشريي", // kushari
+  "مجبوس", // machbous
+  "هريسة", // harissa (already in answers)
+  "حريرة", // harira (duplicate)
+  "فتوشة", // fattoush
+  "تبولة", // tabbouleh
+  "مقلوب", // maqluba
+  "منسفة", // mansaf
+  "ورقات", // grape leaves/papers
+  "محاشي", // stuffed (dishes)
+  "كباية", // cup (colloquial)
+  "ابريق", // teapot (6 - filtered)
+  "براده", // teapot (colloquial)
+  "دلوات", // pots (already in answers)
+  "ترمسة", // thermos
+  "صحنية", // plate-like
+  "ملاعق", // spoons
+  // === Garden & plants ===
+  "وردية", // rosy (already in answers)
+  "ياسمن", // jasmine (truncated)
+  "بنفسج", // violet (duplicate)
+  "صبارة", // cactus
+  "نخيلة", // palm tree
+  "سنديا", // oak (truncated)
+  "صفصاف", // willow (6 - filtered)
+  "زيتون", // olive (duplicate)
+  "تفاحة", // apple (duplicate)
+  "ليمون", // lemon
+  "برتقل", // orange (truncated)
+  "مشمشة", // apricot (duplicate)
+  "تينات", // figs (duplicate)
+  "جوافة", // guava
+  "أناناس", // pineapple (6 - filtered)
+  "كمثرة", // pear (truncated)
+  "بابايا", // papaya (6 - filtered)
+  "أفوكا", // avocado (truncated)
+  "فراولة", // strawberry (6 - filtered)
+  "بازلة", // peas
+  "فاصول", // beans (truncated)
+  "ملوخة", // molokhia
+  "بامية", // okra
+  "كوسات", // zucchini
+  "قرعات", // squash
+  "لفتات", // turnips
+  "جزرات", // carrots
+  "بطاطس", // potato (6 - filtered)
+  "بطاطا", // sweet potato (6 - filtered)
+  "فجلات", // radishes
+  "سبانخ", // spinach
+  "خسيات", // lettuce
+  "جرجير", // arugula
+  "كرفسة", // celery
+  "شمندر", // beet
+  "قنبيط", // cauliflower
+  "بروكل", // broccoli (truncated)
+  // === Common masdars (verbal nouns) ===
+  "إسلام", // Islam/submission
+  "إيمان", // faith (already in answers)
+  "إحسان", // excellence
+  "إنفاق", // spending
+  "إتقان", // mastery
+  "إبداع", // creativity
+  "إمتاع", // enjoyment
+  "إجماع", // consensus
+  "إقناع", // persuasion
+  "إبتكر", // he innovated
+  "إجراء", // procedure
+  "إمداد", // supply
+  "إرشاد", // guidance
+  "إسعاف", // ambulance
+  "إطلاق", // launch
+  "إعداد", // preparation
+  "إغلاق", // closing
+  "إنتاج", // production
+  "إنشاء", // construction
+  "إنجاز", // achievement
+  "إنقاذ", // rescue
+  "اتصال", // communication
+  "اتحاد", // union
+  "اتفاق", // agreement
+  "اجتهد", // he strived
+  "احترف", // he professionalized
+  "احتمل", // he endured
+  "ارتباط", // connection (6 - filtered)
+  "استقل", // he became independent
+  "اشتغل", // he worked
+  "انتشر", // he spread
+  "انتصر", // he won
+  "انطلق", // he launched
+  "انفجر", // he exploded
+  "انفصل", // he separated
+  "انقطع", // he was cut off
+  // === Relative adjectives (nisba) ===
+  "عراقي", // Iraqi
+  "مصرية", // Egyptian (f)
+  "لبنان", // Lebanon
+  "سعودي", // Saudi
+  "كويتي", // Kuwaiti
+  "بحرين", // Bahrain
+  "قطرية", // Qatari (f)
+  "عمانة", // Omani
+  "يمنية", // Yemeni (duplicate)
+  "سوداني", // Sudanese (6 - filtered)
+  "تونسي", // Tunisian
+  "مغربي", // Moroccan
+  "ليبية", // Libyan (f)
+  "أردني", // Jordanian
+  "سورية", // Syrian (f)
+  "تركية", // Turkish (f)
+  "إيراني", // Iranian (6 - filtered)
+  "هندية", // Indian (f)
+  "صينية", // Chinese (f) (already in answers as "tray")
+  "يابان", // Japan
+  "فرنسي", // French
+  "ألماني", // German (6 - filtered)
+  "إنجلي", // English (truncated)
+  "أمريك", // American (truncated)
+  "إفريق", // African (truncated)
+  "أوروب", // European (truncated)
+  "آسيوي", // Asian (6 - filtered)
+  // === Islamic terms ===
+  "مئذنة", // minaret
+  "محراب", // mihrab
+  "منبرة", // pulpit
+  "قبلات", // kisses/qibla (already in answers)
+  "وضوءة", // ablution
+  "تيممة", // tayammum
+  "جنازة", // funeral
+  "كفنات", // shrouds
+  "تلقين", // teaching/prompting
+  "دعوات", // invitations/prayers
+  "فتوات", // fatwas
+  "حلالة", // halal
+  "حرامة", // haram
+  "مكروه", // disliked (duplicate)
+  "مباحة", // permissible
+  "واجبة", // obligatory
+  "مستحب", // recommended
+  "سنيات", // sunnah
+  "بدعات", // innovations
+  "شريعة", // sharia
+  "فقيهة", // female jurist
+  "مفتية", // female mufti
+  "تاجرة", // female trader
+  // === Household tasks ===
+  "تنظيف", // cleaning (already in answers)
+  "ترتيب", // organizing (duplicate)
+  "تخزين", // storage
+  "تبريد", // cooling
+  "تسخين", // heating
+  "تجفيف", // drying
+  "تعقيم", // sterilization
+  "تهوية", // ventilation
+  "إنارة", // lighting (duplicate)
+  "تزيين", // decoration
+  "تغليف", // wrapping
+  "توصيل", // delivery
+  "تنسيق", // coordination
+  // === More everyday Arabic ===
+  "مفاجأ", // surprise
+  "مشاور", // consultant
+  "مسافر", // traveler
+  "مقيمة", // resident (f)
+  "زائرة", // visitor (f)
+  "ضيفات", // guests (f)
+  "مضيفة", // hostess
+  "طاقمة", // crew
+  "قبطان", // captain
+  "بحارة", // sailor
+  "جندية", // female soldier
+  "شرطية", // policewoman
+  "محققة", // investigator (f)
+  "محاسب", // accountant
+  "مراقب", // monitor
+  "مفتشة", // inspector (f)
+  "مشرفة", // supervisor (f)
+  "مرشدة", // guide (f)
+  "معيدة", // teaching assistant (f)
+  "مترجم", // translator
+  "مؤلفة", // author (f)
+  "صحفية", // journalist (f)
+  "مصورة", // photographer (f)
+  "مذيعة", // announcer (f)
+  "معلقة", // commentator (f) (duplicate)
+  "محللة", // analyst (f)
+  "باحثة", // researcher (f)
+  "عالمة", // scientist (f) (duplicate)
+  "فيلسف", // philosopher (truncated)
+  "مؤرخة", // historian (f)
+  "جغراف", // geographer (truncated)
+  // === Feelings & states (more) ===
+  "اشتقت", // I missed (you)
+  "أعجبت", // she liked
+  "أحبتك", // she loved you (truncated)
+  "كرهات", // hatreds
+  "حسدات", // jealousies
+  "غيرات", // jealousies
+  "تسامح", // forgiveness
+  "تقديم", // presenting
+  "اهتمم", // interest (truncated)
+  "تعاطي", // dealing with
+  "تقبلة", // acceptance
+  "اعتراف", // confession (6 - filtered)
+  "اعتزز", // pride (truncated)
+  "فخرات", // prides
+  "تواضع", // humility (already in answers)
+  "كبرات", // prides (arrogance)
+  "عجبات", // wonders
+  // === Games & entertainment ===
+  "لعبات", // games
+  "شطرنج", // chess (6 - filtered)
+  "نردات", // backgammon dice
+  "بلوتة", // baloot (card game)
+  "ورقية", // card (duplicate)
+  "كرتون", // cartoon
+  "أحجية", // puzzle
+  "ألغاز", // riddles
+  "فوازر", // brain teasers
+  "طرائف", // jokes
+  "نكتات", // jokes
+  "مزاحة", // joking
+  "مرحات", // fun times
+  "ترفيه", // entertainment
+  "تسلية", // pastime
+  "متنزه", // park
+  "ملاهي", // amusement
+  "سيركة", // circus
+  "مهرجن", // festival (truncated)
+  "حفلات", // parties
+  "سهرات", // evening gatherings
+  "مسامر", // evening companion
+  // === Construction & building ===
+  "بناءة", // construction (duplicate)
+  "تشييد", // erection
+  "هدمات", // demolitions
+  "حفرات", // excavations
+  "أساسة", // foundation
+  "عمودة", // pillar (duplicate)
+  "جدارة", // wall/competence
+  "سقفات", // roofs (duplicate)
+  "نوافذ", // windows (duplicate)
+  "أبوابي", // doors (6 - filtered)
+  "سلالم", // stairs (already in answers)
+  "مصعدة", // elevator
+  "بلاطة", // tile (duplicate)
+  "رخامة", // marble (duplicate)
+  "خرسان", // concrete (truncated)
+  "طوبات", // bricks
+  "إسمنت", // cement (6 - filtered)
+  "جبسات", // plaster
+  "زجاجة", // glass (already in answers)
+  "ألمنم", // aluminum (truncated)
+  // === Verbs present tense ===
+  "يحتاج", // he needs
+  "يستطع", // he can (truncated)
+  "يعتقد", // he believes
+  "يفترض", // he assumes
+  "يتوقع", // he expects
+  "يحاول", // he tries
+  "يتذكر", // he remembers
+  "يتمنى", // he wishes
+  "يشعرن", // they (f) feel
+  "يعرفن", // they (f) know
+  "يحبون", // they love (6 - filtered)
+  "يريدن", // they (f) want
+  "ينتظر", // he waits
+  "يستمع", // he listens
+  "يتحدث", // he speaks
+  "يتعلم", // he learns
+  "يعملن", // they (f) work (duplicate)
+  "يقرأن", // they (f) read (duplicate)
+  "يكتبن", // they (f) write (duplicate)
+  "يرسمن", // they (f) draw
+  "يطبخن", // they (f) cook
+  "يغسلن", // they (f) wash
+  "يلبسن", // they (f) wear
+  "يأكلن", // they (f) eat
+  "يشربن", // they (f) drink (duplicate)
+  "ينامن", // they (f) sleep
+  "يمشين", // they (f) walk
+  "يركضن", // they (f) run
+  "يقفزن", // they (f) jump
+  "يسبحن", // they (f) swim
+  // === More miscellaneous 5-letter words ===
+  "أنابب", // pipes (truncated)
+  "خراطم", // hoses
+  "صنبور", // faucet
+  "حنفية", // tap
+  "مواسر", // pipes
+  "صرفات", // drains
+  "تمديد", // extension
+  "تأسيس", // establishment
+  "إصلاح", // repair
+  "صيانة", // maintenance
+  "تجديد", // renewal
+  "تحسين", // improvement
+  "تعزيز", // reinforcement
+  "تقوية", // strengthening
+  "تخفيف", // reduction
+  "تقليص", // downsizing
+  "تكثيف", // intensification
+  "تنويع", // diversification
+  "تحقيق", // investigation
+  "تنفيذ", // implementation
+  "تطهير", // purification
+  "توسيع", // expansion
+  "مناقب", // virtues
+  "مناصب", // positions
+  "مواهب", // talents
+  "مراتب", // ranks
+  "مطالب", // demands (duplicate)
+  "مكاسب", // gains
+  "مناسب", // suitable (already in answers)
+  "مذاهب", // doctrines
+  "متاعب", // troubles
+  "مجارب", // experiences
+  "أعجاب", // admiration (truncated)
+  "أنساب", // lineages
+  "أحباب", // loved ones
+  "أصحاب", // companions
+  "أرباب", // lords
+  "أحزاب", // parties
+  "ألقاب", // titles
+  "أعشاب", // herbs (duplicate)
+  "أخطاء", // errors
+  "أسماء", // names
+  "أشياء", // things
+  "أعضاء", // members (duplicate)
+  "آراءة", // opinions
+  "أنباء", // news
+  "أحياء", // neighborhoods/living
+  "أعداء", // enemies (duplicate)
+  "أجواء", // atmospheres
+  "أطباء", // doctors
+  "علماء", // scholars
+  "شعراء", // poets
+  "أدباء", // writers
+  "حكماء", // wise men
+  "زعماء", // leaders
+  "أمراء", // princes
+  "وزراء", // ministers
+  "سفراء", // ambassadors
+  "رؤساء", // presidents
+  "خبراء", // experts
+  "قراءة", // reading (duplicate, already in answers)
+  "جزاءة", // reward
+  "عزاءة", // condolence
+  "وفاءة", // loyalty (already in answers area)
+  "هواءة", // air
+  "غذاءة", // food
+  "دواءة", // medicine (duplicate)
+  "شفاءة", // healing
+  "بناءة", // constructive (duplicate)
+  // === Common broken plurals ===
+  "كتابة", // books (duplicate)
+  "دروسة", // lessons (duplicate)
+  "شهورة", // months
+  "أقوال", // sayings
+  "أمثال", // proverbs
+  "أحوال", // conditions
+  "أعمدة", // columns
+  "أنهار", // rivers (already in answers)
+  "أبيات", // verses (poetry)
+  "أجيال", // generations
+  "أحجار", // stones
+  "أرواح", // souls (already in answers)
+  "أسماك", // fish (already in answers)
+  "أزمات", // crises
+  "أدوار", // roles
+  "أسرات", // families
+  "أجنحة", // wings
+  "أسلاك", // wires
+  "أحمال", // loads
+  "أرصدة", // balances
+  "أطعمة", // foods
+  "أقمشة", // fabrics
+  "ألعاب", // games (already in answers)
+  "أغذية", // foods
+  "أغصان", // branches
+  "أعصاب", // nerves
+  "أوتار", // strings
+  "أوجاع", // pains
+  "أولاد", // children
+  "أوائل", // firsts
+  "بلدان", // countries
+  "جبهات", // fronts (already in answers)
+  "حروبة", // wars
+  "خطابة", // speech/matchmaking
+  "رجالة", // men
+  "سيوفة", // swords
+  "شيوخة", // sheikhs (already in answers)
+  "عقبات", // obstacles (duplicate)
+  "عيوبة", // defects
+  "فنونة", // arts
+  "قرونة", // centuries
+  "كنوزة", // treasures
+  "لغاتة", // languages
+  "نجومة", // stars
+  "هدايا", // gifts
+  // === More Form V-VI verbs (common) ===
+  "تأخرت", // she was late
+  "تأكدت", // she was sure
+  "تأملت", // she contemplated
+  "تبادل", // they exchanged (duplicate)
+  "تبرعت", // she donated
+  "تحملت", // she endured
+  "تحولت", // she transformed
+  "تدخلت", // she interfered
+  "تراجع", // he retreated (duplicate)
+  "تسلقت", // she climbed
+  "تصرفت", // she acted (duplicate)
+  "تعاقد", // he contracted
+  "تعامل", // he dealt
+  "تعرفت", // she got to know
+  "تغلبت", // she overcame
+  "تقدمت", // she advanced
+  "تمردت", // she rebelled
+  "تميزت", // she distinguished
+  "تنازل", // he conceded
+  "توجهت", // she headed
+  "توسعت", // she expanded
+  "تولات", // she took charge
+  // === Common participles (fa'il / maf'ul) ===
+  "سامعة", // listener (f)
+  "ناظرة", // looking (f)
+  "قائلة", // saying (f)
+  "فاعلة", // doing (f)
+  "عاملة", // working (f) (already in answers)
+  "حاملة", // carrying (f) (duplicate)
+  "سائلة", // liquid/asking (f)
+  "قادرة", // able (f)
+  "قاصرة", // minor/short (f)
+  "واصلة", // connecting (f)
+  "ناجحة", // successful (f)
+  "فاشلة", // failing (f)
+  "صادقة", // truthful (f)
+  "كاذبة", // lying (f)
+  "عادلة", // just (f)
+  "ظالمة", // unjust (f)
+  "راضية", // satisfied (f)
+  "ساخنة", // hot (f)
+  "باقية", // remaining (f)
+  "ماضية", // past (f) (already in answers)
+  "قادمة", // coming (f) (already in answers)
+  "دائمة", // permanent (f) (duplicate)
+  "زائلة", // ephemeral (f)
+  "ثابتة", // stable (f) (duplicate)
+  "متحرك", // moving
+  "ساكنة", // still/resident (f)
+  "هادئة", // calm (f)
+  "صاخبة", // noisy (f)
+  "حاضنة", // incubator (f)
+  "راعية", // sponsor (f) (duplicate)
+  "حامية", // protector (f)
+  "واقية", // protective (f)
+  "مانعة", // preventing (f)
+  "دافعة", // pushing (f)
+  "سارقة", // stealing (f)
+  "خائنة", // treacherous (f)
+  "صابرة", // patient (f)
+  "شاكرة", // thankful (f)
+  "عابدة", // worshipping (f)
+  "زاهدة", // ascetic (f)
+  "عارفة", // knowing (f)
+  "جاهلة", // ignorant (f)
+  "غافلة", // heedless (f)
+  "يقظات", // alert
+  "نائمة", // sleeping (f)
+  "ماشية", // walking (f)/livestock
+  "راكبة", // riding (f)
+  "سابحة", // swimming (f)
+  "طائرة", // flying (f) (already in answers)
+  "غاطسة", // diving (f)
+  "عائدة", // returning (f)
+  "قاطعة", // cutting (f)
+  "واثقة", // confident (f)
+  "متأكد", // sure
+  "مصممة", // designer (f)/determined
+  "عازمة", // determined (f)
+  "مستعد", // ready
+  "جاهزة", // ready (f)
+  "مكتمل", // complete
+  "ناقصة", // incomplete (f)
+  "فارغة", // empty (f)
+  "ممتلئ", // full
+  "مكتظة", // crowded (f)
+  "خالية", // empty (f)
+  "مليئة", // full (f)
+  // === Commonly searched words ===
+  "معنات", // meanings
+  "سؤالة", // question
+  "جوابة", // answer
+  "حلولة", // solutions
+  "مفتاح", // key (already in answers)
+  "قفلات", // locks (already in answers)
+  "سرائر", // secrets (duplicate)
+  "أسرار", // secrets (already in answers)
+  "حماية", // protection (duplicate)
+  "خصوصة", // privacy
+  "أمنية", // wish (duplicate)
+  "حفاظة", // preservation
+  "توفير", // saving
+  "إنفاق", // spending (duplicate)
+  "استهل", // he began
+  "توثيق", // documentation
+  "تصديق", // ratification
+  "تحقيق", // investigation (duplicate)
+  "تعليم", // education (duplicate)
+  "تربوي", // educational
+  "ثقافي", // cultural
+  "رياضي", // sporty
+  "اقتصد", // he economized
+  "اجتمع", // he gathered (duplicate)
+  "سياحة", // tourism
+  "سياحي", // touristic
+  "ترفيه", // entertainment (duplicate)
+  "تثقيف", // education
+  "صنعات", // crafts
+  "حرفية", // craftsmanship
+  "مهنية", // professional
+  "أكاديم", // academic (6 - filtered)
+  "جامعي", // university
+  "مدرسي", // school-related
+  // === Time expressions ===
+  "غدوات", // mornings
+  "عشيات", // evenings
+  "شروقة", // sunrise
+  "غروبة", // sunset
+  "سحرات", // pre-dawn
+  "ضحوات", // forenoons
+  "ظهرات", // noons (already in answers)
+  "عصرات", // afternoons (already in answers)
+  "أمسية", // evening
+  "ليلية", // nightly
+  "نهاري", // daytime
+  "صباحي", // morning
+  "مسائي", // evening
+  "أسبوع", // week (already in answers)
+  "شهرية", // monthly (already in answers)
+  // === Miscellaneous high-frequency ===
+  "مسافة", // distance
+  "مساحة", // area
+  "حجمات", // volumes
+  "وزنات", // weights
+  "طولات", // lengths
+  "عرضات", // widths (duplicate with offers)
+  "ارتفع", // height (duplicate)
+  "عمقات", // depths
+  "سرعات", // speeds
+  "بطءات", // slownesses
+  "قوتات", // strengths
+  "ضعفات", // weaknesses
+  "حدتات", // sharpnesses
+  "نعومة", // softness
+  "خشونة", // roughness
+  "صلابة", // hardness
+  "مرونة", // flexibility
+  "متانة", // sturdiness
+  "رقتات", // thinnesses
+  "سمكات", // thicknesses (already in answers as fish)
+  "كثافة", // density
+  "خفتات", // dimnesses
+  "لمعان", // shine
+  "ظلمات", // darknesses
+  "نورات", // lights
+  "ظلالة", // shadows
+  "إضاءة", // illumination
+  "سطوعة", // brightness
+  "بهتان", // fading
+  "وضوحة", // clarity
+  "غموضة", // mystery
+  "تعقيد", // complexity
+  "بساطة", // simplicity
+  "تنوعة", // diversity
+  "وحدات", // units (already in answers)
+  "تكرار", // repetition
+  "تنافس", // competition
+  "تعاون", // cooperation (duplicate)
+  // === Additional common words ===
+  "مناظر", // views
+  "مشاهد", // scenes
+  "تفاصل", // details (truncated)
+  "ملامح", // features
+  "سماتة", // characteristics
+  "خصائص", // properties
+  "ميزات", // advantages
+  "عيوبة", // disadvantages (duplicate)
+  "سلبية", // negative
+  "إيجاب", // positive (truncated)
+  "فائدة", // benefit
+  "منفعة", // utility
+  "ضررات", // harms
+  "فعالة", // effective
+  "مجدية", // useful
+  "عبثية", // absurd
+  "جدوات", // feasibilities
+  "نجاعة", // efficacy
+  "كفاءة", // efficiency
+  "قدرات", // capabilities (already in answers)
+  "إمكان", // possibility
+  "طاقات", // energies (already in answers)
+  "جهودة", // efforts
+  "عناءة", // trouble
+  "مشاقة", // hardship (duplicate)
+  "ارهاق", // exhaustion
+  "اجهاد", // stress
+  "تعافي", // recovery
+  "تحسنة", // improvement
+  "تدهور", // deterioration
+  "انحدر", // he declined
+  "ارتقى", // he rose
+  "تصاعد", // he escalated (duplicate)
+  "تنازل", // he descended (duplicate)
+  // === Final batch of common words ===
+  "نجحوا", // they succeeded
+  "فشلوا", // they failed
+  "وعدوا", // they promised
+  "تابعت", // she followed
+  "باشرت", // she started
+  "أنجزت", // she accomplished
+  "حققوا", // they achieved
+  "عملاء", // clients
+  "زبائن", // customers
+  "تجارة", // commerce (duplicate)
+  "صفقات", // deals
+  "عروضة", // offers
+  "طلبات", // orders
+  "توريد", // supply
+  "تصدير", // export
+  "توزيع", // distribution (duplicate)
+  "بيعات", // sales
+  "ثروات", // fortunes
+  "ديونة", // debts
+  "تعويض", // compensation
+  "أجرات", // wages
+  "معاشة", // pension/living
+  "راتبة", // salary
+  "مكافأ", // reward (truncated)
+  "جوائز", // prizes
+  "تقدير", // appreciation (duplicate)
+  "تميزة", // distinction
+  "جودات", // qualities
+  "معيار", // standard
+  "مقياس", // measure
+  "اختبر", // test (duplicate)
+  "فحصات", // examinations
+  "مراجع", // references
+  "مصادر", // sources (duplicate)
+  "موسوع", // encyclopedia (truncated)
+  "قاموس", // dictionary
+  "معجمة", // dictionary
+  "أطلسة", // atlas
+  "خارطة", // map
+  "مسودة", // draft
+  "نسخات", // copies (duplicate)
+  "طبعات", // editions (duplicate)
+  "منقحة", // revised
+  "محدثة", // updated
+  "مطورة", // developed
+  "محسنة", // improved
+  "معدلة", // modified (f)
+  "مبسطة", // simplified
+  "مختصر", // abbreviated
+  "مفصلة", // detailed
+  "شاملة", // comprehensive
+  "جزئية", // partial
+  "كليات", // totalities (duplicate)
+  "مبدئي", // initial
+  "نهائي", // final
+  "مرحلي", // phased
+  "انتقل", // transitional (duplicate)
+  "مؤقتة", // temporary (duplicate)
+  "مستمر", // continuous
+  "متقطع", // intermittent
+  "منتظم", // regular
+  "عشوائ", // random (truncated)
+  "محددة", // specific (f)
+  "مبهمة", // vague (f)
+  "معينة", // certain (f)
+  "مجملة", // overall (f)
+  "بالغة", // extreme (f)
+  "ضئيلة", // minimal (f)
+  "كافية", // sufficient (f)
+  "ناقصة", // insufficient (f) (duplicate)
+  "زائدة", // excess (f)
+  "ملائم", // suitable
+  "مناسب", // appropriate (already in answers)
+  "ممكنة", // possible (f)
+  "متاحة", // available (f)
+  "محظور", // prohibited
+  "مسموح", // permitted (duplicate)
+  "واجبة", // required (duplicate)
+  "جائزة", // prize/permissible
+  "حسنات", // virtues (duplicate)
+  "مذهلة", // amazing (f)
+  "مدهشة", // astonishing (f)
+  "مثيرة", // exciting (f)
+  "ممتعة", // enjoyable (f)
+  "مسلية", // entertaining (f)
+  "مملات", // boring
+  "مرعبة", // terrifying (f)
+  "محزنة", // saddening (f)
+  "مفرحة", // gladdening (f)
+  "مغيظة", // infuriating (f)
+  "مريحة", // comfortable (f)
+  "مزعجة", // annoying (f)
+  "مقلقة", // worrying (f)
+  "مطمئن", // reassuring
+  "مخيفة", // scary (f)
+  "مؤلمة", // painful (f)
+  "معافى", // healthy
+  "مريضة", // sick (f)
+  "سليمة", // sound/healthy (f)
+  "معتلة", // ailing (f)
+  "نشيطة", // active (f)
+  "كسولة", // lazy (f)
+  "هادئة", // quiet (f) (duplicate)
+  "صاخبة", // loud (f) (duplicate)
+  "مزدحم", // crowded
+  "هادية", // guiding (f)
+  "ضائعة", // lost (f)
+  "تائهة", // wandering (f)
+  "واجدة", // finding (f)
+  "فاقدة", // losing (f)
+  "مالكة", // owning (f)
+  "فقيرة", // poor (f)
+  "غنيات", // rich (f)
+  "متوسط", // average
+  "معتدل", // moderate
+  "مفرطة", // excessive (f)
+  "متزنة", // balanced (f)
+  "حكيمة", // wise (f)
+  "غبيات", // foolish (f)
+  "ذكيات", // smart (f)
+  "بليدة", // dull (f)
+  "ماهرة", // skilled (f)
+  "بارعة", // brilliant (f)
+  "خبيرة", // expert (f)
+  "مبتدئ", // beginner
+  "متقدم", // advanced
+  "محترف", // professional
+  "هاوية", // amateur (f)/abyss
+  "متمكن", // competent
+  "عاجزة", // incapable (f)
+  "قادرة", // capable (f) (duplicate)
+  "ميسرة", // facilitated
+  "معسرة", // insolvent (f)
+  "ناجية", // surviving (f)
+  "هالكة", // perishing (f)
+  "سالمة", // safe (f)
+  "مؤذية", // harmful (f)
+  "نافعة", // beneficial (f)
+  "ضارات", // harmful
+  "مفيدة", // useful (f)
+  "عديمة", // devoid (f)
+  "غزيرة", // abundant (f)
+  "شحيحة", // scarce (f)
+  "وفيرة", // plentiful (f)
+  "نادرة", // rare (f) (duplicate)
+  "كثيرة", // many (f)
+  "قليلة", // few (f)
+  "وحيدة", // alone (f)
+  "متعدد", // multiple
+  "أحادي", // singular
+  "ثنائي", // binary
+  "ثلاثي", // triple
+  "رباعي", // quadruple
+  "خماسي", // quintuple
+  // === Very common daily-use words ===
+  "بيتنا", // our house
+  "عندنا", // we have
+  "معانا", // with us (colloquial)
+  "يلاها", // let's go (colloquial)
+  "خلاصة", // summary
+  "حصيلة", // outcome
+  "نتيجة", // result
+  "ثمرات", // fruits
+  "عوائد", // returns
+  "مردود", // return/yield
+  "محصلة", // resultant
+  "ختامة", // conclusion
+  "بداية", // beginning (duplicate)
+  "نهاية", // ending (duplicate)
+  "وسطات", // midpoints
+  "فترات", // periods
+  "مراحل", // phases (duplicate)
+  "أدوار", // roles (duplicate)
+  "فصولة", // chapters (already in answers)
+  "أبوابي", // sections (6 - filtered, duplicate)
+  "عناون", // titles (truncated)
+  "محاور", // axes
+  "نقاشة", // discussion
+  "حوارة", // dialogue
+  "مداخل", // entrances (already in answers)
+  "مخارج", // exits
+  "منافذ", // outlets
+  "مسالك", // paths
+  "ممرات", // passages (duplicate)
+  "معابر", // crossings
+  "جسورة", // bridges/bold
+  "قناطر", // arches
+  "سدودة", // dams
+  "خزانة", // reservoir (already in answers)
+  "بحيرة", // lake (already in answers)
+  "ينابع", // springs (truncated)
+  "عيونة", // eyes/springs
+  "آبارة", // wells
+  "حفرات", // holes (duplicate)
+  "أخادد", // grooves (truncated)
+  "وديان", // valleys
+  "سهولة", // plains (duplicate with ease)
+  "تلالة", // hills
+  "قممات", // peaks
+  "منحدر", // slope
+  "مرتفع", // highland (duplicate)
+];
+
+// Allowed guesses = answers + extra guesses (deduplicated by validateWords logic)
+const allGuessWords = [...VALID_ANSWERS, ...validateWords(EXTRA_GUESSES)];
+const guessSet = new Set<string>();
+export const ALLOWED_GUESSES: string[] = allGuessWords.filter((w) => {
+  if (guessSet.has(w)) return false;
+  guessSet.add(w);
+  return true;
+});
 
 export function getDailyWord(): string {
   const puzzleNum = getPuzzleNumber();
   const index = (puzzleNum - 1) % VALID_ANSWERS.length;
   return VALID_ANSWERS[index];
+}
+
+export function getWordByPuzzleNumber(puzzleNum: number): string {
+  const index = (puzzleNum - 1) % VALID_ANSWERS.length;
+  return VALID_ANSWERS[index];
+}
+
+/** Get the date string (YYYY-MM-DD) for a given puzzle number */
+export function getDateForPuzzle(puzzleNum: number): string {
+  const launch = new Date("2026-01-01T00:00:00");
+  const date = new Date(launch.getTime() + (puzzleNum - 1) * 24 * 60 * 60 * 1000);
+  return date.toISOString().split("T")[0];
 }
 
 export function isValidGuess(word: string): boolean {

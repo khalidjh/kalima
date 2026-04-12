@@ -1,21 +1,26 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useCallback, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   getDailyRawabetPuzzle,
   getRawabetPuzzleNumber,
+  getRawabetPuzzleByNumber,
   RawabetCategory,
   CategoryColor,
 } from "@/data/rawabet";
 import {
   loadRawabetGameState,
   saveRawabetGameState,
+  loadArchiveRawabetGameState,
+  saveArchiveRawabetGameState,
   updateRawabetStatsOnWin,
   updateRawabetStatsOnLoss,
   loadRawabetStats,
   RawabetStats,
 } from "@/lib/rawabetState";
+import { useAuth } from "@/lib/auth";
+import { useIsPro } from "@/lib/subscription";
 import RawabetResultModal from "@/components/RawabetResultModal";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
 import { Shuffle, CheckCircle2, HelpCircle } from "lucide-react";
@@ -47,10 +52,21 @@ interface Toast {
 
 let toastCounter = 0;
 
-export default function RawabetPage() {
+function RawabetPageInner() {
   const router = useRouter();
-  const puzzle = getDailyRawabetPuzzle();
-  const puzzleNumber = getRawabetPuzzleNumber();
+  const searchParams = useSearchParams();
+  const { user } = useAuth();
+  const { isPro } = useIsPro(user);
+  const archivePuzzleParam = searchParams.get("puzzle");
+  const isArchiveMode = archivePuzzleParam !== null && isPro;
+  const archivePuzzleNum = archivePuzzleParam ? parseInt(archivePuzzleParam, 10) : null;
+
+  const puzzle = isArchiveMode && archivePuzzleNum
+    ? getRawabetPuzzleByNumber(archivePuzzleNum)
+    : getDailyRawabetPuzzle();
+  const puzzleNumber = isArchiveMode && archivePuzzleNum
+    ? archivePuzzleNum
+    : getRawabetPuzzleNumber();
 
   // All words flattened, shuffled for display
   const allWords = puzzle.categories.flatMap((c) => c.words);
@@ -72,7 +88,9 @@ export default function RawabetPage() {
 
   // Load saved state
   useEffect(() => {
-    const saved = loadRawabetGameState();
+    const saved = isArchiveMode && archivePuzzleNum
+      ? loadArchiveRawabetGameState(archivePuzzleNum)
+      : loadRawabetGameState();
     if (saved) {
       setMistakes(saved.mistakes);
       setGameStatus(saved.gameStatus);
@@ -119,6 +137,8 @@ export default function RawabetPage() {
     setTiles((prev) => shuffle([...prev]));
   }
 
+  const saveFn = isArchiveMode ? saveArchiveRawabetGameState : saveRawabetGameState;
+
   const handleCheck = useCallback(() => {
     if (selected.length !== 4 || gameStatus !== "playing" || isChecking) return;
 
@@ -148,11 +168,13 @@ export default function RawabetPage() {
         setTiles((prev) => prev.filter((w) => !matched.words.includes(w)));
 
         if (newFound.length === 4) {
-          const newStats = updateRawabetStatsOnWin();
-          setStats(newStats);
-          writeStatsToFirestore();
+          if (!isArchiveMode) {
+            const newStats = updateRawabetStatsOnWin();
+            setStats(newStats);
+            writeStatsToFirestore();
+          }
           setGameStatus("won");
-          saveRawabetGameState({
+          saveFn({
             puzzleNumber,
             selectedWords: [],
             foundCategories: newFound.map((c) => c.name),
@@ -161,7 +183,7 @@ export default function RawabetPage() {
           });
           setTimeout(() => setShowModal(true), 1500);
         } else {
-          saveRawabetGameState({
+          saveFn({
             puzzleNumber,
             selectedWords: [],
             foundCategories: newFound.map((c) => c.name),
@@ -194,11 +216,13 @@ export default function RawabetPage() {
         setSelected([]);
 
         if (newMistakes >= MAX_MISTAKES) {
-          const newStats = updateRawabetStatsOnLoss();
-          setStats(newStats);
-          writeStatsToFirestore();
+          if (!isArchiveMode) {
+            const newStats = updateRawabetStatsOnLoss();
+            setStats(newStats);
+            writeStatsToFirestore();
+          }
           setGameStatus("lost");
-          saveRawabetGameState({
+          saveFn({
             puzzleNumber,
             selectedWords: [],
             foundCategories: foundCategories.map((c) => c.name),
@@ -208,7 +232,7 @@ export default function RawabetPage() {
           setTimeout(() => setShowModal(true), 1500);
         } else {
           if (!oneAway) showToast("خطأ! حاول مجدداً");
-          saveRawabetGameState({
+          saveFn({
             puzzleNumber,
             selectedWords: [],
             foundCategories: foundCategories.map((c) => c.name),
@@ -219,7 +243,7 @@ export default function RawabetPage() {
         setIsChecking(false);
       }, 500);
     }
-  }, [selected, gameStatus, isChecking, puzzle, foundCategories, mistakes, puzzleNumber]);
+  }, [selected, gameStatus, isChecking, puzzle, foundCategories, mistakes, puzzleNumber, isArchiveMode, saveFn]);
 
   const remainingTiles = tiles;
 
@@ -227,7 +251,16 @@ export default function RawabetPage() {
     <div className="h-full flex flex-col bg-background" dir="rtl">
       {/* Header — flush to top, outside scroll area */}
       <GameHeader
-          center={<span className="text-sm font-bold text-white">#{puzzleNumber}</span>}
+          center={
+            <div className="flex items-center gap-2">
+              {isArchiveMode && (
+                <span className="text-xs font-bold text-primary bg-primary/15 px-2 py-0.5 rounded-full border border-primary/30">
+                  أرشيف
+                </span>
+              )}
+              <span className="text-sm font-bold text-white">#{puzzleNumber}</span>
+            </div>
+          }
           right={
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5">
@@ -389,6 +422,18 @@ export default function RawabetPage() {
         <HowToPlayRawabet onClose={() => setShowHowToPlay(false)} />
       )}
     </div>
+  );
+}
+
+export default function RawabetPage() {
+  return (
+    <Suspense fallback={
+      <div className="h-full bg-background flex items-center justify-center">
+        <div className="text-white text-2xl font-bold">روابط</div>
+      </div>
+    }>
+      <RawabetPageInner />
+    </Suspense>
   );
 }
 

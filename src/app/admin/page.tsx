@@ -20,14 +20,6 @@ interface Stats {
   recentUsers: RecentUser[];
 }
 
-function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(";").shift() ?? null;
-  return null;
-}
-
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="bg-surface border border-border rounded-2xl p-5">
@@ -40,23 +32,31 @@ function StatCard({ label, value }: { label: string; value: number }) {
 }
 
 export default function AdminPage() {
-  const [isAuthed, setIsAuthed] = useState(() => getCookie("kalima_admin") === "1");
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loggingIn, setLoggingIn] = useState(false);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState("");
 
+  // Check existing session on mount
+  useEffect(() => {
+    fetch("/api/admin/auth")
+      .then((r) => {
+        if (r.ok) setIsAuthed(true);
+      })
+      .catch(() => {})
+      .finally(() => setCheckingSession(false));
+  }, []);
+
+  // Fetch stats once authed
   useEffect(() => {
     if (!isAuthed) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setFetchError("");
-    fetch("/api/admin/stats", {
-      headers: {
-        "x-admin-secret": process.env.NEXT_PUBLIC_ADMIN_SECRET ?? "kalima_admin_secret_2026",
-      },
-    })
+    fetch("/api/admin/stats")
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -66,21 +66,41 @@ export default function AdminPage() {
       .finally(() => setLoading(false));
   }, [isAuthed]);
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (password === "kalima_admin_2026") {
-      document.cookie = "kalima_admin=1; path=/; max-age=86400";
+    setLoggingIn(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "كلمة مرور خاطئة");
+        return;
+      }
       setIsAuthed(true);
-      setError("");
-    } else {
-      setError("كلمة مرور خاطئة");
+    } catch {
+      setError("خطأ في الاتصال");
+    } finally {
+      setLoggingIn(false);
     }
   }
 
-  function handleLogout() {
-    document.cookie = "kalima_admin=; path=/; max-age=0";
+  async function handleLogout() {
+    await fetch("/api/admin/auth", { method: "DELETE" }).catch(() => {});
     setIsAuthed(false);
     setStats(null);
+  }
+
+  if (checkingSession) {
+    return (
+      <div className="h-full flex items-center justify-center bg-background">
+        <div className="text-muted text-lg">جاري التحقق...</div>
+      </div>
+    );
   }
 
   if (!isAuthed) {
@@ -104,9 +124,10 @@ export default function AdminPage() {
             )}
             <button
               type="submit"
-              className="bg-primary text-primary-text font-bold py-3 rounded-xl hover:bg-primary-dark transition-colors"
+              disabled={loggingIn}
+              className="bg-primary text-primary-text font-bold py-3 rounded-xl hover:bg-primary-dark transition-colors disabled:opacity-50"
             >
-              دخول
+              {loggingIn ? "جاري الدخول..." : "دخول"}
             </button>
           </form>
         </div>

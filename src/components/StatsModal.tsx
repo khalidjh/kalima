@@ -27,6 +27,7 @@ interface StatsModalProps {
   gameStatus: "playing" | "won" | "lost";
   guesses: string[];
   answer: string;
+  hardMode?: boolean;
 }
 
 export default function StatsModal({
@@ -35,6 +36,7 @@ export default function StatsModal({
   gameStatus,
   guesses,
   answer,
+  hardMode = false,
 }: StatsModalProps) {
   const [copied, setCopied] = useState(false);
   const [imageSharing, setImageSharing] = useState(false);
@@ -57,7 +59,7 @@ export default function StatsModal({
     const puzzleNum = getPuzzleNumber();
     setImageSharing(true);
     try {
-      const blob = await generateShareImage(guesses, answer, gameStatus === "won", stats.currentStreak);
+      const blob = await generateShareImage(guesses, answer, gameStatus === "won", stats.currentStreak, hardMode);
       const filename = `kalima-puzzle-${puzzleNum}.png`;
       const file = new File([blob], filename, { type: "image/png" });
 
@@ -87,7 +89,8 @@ export default function StatsModal({
     const text = generateShareText(
       guesses,
       answer,
-      gameStatus === "won"
+      gameStatus === "won",
+      hardMode
     );
     const success = await copyToClipboard(text);
     if (success) {

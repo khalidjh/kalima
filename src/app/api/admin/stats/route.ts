@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminApp } from "@/lib/firebaseAdmin";
+import { verifySessionToken, ADMIN_COOKIE } from "@/lib/adminSession";
 
 export async function GET(req: NextRequest) {
   try {
-    const secret = req.headers.get("x-admin-secret");
-    if (!secret || secret !== process.env.ADMIN_SECRET) {
+    const token = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (!token || !verifySessionToken(token)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

@@ -105,7 +105,8 @@ export async function generateShareImage(
   guesses: string[],
   answer: string,
   won: boolean,
-  currentStreak?: number
+  currentStreak?: number,
+  hardMode: boolean = false
 ): Promise<Blob> {
   const canvas = document.createElement("canvas");
   canvas.width = SIZE;
@@ -202,24 +203,35 @@ export async function generateShareImage(
 
   // ── Result badge (e.g. "3/6") ──
   const badgeY = answerY;
+  const resultDisplay = hardMode ? `${result}*` : result;
   ctx.font = `bold 44px ${ARABIC_FONT}`;
   ctx.fillStyle = won ? CORRECT_LIGHT : GRAY;
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
-  ctx.fillText(result, SIZE / 2, badgeY);
+  ctx.fillText(resultDisplay, SIZE / 2, badgeY);
+
+  // ── Hard mode label ──
+  if (hardMode) {
+    ctx.font = `bold 28px ${ARABIC_FONT}`;
+    ctx.fillStyle = "#EF4444";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText("الوضع الصعب", SIZE / 2, badgeY + 52);
+  }
 
   // ── Streak line ──
+  const hardModeOffset = hardMode ? 48 : 0;
   const showStreak = currentStreak !== undefined && currentStreak > 1;
   if (showStreak) {
     ctx.font = `bold 36px ${ARABIC_FONT}`;
     ctx.fillStyle = "#FF9500";
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    ctx.fillText(`🔥 ${currentStreak} يوم`, SIZE / 2, badgeY + 56);
+    ctx.fillText(`🔥 ${currentStreak} يوم`, SIZE / 2, badgeY + 56 + hardModeOffset);
   }
 
   // ── Challenge line ──
-  const challengeY = badgeY + (showStreak ? 112 : 64);
+  const challengeY = badgeY + (showStreak ? 112 : 64) + hardModeOffset;
   ctx.font = `34px ${ARABIC_FONT}`;
   ctx.fillStyle = GRAY;
   ctx.textAlign = "center";

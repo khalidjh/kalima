@@ -15,18 +15,20 @@ function stateToEmoji(state: LetterState): string {
 export function generateShareText(
   guesses: string[],
   answer: string,
-  won: boolean
+  won: boolean,
+  hardMode: boolean = false
 ): string {
   const puzzleNum = getPuzzleNumber();
   const totalGuesses = guesses.length;
   const result = won ? `${totalGuesses}/6` : "X/6";
+  const hardModeTag = hardMode ? "*" : "";
 
   const rows = guesses.map((guess) => {
     const states = evaluateGuess(guess, answer);
     return states.map(stateToEmoji).join("");
   });
 
-  return `كلمة #${puzzleNum} ${result}\n${rows.join("\n")}\n\nkalima.fun`;
+  return `كلمة #${puzzleNum} ${result}${hardModeTag}\n${rows.join("\n")}\n\nkalima.fun`;
 }
 
 export async function copyToClipboard(text: string): Promise<boolean> {

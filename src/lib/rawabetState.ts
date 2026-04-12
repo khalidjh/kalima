@@ -38,6 +38,28 @@ export function saveRawabetGameState(state: RawabetGameState): void {
   localStorage.setItem(GAME_STATE_KEY, JSON.stringify(state));
 }
 
+// ── Archive Mode (separate storage, no stats impact) ──
+
+function archiveRawabetKey(puzzleNum: number): string {
+  return `kalima_archive_rawabet_${puzzleNum}`;
+}
+
+export function loadArchiveRawabetGameState(puzzleNum: number): RawabetGameState | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(archiveRawabetKey(puzzleNum));
+    if (!raw) return null;
+    return JSON.parse(raw) as RawabetGameState;
+  } catch {
+    return null;
+  }
+}
+
+export function saveArchiveRawabetGameState(state: RawabetGameState): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(archiveRawabetKey(state.puzzleNumber), JSON.stringify(state));
+}
+
 export function loadRawabetStats(): RawabetStats {
   if (typeof window === "undefined") return defaultStats();
   try {
