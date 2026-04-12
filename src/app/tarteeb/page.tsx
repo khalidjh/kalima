@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { TrendingUp, TrendingDown, Share2 } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { TrendingUp, TrendingDown, Share2, HelpCircle } from "lucide-react";
 import BackToHome from "@/components/BackToHome";
 import GameHeader from "@/components/GameHeader";
+import HowToPlayTarteeb from "@/components/HowToPlayTarteeb";
 import { playCorrect, playWrong } from "@/lib/sounds";
 import {
   getDailyTarteebPairs,
@@ -11,6 +12,12 @@ import {
   TarteebPair,
   isHigherCorrect,
 } from "@/data/tarteeb";
+import {
+  loadTarteebGameState,
+  saveTarteebGameState,
+  updateTarteebStatsOnFinish,
+  TarteebGameState,
+} from "@/lib/tarteebState";
 
 type GameStatus = "playing" | "won" | "lost";
 
@@ -27,6 +34,22 @@ function formatValue(v: number): string {
   return v % 1 === 0 ? String(v) : v.toFixed(1);
 }
 
+function getResultMessage(score: number, total: number): { emoji: string; title: string; subtitle: string } {
+  if (score === total) {
+    return { emoji: "🎉", title: "أحسنت! نتيجة مثالية!", subtitle: "أجبت على جميع الأسئلة بشكل صحيح" };
+  }
+  if (score >= 8) {
+    return { emoji: "🌟", title: "ممتاز!", subtitle: `أجبت صحيح على ${toArabicNumerals(score)} من ${toArabicNumerals(total)}` };
+  }
+  if (score >= 6) {
+    return { emoji: "👍", title: "جيد!", subtitle: `أجبت صحيح على ${toArabicNumerals(score)} من ${toArabicNumerals(total)}` };
+  }
+  if (score >= 4) {
+    return { emoji: "😐", title: "لا بأس", subtitle: `أجبت صحيح على ${toArabicNumerals(score)} من ${toArabicNumerals(total)}` };
+  }
+  return { emoji: "😔", title: "حاول مرة أخرى", subtitle: `أجبت صحيح على ${toArabicNumerals(score)} من ${toArabicNumerals(total)}` };
+}
+
 export default function TarteebPage() {
   const pairs = getDailyTarteebPairs();
   const puzzleNumber = getTarteebPuzzleNumber();
@@ -38,19 +61,66 @@ export default function TarteebPage() {
   const [flash, setFlash] = useState<"correct" | "wrong" | null>(null);
   const [showValues, setShowValues] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-  const pair: TarteebPair = pairs[currentRound];
-  const higherIsCorrect = isHigherCorrect(pair);
+  // Guard: if pairs are empty or malformed, show error
+  if (!pairs || pairs.length === 0) {
+    return (
+      <div className="h-full flex flex-col bg-background" dir="rtl">
+        <GameHeader
+          center={<span className="text-sm font-bold text-white">ترتيب</span>}
+        />
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="text-center">
+            <p className="text-2xl mb-2">⚠️</p>
+            <p className="text-white font-bold mb-1">لا يوجد لغز متاح</p>
+            <p className="text-sm text-muted">حدث خطأ في تحميل بيانات اللعبة</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Load saved state on mount
+  useEffect(() => {
+    const saved = loadTarteebGameState();
+    if (saved && saved.puzzleNumber === puzzleNumber) {
+      setCurrentRound(saved.currentRound);
+      setScore(saved.score);
+      setResults(saved.results);
+      setGameStatus(saved.gameStatus);
+    }
+    setLoaded(true);
+  }, [puzzleNumber]);
+
+  // Save state whenever game progresses
+  const saveState = useCallback(
+    (round: number, sc: number, res: boolean[], status: GameStatus) => {
+      const state: TarteebGameState = {
+        puzzleNumber,
+        currentRound: round,
+        score: sc,
+        results: res,
+        gameStatus: status,
+      };
+      saveTarteebGameState(state);
+    },
+    [puzzleNumber]
+  );
 
   useEffect(() => {
-    if (gameStatus !== "playing") {
+    if (gameStatus !== "playing" && loaded) {
       const t = setTimeout(() => setShowModal(true), 800);
       return () => clearTimeout(t);
     }
-  }, [gameStatus]);
+  }, [gameStatus, loaded]);
+
+  const pair: TarteebPair | undefined = pairs[currentRound];
+  const higherIsCorrect = pair ? isHigherCorrect(pair) : false;
 
   function handleGuess(guessHigher: boolean) {
-    if (gameStatus !== "playing" || flash !== null) return;
+    if (gameStatus !== "playing" || flash !== null || !pair) return;
 
     const correct = guessHigher === higherIsCorrect;
 
@@ -70,8 +140,11 @@ export default function TarteebPage() {
         const nextRound = currentRound + 1;
         if (nextRound >= pairs.length) {
           setGameStatus("won");
+          saveState(nextRound, newScore, newResults, "won");
+          updateTarteebStatsOnFinish(newScore, pairs.length);
         } else {
           setCurrentRound(nextRound);
+          saveState(nextRound, newScore, newResults, "playing");
         }
       }, 1200);
     } else {
@@ -82,8 +155,11 @@ export default function TarteebPage() {
       setTimeout(() => {
         setFlash(null);
         setShowValues(false);
-        setResults([...results, false]);
+        const newResults = [...results, false];
+        setResults(newResults);
         setGameStatus("lost");
+        saveState(currentRound, score, newResults, "lost");
+        updateTarteebStatsOnFinish(score, pairs.length);
       }, 1200);
     }
   }
@@ -103,16 +179,37 @@ export default function TarteebPage() {
     }
   }
 
+  // Don't render game content until state is loaded (prevents flash of fresh state)
+  if (!loaded) {
+    return (
+      <div className="h-full flex flex-col bg-background" dir="rtl">
+        <GameHeader
+          center={<span className="text-sm font-bold text-white">ترتيب #{toArabicNumerals(puzzleNumber)}</span>}
+        />
+        <div className="flex-1" />
+      </div>
+    );
+  }
+
   const roundLabel = `الجولة ${toArabicNumerals(currentRound + 1)}/${toArabicNumerals(pairs.length)}`;
+  const resultMsg = getResultMessage(score, pairs.length);
 
   return (
     <div className="h-full flex flex-col bg-background" dir="rtl">
       <GameHeader
         center={<span className="text-sm font-bold text-white">ترتيب #{toArabicNumerals(puzzleNumber)}</span>}
         right={
-          <span className="text-xs text-muted font-medium">
-            {gameStatus === "playing" ? roundLabel : `${toArabicNumerals(score)}/${toArabicNumerals(pairs.length)}`}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted font-medium">
+              {gameStatus === "playing" ? roundLabel : `${toArabicNumerals(score)}/${toArabicNumerals(pairs.length)}`}
+            </span>
+            <button
+              onClick={() => setShowHelp(true)}
+              className="text-muted hover:text-white transition-colors"
+            >
+              <HelpCircle size={20} strokeWidth={1.5} />
+            </button>
+          </div>
         }
       />
 
@@ -133,64 +230,68 @@ export default function TarteebPage() {
           </div>
 
           {/* Category label */}
-          <div className="text-center">
-            <span className="text-xs text-muted font-medium bg-surface border border-border px-3 py-1 rounded-full">
-              {pair.category}
-            </span>
-          </div>
+          {pair && (
+            <div className="text-center">
+              <span className="text-xs text-muted font-medium bg-surface border border-border px-3 py-1 rounded-full">
+                {pair.category}
+              </span>
+            </div>
+          )}
 
           {/* Comparison cards */}
-          <div className="flex gap-3">
-            {/* Card A — always shows value */}
-            <div
-              className={[
-                "flex-1 rounded-2xl border-2 p-4 flex flex-col items-center justify-center text-center transition-all duration-300",
-                flash === "correct"
-                  ? "border-correct bg-correct/10"
-                  : flash === "wrong"
-                  ? "border-present bg-present/10"
-                  : "border-border bg-surface",
-              ].join(" ")}
-            >
-              <span className="text-sm text-muted mb-2 font-medium">{pair.itemA}</span>
-              <span className="text-3xl font-black text-white">{formatValue(pair.valueA)}</span>
-              <span className="text-xs text-muted mt-1">{pair.unit}</span>
-            </div>
+          {pair && (
+            <div className="flex gap-3">
+              {/* Card A */}
+              <div
+                className={[
+                  "flex-1 rounded-2xl border-2 p-4 flex flex-col items-center justify-center text-center transition-all duration-300",
+                  flash === "correct"
+                    ? "border-correct bg-correct/10"
+                    : flash === "wrong"
+                    ? "border-present bg-present/10"
+                    : "border-border bg-surface",
+                ].join(" ")}
+              >
+                <span className="text-sm text-muted mb-2 font-medium">{pair.itemA}</span>
+                <span className="text-3xl font-black text-white">{formatValue(pair.valueA)}</span>
+                <span className="text-xs text-muted mt-1">{pair.unit}</span>
+              </div>
 
-            {/* VS divider */}
-            <div className="flex items-center justify-center flex-shrink-0">
-              <span className="text-xs text-muted font-bold">VS</span>
-            </div>
+              {/* VS divider */}
+              <div className="flex items-center justify-center flex-shrink-0">
+                <span className="text-xs text-muted font-bold">VS</span>
+              </div>
 
-            {/* Card B — shows ? or value after guess */}
-            <div
-              className={[
-                "flex-1 rounded-2xl border-2 p-4 flex flex-col items-center justify-center text-center transition-all duration-300",
-                flash === "correct"
-                  ? "border-correct bg-correct/10"
-                  : flash === "wrong"
-                  ? "border-present bg-present/10"
-                  : "border-primary/40 bg-surface",
-              ].join(" ")}
-            >
-              <span className="text-sm text-muted mb-2 font-medium">{pair.itemB}</span>
-              {showValues ? (
-                <span
-                  className={`text-3xl font-black transition-all duration-300 ${
-                    pair.valueB > pair.valueA ? "text-correct" : "text-present"
-                  }`}
-                >
-                  {formatValue(pair.valueB)}
-                </span>
-              ) : (
-                <span className="text-4xl font-black text-primary">?</span>
-              )}
-              <span className="text-xs text-muted mt-1">{pair.unit}</span>
+              {/* Card B */}
+              <div
+                className={[
+                  "flex-1 rounded-2xl border-2 p-4 flex flex-col items-center justify-center text-center transition-all duration-300",
+                  flash === "correct"
+                    ? "border-correct bg-correct/10"
+                    : flash === "wrong"
+                    ? "border-present bg-present/10"
+                    : "border-primary/40 bg-surface",
+                ].join(" ")}
+              >
+                <span className="text-sm text-muted mb-2 font-medium">{pair.itemB}</span>
+                {showValues ? (
+                  <span
+                    className={`text-3xl font-black transition-all duration-300 ${
+                      pair.valueB > pair.valueA ? "text-correct" : "text-present"
+                    }`}
+                  >
+                    {formatValue(pair.valueB)}
+                  </span>
+                ) : (
+                  <span className="text-4xl font-black text-primary">?</span>
+                )}
+                <span className="text-xs text-muted mt-1">{pair.unit}</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Instruction */}
-          {gameStatus === "playing" && !showValues && (
+          {gameStatus === "playing" && !showValues && pair && (
             <p className="text-center text-sm text-muted">
               هل قيمة <span className="text-white font-bold">{pair.itemB}</span> أعلى أم أدنى؟
             </p>
@@ -247,15 +348,13 @@ export default function TarteebPage() {
             {/* Title */}
             <div className="text-center">
               <div className="text-4xl mb-2">
-                {gameStatus === "won" ? "🎉" : "😔"}
+                {resultMsg.emoji}
               </div>
               <h2 className="text-xl font-black text-white">
-                {gameStatus === "won" ? "أحسنت! نتيجة مثالية!" : "انتهت اللعبة"}
+                {resultMsg.title}
               </h2>
               <p className="text-sm text-muted mt-1">
-                {gameStatus === "won"
-                  ? "أجبت على جميع الأسئلة بشكل صحيح"
-                  : `أجبت صحيح على ${toArabicNumerals(score)} من ${toArabicNumerals(pairs.length)}`}
+                {resultMsg.subtitle}
               </p>
             </div>
 
@@ -290,6 +389,9 @@ export default function TarteebPage() {
           </div>
         </div>
       )}
+
+      {/* How to Play Modal */}
+      {showHelp && <HowToPlayTarteeb onClose={() => setShowHelp(false)} />}
     </div>
   );
 }

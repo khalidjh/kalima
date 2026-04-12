@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import BackToHome from "@/components/BackToHome";
 import { getDailyNahlaPuzzle, getNahlaPuzzleNumber, calculateWordScore, getRank, isPangram } from "@/data/nahla";
 import { playTap, playCorrect, playWrong } from "@/lib/sounds";
+import { updateNahlaStats } from "@/lib/nahlaState";
+import GameHeader from "@/components/GameHeader";
+import HowToPlayNahla from "@/components/HowToPlayNahla";
+import { HelpCircle } from "lucide-react";
 
 const STORAGE_KEY = "kalima_nahla_state";
 
@@ -11,17 +14,18 @@ interface GameState {
   puzzleNumber: number;
   foundWords: string[];
   score: number;
+  statsRecorded: boolean;
 }
 
 function loadState(puzzleNumber: number): GameState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { puzzleNumber, foundWords: [], score: 0 };
+    if (!raw) return { puzzleNumber, foundWords: [], score: 0, statsRecorded: false };
     const state: GameState = JSON.parse(raw);
-    if (state.puzzleNumber !== puzzleNumber) return { puzzleNumber, foundWords: [], score: 0 };
+    if (state.puzzleNumber !== puzzleNumber) return { puzzleNumber, foundWords: [], score: 0, statsRecorded: false };
     return state;
   } catch {
-    return { puzzleNumber, foundWords: [], score: 0 };
+    return { puzzleNumber, foundWords: [], score: 0, statsRecorded: false };
   }
 }
 
@@ -34,19 +38,31 @@ function toArabicNum(n: number): string {
   return String(n).replace(/\d/g, (d) => digits[parseInt(d)]);
 }
 
+/** Fisher-Yates shuffle - unbiased */
+function fisherYatesShuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export default function NahlaPage() {
   const puzzle = getDailyNahlaPuzzle();
   const puzzleNumber = getNahlaPuzzleNumber();
 
-  const [state, setState] = useState<GameState>({ puzzleNumber, foundWords: [], score: 0 });
+  const [state, setState] = useState<GameState>({ puzzleNumber, foundWords: [], score: 0, statsRecorded: false });
   const [input, setInput] = useState("");
   const [toast, setToast] = useState<string | null>(null);
   const [shuffledLetters, setShuffledLetters] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [showHowToPlay, setShowHowToPlay] = useState(false);
 
   useEffect(() => {
-    setState(loadState(puzzleNumber));
-    setShuffledLetters([...puzzle.letters.filter(l => l !== puzzle.requiredLetter)].sort(() => Math.random() - 0.5));
+    const loaded = loadState(puzzleNumber);
+    setState(loaded);
+    setShuffledLetters(fisherYatesShuffle(puzzle.letters.filter(l => l !== puzzle.requiredLetter)));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -92,7 +108,7 @@ export default function NahlaPage() {
     playCorrect();
     const pts = calculateWordScore(word, puzzle.letters);
     const pan = isPangram(word, puzzle.letters);
-    const newState = {
+    const newState: GameState = {
       ...state,
       foundWords: [...state.foundWords, word],
       score: state.score + pts,
@@ -103,8 +119,76 @@ export default function NahlaPage() {
     if (pan) showToast("Pangram! 🐝🎉");
   }, [input, puzzle, state, showToast]);
 
+  // Record stats once when player finds all words
+  useEffect(() => {
+    if (
+      state.foundWords.length === puzzle.validWords.length &&
+      state.foundWords.length > 0 &&
+      !state.statsRecorded
+    ) {
+      updateNahlaStats(state.score);
+      const updated = { ...state, statsRecorded: true };
+      setState(updated);
+      saveState(updated);
+    }
+  }, [state, puzzle.validWords.length]);
+
+  // Keyboard support
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      // Ignore if user is in another input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      // Ignore if modal open
+      if (document.querySelector("[data-nahla-modal]")) return;
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        // Trigger submit via a custom event to avoid stale closure
+        document.dispatchEvent(new CustomEvent("nahla-submit"));
+        return;
+      }
+
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        setInput(prev => prev.slice(0, -1));
+        playTap();
+        return;
+      }
+
+      // Check if it's an Arabic letter that's in the puzzle
+      const char = e.key;
+      if (char.length === 1 && puzzle.letters.includes(char)) {
+        e.preventDefault();
+        setInput(prev => prev + char);
+        playTap();
+      }
+    }
+
+    function handleSubmitEvent() {
+      // We use a ref-like pattern via custom event to get fresh state
+      document.dispatchEvent(new CustomEvent("nahla-do-submit"));
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("nahla-submit", handleSubmitEvent);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("nahla-submit", handleSubmitEvent);
+    };
+  }, [puzzle.letters]);
+
+  // Listen for submit custom event with fresh handleSubmit
+  useEffect(() => {
+    function doSubmit() {
+      handleSubmit();
+    }
+    document.addEventListener("nahla-do-submit", doSubmit);
+    return () => document.removeEventListener("nahla-do-submit", doSubmit);
+  }, [handleSubmit]);
+
   const handleShuffle = () => {
-    setShuffledLetters(prev => [...prev].sort(() => Math.random() - 0.5));
+    setShuffledLetters(prev => fisherYatesShuffle(prev));
     playTap();
   };
 
@@ -140,14 +224,30 @@ export default function NahlaPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#0F0C00] text-white flex flex-col items-center px-4 py-4" dir="rtl">
-      <BackToHome />
-      <div className="w-full max-w-md">
-        <div className="text-center mb-4">
-          <h1 className="text-2xl font-extrabold">نحلة 🐝</h1>
-          <p className="text-muted text-sm">#{toArabicNum(puzzleNumber)}</p>
-        </div>
+    <main className="min-h-screen bg-[#0F0C00] text-white flex flex-col items-center" dir="rtl">
+      <GameHeader
+        center={
+          <span className="text-sm font-bold">
+            نحلة 🐝 #{toArabicNum(puzzleNumber)}
+          </span>
+        }
+        right={
+          <button
+            onClick={() => setShowHowToPlay(true)}
+            className="text-muted hover:text-white transition-colors"
+          >
+            <HelpCircle size={22} strokeWidth={1.5} />
+          </button>
+        }
+      />
 
+      {showHowToPlay && (
+        <div data-nahla-modal>
+          <HowToPlayNahla onClose={() => setShowHowToPlay(false)} />
+        </div>
+      )}
+
+      <div className="w-full max-w-md px-4 py-4">
         <div className="bg-surface border border-border rounded-2xl p-4 mb-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-muted">{rank.emoji} {rank.name}</span>

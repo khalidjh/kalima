@@ -2,6 +2,7 @@ import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { app } from "./firebase";
 import { loadStats, saveStats } from "./gameState";
 import { loadRawabetStats, saveRawabetStats } from "./rawabetState";
+import { loadTarteebStats, saveTarteebStats } from "./tarteebState";
 
 let currentUid: string | null = null;
 
@@ -49,6 +50,24 @@ export async function mergeLocalStatsFromFirestore(uid: string): Promise<void> {
       };
       saveRawabetStats(merged);
     }
+
+    // Merge Tarteeb stats
+    if (data.tarteebStats) {
+      const local = loadTarteebStats();
+      const remote = data.tarteebStats;
+      const merged = {
+        ...local,
+        gamesPlayed: Math.max(local.gamesPlayed, remote.gamesPlayed ?? 0),
+        gamesWon: Math.max(local.gamesWon, remote.gamesWon ?? 0),
+        perfectGames: Math.max(local.perfectGames, remote.perfectGames ?? 0),
+        currentStreak: Math.max(local.currentStreak, remote.currentStreak ?? 0),
+        maxStreak: Math.max(local.maxStreak, remote.maxStreak ?? 0),
+        totalScore: Math.max(local.totalScore, remote.totalScore ?? 0),
+        lastPlayedPuzzle: Math.max(local.lastPlayedPuzzle, remote.lastPlayedPuzzle ?? -1),
+        lastWonPuzzle: Math.max(local.lastWonPuzzle, remote.lastWonPuzzle ?? -1),
+      };
+      saveTarteebStats(merged);
+    }
   } catch {
     // Graceful failure — never break the game for Firestore
   }
@@ -63,6 +82,7 @@ export async function writeStatsToFirestore(): Promise<void> {
       {
         kalimaStats: loadStats(),
         rawabetStats: loadRawabetStats(),
+        tarteebStats: loadTarteebStats(),
         updatedAt: new Date().toISOString(),
       },
       { merge: true }
