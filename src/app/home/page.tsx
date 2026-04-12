@@ -23,6 +23,18 @@ function HoroufIcon() {
   );
 }
 
+// خربشة icon: scattered letter tiles
+function KharbashaIcon() {
+  return (
+    <div className="relative w-12 h-12 flex-shrink-0">
+      <div className="absolute top-0 right-0 w-5 h-5 rounded bg-primary opacity-90 rotate-12" />
+      <div className="absolute top-1 left-0.5 w-5 h-5 rounded bg-present opacity-90 -rotate-6" />
+      <div className="absolute bottom-0 right-1 w-5 h-5 rounded bg-correct opacity-90 -rotate-12" />
+      <div className="absolute bottom-0.5 left-0 w-5 h-5 rounded bg-primary opacity-70 rotate-6" />
+    </div>
+  );
+}
+
 // ترتيب icon: two bars (higher/lower)
 function TarteebIcon() {
   return (
@@ -188,9 +200,7 @@ export default function HomePage() {
           <Link href="/kharbasha" className="block group">
             <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
               <div className="flex items-start gap-4">
-                <div className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center">
-                  <span className="text-3xl">🔄</span>
-                </div>
+                <KharbashaIcon />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <h3 className="text-lg font-semibold text-white">خربشة</h3>
