@@ -223,6 +223,12 @@ export default function HomePage() {
                   </div>
                   <p className="text-sm text-muted leading-relaxed">
                     خمّن أيهما أعلى قيمة في ١٠ جولات
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+
           {/* Archive card */}
           <Link href="/archive" className="block group">
             <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
