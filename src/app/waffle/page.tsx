@@ -19,6 +19,8 @@ import {
 } from "@/lib/waffleState";
 import type { WaffleGameState } from "@/lib/waffleState";
 import HowToPlayWaffle from "@/components/HowToPlayWaffle";
+import CountdownTimer from "@/components/CountdownTimer";
+import { playTap, playSwap, playWin, playWrong } from "@/lib/sounds";
 
 const MAX_SWAPS = 15;
 
@@ -180,6 +182,7 @@ export default function WafflePage() {
 
       if (!gameState.selected) {
         // Select first cell
+        playTap();
         const updated = { ...gameState, selected: [row, col] as [number, number] };
         setGameState(updated);
         saveWaffleGameState(updated);
@@ -205,6 +208,7 @@ export default function WafflePage() {
         }
 
         // Swap!
+        playSwap();
         const newGrid = gameState.grid.map((r) => [...r]);
         const temp = newGrid[sr][sc];
         newGrid[sr][sc] = newGrid[row][col];
@@ -232,10 +236,12 @@ export default function WafflePage() {
         saveWaffleGameState(updated);
 
         if (newStatus === "won") {
+          playWin();
           const optimal = countOptimalSwaps(shuffleGrid(puzzle.solution), puzzle.solution);
           updateWaffleStatsOnWin(newSwaps, optimal);
           setTimeout(() => setShowResult(true), 500);
         } else if (newStatus === "lost") {
+          playWrong();
           updateWaffleStatsOnLoss();
           setTimeout(() => setShowResult(true), 500);
         }
@@ -417,7 +423,7 @@ export default function WafflePage() {
               </>
             )}
 
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-3 justify-center mb-4">
               <button
                 onClick={handleShare}
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-text font-bold text-sm hover:opacity-90 transition-opacity"
@@ -432,6 +438,8 @@ export default function WafflePage() {
                 الرئيسية
               </button>
             </div>
+
+            <CountdownTimer />
           </div>
         )}
 

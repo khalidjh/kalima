@@ -9,6 +9,7 @@ import { loadWaffleGameState } from "@/lib/waffleState";
 import { TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
+import StreakFire from "@/components/StreakFire";
 
 // حروف icon: 2×3 mini tile grid, Minted / Slate / Saffron pattern
 function HoroufIcon() {
@@ -142,12 +143,7 @@ export default function HomePage() {
         {/* Section header */}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-white">ألعاب اليوم</h2>
-          {streak > 0 && (
-            <div className="flex items-center gap-1.5 text-primary bg-primary/20 font-bold text-sm px-2 py-0.5 rounded-full">
-              <span>🔥</span>
-              <span>{streak}</span>
-            </div>
-          )}
+          {streak > 0 && <StreakFire streak={streak} size="sm" />}
         </div>
 
         <div className="flex flex-col gap-3">
