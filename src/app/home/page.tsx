@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Archive } from "lucide-react";
 import { loadStats, loadGameState } from "@/lib/gameState";
 import { loadRawabetGameState } from "@/lib/rawabetState";
+import { loadWaffleGameState } from "@/lib/waffleState";
 import { TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
@@ -47,6 +48,32 @@ function TarteebIcon() {
 }
 
 // روابط icon: 4×4 grid with 4 color groups
+// وافل icon: waffle-shaped cross grid
+function WaffleIcon() {
+  return (
+    <div className="grid grid-cols-5 gap-0.5 w-12 h-12 flex-shrink-0">
+      {[
+        1, 1, 1, 1, 1,
+        1, 0, 1, 0, 1,
+        1, 1, 1, 1, 1,
+        1, 0, 1, 0, 1,
+        1, 1, 1, 1, 1,
+      ].map((v, i) =>
+        v ? (
+          <div
+            key={i}
+            className={`rounded-[2px] ${
+              i % 3 === 0 ? "bg-correct" : i % 5 === 0 ? "bg-present" : "bg-primary"
+            } opacity-90`}
+          />
+        ) : (
+          <div key={i} />
+        )
+      )}
+    </div>
+  );
+}
+
 function RawabetIcon() {
   const colors = [
     "bg-primary",
@@ -81,6 +108,7 @@ export default function HomePage() {
   const [streak, setStreak] = useState(0);
   const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost" | null>(null);
   const [rawabetStatus, setRawabetStatus] = useState<"playing" | "won" | "lost" | null>(null);
+  const [waffleStatus, setWaffleStatus] = useState<"playing" | "won" | "lost" | null>(null);
 
   useEffect(() => {
     const stats = loadStats();
@@ -97,10 +125,16 @@ export default function HomePage() {
       setRawabetStatus(rawabetSaved.gameStatus);
     }
 
+    const waffleSaved = loadWaffleGameState();
+    if (waffleSaved) {
+      setWaffleStatus(waffleSaved.gameStatus);
+    }
+
   }, []);
 
   const gameCompleted = gameStatus === "won" || gameStatus === "lost";
   const rawabetCompleted = rawabetStatus === "won" || rawabetStatus === "lost";
+  const waffleCompleted = waffleStatus === "won" || waffleStatus === "lost";
 
   return (
     <div className="h-full overflow-y-auto bg-background" dir="rtl">
@@ -117,6 +151,37 @@ export default function HomePage() {
         </div>
 
         <div className="flex flex-col gap-3">
+          {/* وافل card — NEW */}
+          <Link href="/waffle" className="block group">
+            <div className="bg-surface rounded-2xl p-4 border border-primary/30 group-hover:border-primary-light transition-colors relative overflow-hidden">
+              <div className="flex items-start gap-4">
+                <WaffleIcon />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-semibold text-white">وافل</h3>
+                      <span className="text-[10px] font-bold text-primary-text bg-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                        جديد
+                      </span>
+                    </div>
+                    {waffleCompleted ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
+                        ✓ أنهيت اليوم
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                        العب
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted leading-relaxed">
+                    بدّل الحروف في الشبكة لتكوين ٦ كلمات متقاطعة
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+
           {/* حروف card — active */}
           <Link href="/" className="block group">
             <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
