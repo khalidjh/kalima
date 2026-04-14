@@ -366,12 +366,6 @@ export default function LaunchPage() {
               العب الآن
               <span className="text-xl">←</span>
             </Link>
-            <Link
-              href="/kalimat"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-base border-2 border-[#FF922B]/40 text-[#FF922B] hover:bg-[#FF922B]/10 transition-all duration-300"
-            >
-              📝 Kalimat كلمات
-            </Link>
           </div>
         </div>
 
@@ -383,13 +377,6 @@ export default function LaunchPage() {
           <LiveGameDemo />
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-          <span className="text-xs text-[#999]">اكتشف المزيد</span>
-          <div className="w-5 h-8 rounded-full border-2 border-[#999] flex items-start justify-center p-1">
-            <div className="w-1 h-2 rounded-full bg-[#999] animate-bounce" />
-          </div>
-        </div>
       </section>
 
       {/* ═══════════════ DIVIDER ═══════════════ */}
