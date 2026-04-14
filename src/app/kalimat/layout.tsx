@@ -135,13 +135,13 @@ export default function KidsLayout({
       >
         <Link href="/kalimat" className="flex items-center gap-2 group">
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-lg transition-transform group-hover:scale-110 group-active:scale-95"
+            className="w-8 h-8 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 group-active:scale-95"
             style={{
-              background: "linear-gradient(135deg, #FF922B, #FFD43B)",
+              background: "linear-gradient(135deg, #FF922B, #FF6B6B)",
               boxShadow: "0 2px 8px rgba(255,146,43,0.3)",
             }}
           >
-            📝
+            <span className="text-[#FFF8F0] font-bold text-lg leading-none" style={{ fontFamily: "'Cairo', sans-serif" }}>ك</span>
           </div>
           <div>
             <span className="text-white font-black text-lg block leading-tight" style={{ letterSpacing: "0.5px" }}>

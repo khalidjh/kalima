@@ -163,12 +163,27 @@ export default function KidsHomePage() {
 
   return (
     <div className="max-w-lg mx-auto px-5 pt-4 pb-12">
-      {/* Star counter */}
-      {totalStars > 0 && (
-        <div
-          className="text-center mb-4"
-          style={{ animation: "bounce-in 0.4s ease-out both" }}
-        >
+      {/* Logo + star counter */}
+      <div
+        className="flex items-center justify-between mb-5"
+        style={{ animation: "bounce-in 0.4s ease-out both" }}
+      >
+        <div className="flex items-center gap-2.5">
+          <div
+            className="w-11 h-11 rounded-2xl flex items-center justify-center"
+            style={{
+              background: "linear-gradient(135deg, #FF922B, #FF6B6B)",
+              boxShadow: "0 4px 16px rgba(255,107,107,0.3)",
+            }}
+          >
+            <span className="text-[#FFF8F0] font-black text-2xl leading-none" style={{ fontFamily: "'Cairo', sans-serif" }}>ك</span>
+          </div>
+          <div>
+            <span className="text-base font-black block leading-tight" style={{ color: "#2D3436" }}>Kalimat</span>
+            <span className="text-[10px] font-medium" style={{ color: "#636E72" }}>كلمات</span>
+          </div>
+        </div>
+        {totalStars > 0 && (
           <div
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold"
             style={{
@@ -180,8 +195,8 @@ export default function KidsHomePage() {
             <span>⭐</span>
             <span>{toArabicNumeral(totalStars)}</span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Section 1: Play */}
       <div className="mb-6">

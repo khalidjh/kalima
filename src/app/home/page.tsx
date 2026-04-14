@@ -331,12 +331,12 @@ export default function HomePage() {
         {/* Kids Section */}
         <Link href="/kalimat" className="block group mt-3">
           <div className="bg-gradient-to-l from-[#FFE8CC]/10 to-[#FF922B]/10 rounded-xl p-3.5 border border-[#FF922B]/20 group-hover:border-[#FF922B]/40 transition-colors flex items-center gap-3">
-            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-[#FF922B]/10 border border-[#FF922B]/20">
-              <span className="text-lg">📝</span>
+            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg" style={{ background: "linear-gradient(135deg, #FF922B, #FF6B6B)" }}>
+              <span className="text-[#FFF8F0] font-bold text-lg leading-none" style={{ fontFamily: "'Cairo', sans-serif" }}>ك</span>
             </div>
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-white">Kalimat كلمات</h3>
-              <p className="text-xs text-muted">العب وتعلّم</p>
+              <p className="text-xs text-muted">ألعاب الأطفال</p>
             </div>
             <span className="text-[10px] font-bold text-[#2D3436] bg-[#FF922B] px-2 py-0.5 rounded-full">كلمات</span>
           </div>
