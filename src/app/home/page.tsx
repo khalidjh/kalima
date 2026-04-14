@@ -236,12 +236,11 @@ export default function HomePage() {
         {/* Featured / Hero Card */}
         <div className="mb-4">
           <HeroCard
-            href="/rubaei"
-            icon={<RubaeiIcon size="lg" />}
-            title="رباعي"
-            description="خمّن ٤ كلمات في وقت واحد بـ ٩ محاولات"
-            completed={rubaeiCompleted}
-            isNew
+            href="/"
+            icon={<HoroufIcon />}
+            title="حروف"
+            description="خمّن الكلمة اليومية في ٦ محاولات"
+            completed={gameCompleted}
           />
         </div>
 
@@ -249,7 +248,7 @@ export default function HomePage() {
         <div className="mb-4">
           <h2 className="text-sm font-semibold text-muted mb-3">جميع الألعاب</h2>
           <div className="grid grid-cols-3 gap-2.5">
-            <GridCard href="/" icon={<HoroufIcon />} title="حروف" completed={gameCompleted} />
+            <GridCard href="/rubaei" icon={<RubaeiIcon />} title="رباعي" completed={rubaeiCompleted} />
             <GridCard href="/waffle" icon={<WaffleIcon />} title="وافل" completed={waffleCompleted} />
             <GridCard href="/rawabet" icon={<RawabetIcon />} title="روابط" completed={rawabetCompleted} />
             <GridCard href="/nahla" icon={<NahlaIcon />} title="نحلة" completed={false} />
