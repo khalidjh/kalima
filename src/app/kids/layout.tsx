@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "كلمة أطفال - ألعاب تعليمية للأطفال",
+  title: "Sparks شرارة - العب وتعلّم",
   description:
     "ألعاب تعليمية ممتعة للأطفال باللغة العربية. تعلم الحروف والأرقام والأشكال والألوان!",
 };
@@ -92,7 +92,7 @@ export default function KidsLayout({
           className="absolute text-2xl"
           style={{ top: "12%", right: "8%", animation: "twinkle 3s ease-in-out infinite", animationDelay: "0s" }}
         >
-          ✨
+          ⚡
         </span>
         <span
           className="absolute text-xl"
@@ -104,7 +104,7 @@ export default function KidsLayout({
           className="absolute text-lg"
           style={{ top: "45%", right: "4%", animation: "twinkle 4s ease-in-out infinite", animationDelay: "2s" }}
         >
-          ⭐
+          ⚡
         </span>
         <span
           className="absolute text-2xl"
@@ -116,13 +116,13 @@ export default function KidsLayout({
           className="absolute text-sm"
           style={{ top: "70%", right: "12%", animation: "twinkle 3.5s ease-in-out infinite", animationDelay: "1.5s" }}
         >
-          ✨
+          ⚡
         </span>
         <span
           className="absolute text-lg"
           style={{ top: "85%", left: "15%", animation: "drift 7s ease-in-out infinite", animationDelay: "3s" }}
         >
-          🌙
+          ⚡
         </span>
       </div>
 
@@ -131,7 +131,7 @@ export default function KidsLayout({
         <div
           className="relative px-5 pt-4 pb-10"
           style={{
-            background: "linear-gradient(135deg, #4A90D9 0%, #9B59D9 40%, #CC5DE8 70%, #F06595 100%)",
+            background: "linear-gradient(135deg, #FF922B 0%, #FF6B6B 40%, #E64980 70%, #F06595 100%)",
           }}
         >
           <div className="flex items-center justify-between">
@@ -140,12 +140,12 @@ export default function KidsLayout({
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
                 style={{
-                  background: "rgba(255,255,255,0.25)",
-                  backdropFilter: "blur(8px)",
+                  background: "linear-gradient(135deg, #FF922B, #FFD43B)",
+                  boxShadow: "0 2px 12px rgba(255,146,43,0.4)",
                   animation: "wave-bob 3s ease-in-out infinite",
                 }}
               >
-                🌟
+                ⚡
               </div>
               <div>
                 <span
@@ -155,9 +155,13 @@ export default function KidsLayout({
                     letterSpacing: "0.5px",
                   }}
                 >
-                  كلمة أطفال
+                  Sparks
                 </span>
-                <span className="text-white/70 text-xs font-medium">نتعلّم ونلعب</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-white/60 text-xs font-medium">شرارة</span>
+                  <span className="text-white/40 text-xs">|</span>
+                  <span className="text-white/70 text-xs font-medium">العب وتعلّم</span>
+                </div>
               </div>
             </div>
 

@@ -330,15 +330,15 @@ export default function HomePage() {
 
         {/* Kids Section */}
         <Link href="/kids" className="block group mt-3">
-          <div className="bg-gradient-to-l from-[#FFE8CC]/10 to-[#E8CCF5]/10 rounded-xl p-3.5 border border-[#CC5DE8]/20 group-hover:border-[#CC5DE8]/40 transition-colors flex items-center gap-3">
-            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-[#FFD43B]/10 border border-[#FFD43B]/20">
-              <span className="text-lg">🌟</span>
+          <div className="bg-gradient-to-l from-[#FFE8CC]/10 to-[#FF922B]/10 rounded-xl p-3.5 border border-[#FF922B]/20 group-hover:border-[#FF922B]/40 transition-colors flex items-center gap-3">
+            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-[#FF922B]/10 border border-[#FF922B]/20">
+              <span className="text-lg">⚡</span>
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-white">كلمة أطفال</h3>
-              <p className="text-xs text-muted">ألعاب تعليمية للأطفال</p>
+              <h3 className="text-sm font-semibold text-white">Sparks</h3>
+              <p className="text-xs text-muted">العب وتعلّم</p>
             </div>
-            <span className="text-[10px] font-bold text-[#2D3436] bg-[#FFD43B] px-2 py-0.5 rounded-full">جديد</span>
+            <span className="text-[10px] font-bold text-[#2D3436] bg-[#FF922B] px-2 py-0.5 rounded-full">Sparks</span>
           </div>
         </Link>
       </div>
