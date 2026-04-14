@@ -410,7 +410,7 @@ export default function SuraaPage() {
 
   if (phase === "menu") {
     return (
-      <div className="h-[calc(100dvh-120px)] flex flex-col px-4" dir="rtl">
+      <div className="h-[calc(100dvh-96px)] flex flex-col px-4" dir="rtl">
         {/* Header */}
         <div className="flex items-center justify-between pt-4 pb-2">
           <Link
@@ -469,7 +469,7 @@ export default function SuraaPage() {
     const timerColor = timerPercent > 60 ? "#51CF66" : timerPercent > 30 ? "#FCC419" : "#FF6B6B";
 
     return (
-      <div className="h-[calc(100dvh-120px)] flex flex-col px-4" dir="rtl">
+      <div className="h-[calc(100dvh-96px)] flex flex-col px-4" dir="rtl">
         {/* Top bar: score + combo + progress */}
         <div className="flex items-center justify-between pt-3 pb-2">
           <div className="flex items-center gap-3">
@@ -588,7 +588,7 @@ export default function SuraaPage() {
   const stars = percent >= 80 ? 3 : percent >= 50 ? 2 : percent >= 20 ? 1 : 0;
 
   return (
-    <div className="h-[calc(100dvh-120px)] flex flex-col items-center justify-center px-4 gap-6" dir="rtl">
+    <div className="h-[calc(100dvh-96px)] flex flex-col items-center justify-center px-4 gap-6" dir="rtl">
       <div
         className="text-center px-6 py-8 rounded-3xl w-full max-w-sm"
         style={{

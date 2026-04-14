@@ -243,7 +243,7 @@ function Celebration({
   const hasNext = levelIndex < LEVELS.length - 1;
 
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100dvh-120px)] px-6">
+    <div className="flex flex-col items-center justify-center h-[calc(100dvh-96px)] px-6">
       <div className="text-center" style={{ animation: "bounce-in 0.5s ease-out both" }}>
         <div
           className="text-7xl mb-4"
@@ -536,7 +536,7 @@ function GameBoardWrapper({
   }, [level]);
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-120px)]">
+    <div className="flex flex-col h-[calc(100dvh-96px)]">
       {/* Header bar */}
       <div className="flex items-center justify-between px-4 py-3 flex-shrink-0">
         <button

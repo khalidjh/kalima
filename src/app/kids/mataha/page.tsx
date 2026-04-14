@@ -649,7 +649,7 @@ function MazeGameWrapper({
   const WALL_WIDTH = 3;
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-120px)]" ref={containerRef}>
+    <div className="flex flex-col h-[calc(100dvh-96px)]" ref={containerRef}>
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-2 flex-shrink-0">
         <button

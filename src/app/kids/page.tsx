@@ -199,23 +199,8 @@ export default function KidsHomePage() {
         )}
       </div>
 
-      {/* Section 1: Learn */}
-      <div className="mb-8">
-        <h2
-          className="text-lg font-bold mb-3"
-          style={{ color: "#2D3436" }}
-        >
-          🧠 تعلّم
-        </h2>
-        <div className="grid grid-cols-3 gap-3">
-          {learnGames.map((game, i) => (
-            <GameCard key={game.href} game={game} index={i} />
-          ))}
-        </div>
-      </div>
-
-      {/* Section 2: Play */}
-      <div>
+      {/* Section 1: Play */}
+      <div className="mb-6">
         <h2
           className="text-lg font-bold mb-3"
           style={{ color: "#2D3436" }}
@@ -224,7 +209,22 @@ export default function KidsHomePage() {
         </h2>
         <div className="grid grid-cols-3 gap-3">
           {playGames.map((game, i) => (
-            <GameCard key={game.href} game={game} index={i + learnGames.length} />
+            <GameCard key={game.href} game={game} index={i} />
+          ))}
+        </div>
+      </div>
+
+      {/* Section 2: Learn */}
+      <div>
+        <h2
+          className="text-lg font-bold mb-3"
+          style={{ color: "#2D3436" }}
+        >
+          🧠 تعلّم
+        </h2>
+        <div className="grid grid-cols-3 gap-3">
+          {learnGames.map((game, i) => (
+            <GameCard key={game.href} game={game} index={i + playGames.length} />
           ))}
         </div>
       </div>

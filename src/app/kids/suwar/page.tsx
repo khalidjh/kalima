@@ -230,7 +230,7 @@ const SHARED_STYLES = `
 function GameContainer({ children, scroll }: { children: React.ReactNode; scroll?: boolean }) {
   return (
     <div
-      className={`h-[calc(100dvh-120px)] flex flex-col ${scroll ? "overflow-y-auto" : "overflow-hidden"}`}
+      className={`h-[calc(100dvh-96px)] flex flex-col ${scroll ? "overflow-y-auto" : "overflow-hidden"}`}
     >
       <style>{SHARED_STYLES}</style>
       {children}

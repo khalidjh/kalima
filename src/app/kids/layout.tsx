@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Sparks شرارة - العب وتعلّم",
+  title: "Sparks سبارك - العب وتعلّم",
   description:
     "ألعاب تعليمية ممتعة للأطفال باللغة العربية. تعلم الحروف والأرقام والأشكال والألوان!",
 };
@@ -126,73 +126,42 @@ export default function KidsLayout({
         </span>
       </div>
 
-      {/* Playful wavy header */}
-      <header className="relative z-10">
-        <div
-          className="relative px-5 pt-4 pb-10"
-          style={{
-            background: "linear-gradient(135deg, #FF922B 0%, #FF6B6B 40%, #E64980 70%, #F06595 100%)",
-          }}
-        >
-          <div className="flex items-center justify-between">
-            {/* Branding */}
-            <div className="flex items-center gap-3">
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
-                style={{
-                  background: "linear-gradient(135deg, #FF922B, #FFD43B)",
-                  boxShadow: "0 2px 12px rgba(255,146,43,0.4)",
-                  animation: "wave-bob 3s ease-in-out infinite",
-                }}
-              >
-                ⚡
-              </div>
-              <div>
-                <span
-                  className="text-white font-black text-2xl block"
-                  style={{
-                    textShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                    letterSpacing: "0.5px",
-                  }}
-                >
-                  Sparks
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="text-white/60 text-xs font-medium">شرارة</span>
-                  <span className="text-white/40 text-xs">|</span>
-                  <span className="text-white/70 text-xs font-medium">العب وتعلّم</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Back button */}
-            <Link
-              href="/home"
-              className="flex items-center gap-1.5 text-white/80 hover:text-white font-semibold text-xs px-3 py-1.5 rounded-full transition-all hover:scale-105"
-              style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(4px)" }}
-            >
-              <span>الرئيسية</span>
-              <span>←</span>
-            </Link>
+      {/* Compact header */}
+      <header
+        className="relative z-10 flex items-center justify-between px-4 py-2"
+        style={{
+          background: "linear-gradient(135deg, #FF922B 0%, #FF6B6B 50%, #E64980 100%)",
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <div
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-lg"
+            style={{
+              background: "linear-gradient(135deg, #FF922B, #FFD43B)",
+              boxShadow: "0 2px 8px rgba(255,146,43,0.3)",
+            }}
+          >
+            ⚡
+          </div>
+          <div>
+            <span className="text-white font-black text-lg block leading-tight" style={{ letterSpacing: "0.5px" }}>
+              Sparks
+            </span>
+            <span className="text-white/60 text-[10px] font-medium">سبارك</span>
           </div>
         </div>
 
-        {/* Wavy bottom edge */}
-        <svg
-          viewBox="0 0 1440 60"
-          className="w-full block -mt-px"
-          style={{ color: "#FFF8F0" }}
-          preserveAspectRatio="none"
+        <Link
+          href="/home"
+          className="text-white/80 hover:text-white font-semibold text-xs px-3 py-1 rounded-full transition-all"
+          style={{ background: "rgba(255,255,255,0.15)" }}
         >
-          <path
-            d="M0,0 C360,60 720,60 1080,30 C1260,15 1380,40 1440,20 L1440,60 L0,60 Z"
-            fill="currentColor"
-          />
-        </svg>
+          الرئيسية ←
+        </Link>
       </header>
 
       {/* Page content */}
-      <main className="relative z-10 flex-1 min-h-0 overflow-y-auto pb-16">
+      <main className="relative z-10 flex-1 min-h-0 overflow-y-auto">
         {children}
       </main>
     </div>

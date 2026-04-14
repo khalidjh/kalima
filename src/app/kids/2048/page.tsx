@@ -335,7 +335,7 @@ export default function Game2048Page() {
   if (!initialized) return null;
 
   return (
-    <div className="h-[calc(100dvh-120px)] flex flex-col items-center px-4" dir="rtl">
+    <div className="h-[calc(100dvh-96px)] flex flex-col items-center px-4" dir="rtl">
       {/* Header */}
       <div className="w-full max-w-[400px] flex items-center justify-between pt-3 pb-2">
         <Link

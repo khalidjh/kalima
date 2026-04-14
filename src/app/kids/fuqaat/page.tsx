@@ -693,7 +693,7 @@ function GamePlay({
   const containerHeight = containerRef.current?.clientHeight ?? 500;
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-120px)] max-w-lg mx-auto w-full select-none">
+    <div className="flex flex-col h-[calc(100dvh-96px)] max-w-lg mx-auto w-full select-none">
       {/* Top bar: score + question + lives */}
       <div className="px-4 pt-3 pb-2 flex items-center justify-between relative z-20">
         <div
