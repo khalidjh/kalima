@@ -145,11 +145,7 @@ function HomeInner() {
       triggerShake();
       return;
     }
-    if (!isValidGuess(currentGuess)) {
-      showToast("الكلمة غير موجودة في القائمة");
-      triggerShake();
-      return;
-    }
+    // Allow any 4-letter Arabic input, no dictionary validation
 
     if (hardMode && guesses.length > 0) {
       const violation = validateHardMode(currentGuess, guesses, answer);
