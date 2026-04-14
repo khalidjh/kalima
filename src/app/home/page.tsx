@@ -2,20 +2,54 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Archive } from "lucide-react";
+import { Archive, ChevronLeft } from "lucide-react";
 import { loadStats, loadGameState } from "@/lib/gameState";
 import { loadRawabetGameState } from "@/lib/rawabetState";
 import { loadWaffleGameState } from "@/lib/waffleState";
 import { loadRubaeiGameState } from "@/lib/rubaeiState";
-import { TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
 import StreakFire from "@/components/StreakFire";
 
-// حروف icon: 2×3 mini tile grid, Minted / Slate / Saffron pattern
+// ── Icon Components ──
+
+function WaffleIcon({ size = "sm" }: { size?: "sm" | "lg" }) {
+  const s = size === "lg" ? "w-14 h-14" : "w-10 h-10";
+  const gap = size === "lg" ? "gap-[3px]" : "gap-[2px]";
+  return (
+    <div className={`grid grid-cols-5 ${gap} ${s} flex-shrink-0`}>
+      {[1,1,1,1,1, 1,0,1,0,1, 1,1,1,1,1, 1,0,1,0,1, 1,1,1,1,1].map((v, i) =>
+        v ? (
+          <div key={i} className={`rounded-[2px] ${i % 3 === 0 ? "bg-correct" : i % 5 === 0 ? "bg-present" : "bg-primary"} opacity-90`} />
+        ) : <div key={i} />
+      )}
+    </div>
+  );
+}
+
+function RubaeiIcon({ size = "sm" }: { size?: "sm" | "lg" }) {
+  const s = size === "lg" ? "w-14 h-14" : "w-10 h-10";
+  const cellSize = size === "lg" ? "w-[6px] h-[6px]" : "w-[4px] h-[4px]";
+  const mini = (colors: string[]) => (
+    <div className="grid grid-cols-3 gap-[1px]">
+      {colors.map((c, i) => (
+        <div key={i} className={`${cellSize} rounded-[1px] ${c} opacity-90`} />
+      ))}
+    </div>
+  );
+  return (
+    <div className={`grid grid-cols-2 gap-1 ${s} flex-shrink-0 p-0.5`}>
+      {mini(["bg-correct","bg-absent","bg-present","bg-absent","bg-correct","bg-correct","bg-present","bg-absent","bg-correct"])}
+      {mini(["bg-absent","bg-present","bg-correct","bg-correct","bg-absent","bg-present","bg-correct","bg-correct","bg-absent"])}
+      {mini(["bg-present","bg-correct","bg-absent","bg-correct","bg-present","bg-absent","bg-absent","bg-correct","bg-present"])}
+      {mini(["bg-correct","bg-absent","bg-correct","bg-absent","bg-correct","bg-absent","bg-present","bg-absent","bg-correct"])}
+    </div>
+  );
+}
+
 function HoroufIcon() {
   return (
-    <div className="grid grid-cols-3 gap-0.5 w-12 h-8 flex-shrink-0">
+    <div className="grid grid-cols-3 gap-0.5 w-10 h-7 flex-shrink-0">
       <div className="rounded-sm bg-correct opacity-90" />
       <div className="rounded-sm bg-absent opacity-80" />
       <div className="rounded-sm bg-present opacity-90" />
@@ -26,102 +60,126 @@ function HoroufIcon() {
   );
 }
 
-// خربشة icon: scattered letter tiles
+function RawabetIcon() {
+  const colors = ["bg-primary","bg-primary","bg-correct","bg-correct","bg-primary","bg-primary","bg-correct","bg-correct","bg-present","bg-present","bg-accent","bg-accent","bg-present","bg-present","bg-accent","bg-accent"];
+  return (
+    <div className="grid grid-cols-4 gap-0.5 w-10 h-10 flex-shrink-0">
+      {colors.map((c, i) => <div key={i} className={`rounded-[2px] ${c} opacity-90`} />)}
+    </div>
+  );
+}
+
+function NahlaIcon() {
+  return (
+    <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
+      <span className="text-2xl">🐝</span>
+    </div>
+  );
+}
+
 function KharbashaIcon() {
   return (
-    <div className="relative w-12 h-12 flex-shrink-0">
-      <div className="absolute top-0 right-0 w-5 h-5 rounded bg-primary opacity-90 rotate-12" />
-      <div className="absolute top-1 left-0.5 w-5 h-5 rounded bg-present opacity-90 -rotate-6" />
-      <div className="absolute bottom-0 right-1 w-5 h-5 rounded bg-correct opacity-90 -rotate-12" />
-      <div className="absolute bottom-0.5 left-0 w-5 h-5 rounded bg-primary opacity-70 rotate-6" />
+    <div className="relative w-10 h-10 flex-shrink-0">
+      <div className="absolute top-0 right-0 w-4 h-4 rounded bg-primary opacity-90 rotate-12" />
+      <div className="absolute top-1 left-0 w-4 h-4 rounded bg-present opacity-90 -rotate-6" />
+      <div className="absolute bottom-0 right-0.5 w-4 h-4 rounded bg-correct opacity-90 -rotate-12" />
+      <div className="absolute bottom-0 left-0 w-4 h-4 rounded bg-primary opacity-70 rotate-6" />
     </div>
   );
 }
 
-// ترتيب icon: two bars (higher/lower)
 function TarteebIcon() {
   return (
-    <div className="flex items-end gap-1 w-12 h-12 flex-shrink-0 pb-1">
-      <div className="flex-1 rounded-sm bg-correct opacity-90" style={{ height: "60%" }} />
-      <div className="flex-1 rounded-sm bg-primary opacity-90" style={{ height: "100%" }} />
-      <TrendingUp size={14} className="text-primary mb-0.5 flex-shrink-0" strokeWidth={2} />
+    <div className="flex items-end gap-0.5 w-10 h-10 flex-shrink-0 pb-0.5">
+      <div className="flex-1 rounded-sm bg-correct opacity-90" style={{ height: "55%" }} />
+      <div className="flex-1 rounded-sm bg-primary opacity-90" style={{ height: "90%" }} />
+      <div className="flex-1 rounded-sm bg-present opacity-90" style={{ height: "70%" }} />
     </div>
   );
 }
 
-// روابط icon: 4×4 grid with 4 color groups
-// وافل icon: waffle-shaped cross grid
-function WaffleIcon() {
+// ── Completion Badge ──
+
+function CompletedBadge() {
   return (
-    <div className="grid grid-cols-5 gap-0.5 w-12 h-12 flex-shrink-0">
-      {[
-        1, 1, 1, 1, 1,
-        1, 0, 1, 0, 1,
-        1, 1, 1, 1, 1,
-        1, 0, 1, 0, 1,
-        1, 1, 1, 1, 1,
-      ].map((v, i) =>
-        v ? (
-          <div
-            key={i}
-            className={`rounded-[2px] ${
-              i % 3 === 0 ? "bg-correct" : i % 5 === 0 ? "bg-present" : "bg-primary"
-            } opacity-90`}
-          />
-        ) : (
-          <div key={i} />
-        )
-      )}
-    </div>
+    <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-correct bg-correct/10 px-2 py-0.5 rounded-full border border-correct/20">
+      ✓ أنهيت
+    </span>
   );
 }
 
-// رباعي icon: 2×2 mini Wordle boards
-function RubaeiIcon() {
-  const mini = (colors: string[]) => (
-    <div className="grid grid-cols-3 gap-[1px]">
-      {colors.map((c, i) => (
-        <div key={i} className={`w-[5px] h-[5px] rounded-[1px] ${c} opacity-90`} />
-      ))}
-    </div>
-  );
+function PlayBadge() {
   return (
-    <div className="grid grid-cols-2 gap-1 w-12 h-12 flex-shrink-0 p-0.5">
-      {mini(["bg-correct", "bg-absent", "bg-present", "bg-absent", "bg-correct", "bg-correct", "bg-present", "bg-absent", "bg-correct"])}
-      {mini(["bg-absent", "bg-present", "bg-correct", "bg-correct", "bg-absent", "bg-present", "bg-correct", "bg-correct", "bg-absent"])}
-      {mini(["bg-present", "bg-correct", "bg-absent", "bg-correct", "bg-present", "bg-absent", "bg-absent", "bg-correct", "bg-present"])}
-      {mini(["bg-correct", "bg-absent", "bg-correct", "bg-absent", "bg-correct", "bg-absent", "bg-present", "bg-absent", "bg-correct"])}
-    </div>
+    <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-primary-light bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+      العب
+    </span>
   );
 }
 
-function RawabetIcon() {
-  const colors = [
-    "bg-primary",
-    "bg-primary",
-    "bg-correct",
-    "bg-correct",
-    "bg-primary",
-    "bg-primary",
-    "bg-correct",
-    "bg-correct",
-    "bg-present",
-    "bg-present",
-    "bg-accent",
-    "bg-accent",
-    "bg-present",
-    "bg-present",
-    "bg-accent",
-    "bg-accent",
-  ];
+function NewBadge() {
   return (
-    <div className="grid grid-cols-4 gap-0.5 w-12 h-12 flex-shrink-0">
-      {colors.map((c, i) => (
-        <div key={i} className={`rounded-sm ${c} opacity-90`} />
-      ))}
-    </div>
+    <span className="text-[9px] font-bold text-primary-text bg-primary px-1.5 py-0.5 rounded-full tracking-wider">
+      جديد
+    </span>
   );
 }
+
+// ── Game Card Components ──
+
+function HeroCard({
+  href, icon, title, description, completed, isNew,
+}: {
+  href: string; icon: React.ReactNode; title: string; description: string; completed: boolean; isNew?: boolean;
+}) {
+  return (
+    <Link href={href} className="block group">
+      <div className="bg-gradient-to-br from-surface to-surface/80 rounded-2xl p-5 border border-primary/30 group-hover:border-primary transition-all duration-200 relative overflow-hidden">
+        {/* Glow effect */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-correct/5 rounded-full blur-2xl" />
+
+        <div className="relative flex items-center gap-4">
+          <div className="p-3 rounded-xl bg-background/50 border border-border/50">
+            {icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-xl font-bold text-white">{title}</h3>
+              {isNew && <NewBadge />}
+            </div>
+            <p className="text-sm text-muted leading-relaxed">{description}</p>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            {completed ? <CompletedBadge /> : <PlayBadge />}
+            <ChevronLeft size={18} className="text-muted group-hover:text-primary transition-colors" />
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function GridCard({
+  href, icon, title, completed,
+}: {
+  href: string; icon: React.ReactNode; title: string; completed: boolean;
+}) {
+  return (
+    <Link href={href} className="block group">
+      <div className={`bg-surface rounded-xl p-3 border ${completed ? "border-correct/20" : "border-border"} group-hover:border-primary/40 transition-all duration-200 flex flex-col items-center gap-2 aspect-square justify-center relative`}>
+        {completed && (
+          <div className="absolute top-2 left-2">
+            <span className="text-correct text-xs">✓</span>
+          </div>
+        )}
+        {icon}
+        <span className="text-xs font-semibold text-white">{title}</span>
+      </div>
+    </Link>
+  );
+}
+
+// ── Main Page ──
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -134,29 +192,19 @@ export default function HomePage() {
 
   useEffect(() => {
     const stats = loadStats();
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStreak(stats.currentStreak);
 
     const saved = loadGameState();
-    if (saved) {
-      setGameStatus(saved.gameStatus);
-    }
+    if (saved) setGameStatus(saved.gameStatus);
 
     const rawabetSaved = loadRawabetGameState();
-    if (rawabetSaved) {
-      setRawabetStatus(rawabetSaved.gameStatus);
-    }
+    if (rawabetSaved) setRawabetStatus(rawabetSaved.gameStatus);
 
     const waffleSaved = loadWaffleGameState();
-    if (waffleSaved) {
-      setWaffleStatus(waffleSaved.gameStatus);
-    }
+    if (waffleSaved) setWaffleStatus(waffleSaved.gameStatus);
 
     const rubaeiSaved = loadRubaeiGameState();
-    if (rubaeiSaved) {
-      setRubaeiStatus(rubaeiSaved.gameStatus);
-    }
-
+    if (rubaeiSaved) setRubaeiStatus(rubaeiSaved.gameStatus);
   }, []);
 
   const gameCompleted = gameStatus === "won" || gameStatus === "lost";
@@ -164,228 +212,69 @@ export default function HomePage() {
   const waffleCompleted = waffleStatus === "won" || waffleStatus === "lost";
   const rubaeiCompleted = rubaeiStatus === "won" || rubaeiStatus === "lost";
 
+  // Count completed games
+  const completedCount = [gameCompleted, rawabetCompleted, waffleCompleted, rubaeiCompleted].filter(Boolean).length;
+  const totalDailyGames = 7;
+
   return (
     <div className="h-full overflow-y-auto bg-background" dir="rtl">
-      <div className="max-w-lg mx-auto px-4 pt-5 pb-6">
-        {/* Section header */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-white">ألعاب اليوم</h2>
+      <div className="max-w-lg mx-auto px-4 pt-5 pb-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h1 className="text-2xl font-bold text-white">كلمة</h1>
+            <p className="text-xs text-muted mt-0.5">
+              {completedCount > 0
+                ? `أنهيت ${completedCount} من ${totalDailyGames} ألعاب`
+                : "ألعاب اليوم"
+              }
+            </p>
+          </div>
           {streak > 0 && <StreakFire streak={streak} size="sm" />}
         </div>
 
-        <div className="flex flex-col gap-3">
-          {/* وافل card — NEW */}
-          <Link href="/waffle" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-primary/30 group-hover:border-primary-light transition-colors relative overflow-hidden">
-              <div className="flex items-start gap-4">
-                <WaffleIcon />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-white">وافل</h3>
-                      <span className="text-[10px] font-bold text-primary-text bg-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                        جديد
-                      </span>
-                    </div>
-                    {waffleCompleted ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
-                        ✓ أنهيت اليوم
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                        العب
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    بدّل الحروف في الشبكة لتكوين ٦ كلمات متقاطعة
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* رباعي card — NEW */}
-          <Link href="/rubaei" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-primary/30 group-hover:border-primary-light transition-colors relative overflow-hidden">
-              <div className="flex items-start gap-4">
-                <RubaeiIcon />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-white">رباعي</h3>
-                      <span className="text-[10px] font-bold text-primary-text bg-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                        جديد
-                      </span>
-                    </div>
-                    {rubaeiCompleted ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
-                        ✓ أنهيت اليوم
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                        العب
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    خمّن ٤ كلمات في وقت واحد بـ ٩ محاولات
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* حروف card — active */}
-          <Link href="/" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
-              <div className="flex items-start gap-4">
-                {/* Icon */}
-                <HoroufIcon />
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">حروف</h3>
-                    {gameCompleted ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
-                        ✓ أنهيت اليوم
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                        جاهزة
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    خمّن الكلمة اليومية في ٦ محاولات
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* روابط card — active */}
-          <Link href="/rawabet" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
-              <div className="flex items-start gap-4">
-                {/* Icon */}
-                <RawabetIcon />
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">روابط</h3>
-                    {rawabetCompleted ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
-                        ✓ أنهيت اليوم
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                        العب
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    اربط الكلمات المتشابهة في مجموعات
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* نحلة card */}
-          <Link href="/nahla" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
-              <div className="flex items-start gap-4">
-                <div className="relative w-12 h-12 flex-shrink-0 flex items-center justify-center">
-                  <span className="text-3xl">🐝</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">نحلة</h3>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                      العب
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    كوّن كلمات من ٧ أحرف — النحلة تنتظرك
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-          {/* خربشة card */}
-          <Link href="/kharbasha" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
-              <div className="flex items-start gap-4">
-                <KharbashaIcon />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">خربشة</h3>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                      العب
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    رتّب الأحرف واكتشف الكلمة المخفية
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* ترتيب card */}
-          <Link href="/tarteeb" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
-              <div className="flex items-start gap-4">
-                {/* Icon */}
-                <TarteebIcon />
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">ترتيب</h3>
-                    <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                      العب
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    خمّن أيهما أعلى قيمة في ١٠ جولات
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Archive card */}
-          <Link href="/archive" className="block group">
-            <div className="bg-surface rounded-2xl p-4 border border-border group-hover:border-primary-light transition-colors">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
-                  <Archive size={22} className="text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white">الأرشيف</h3>
-                    {isPro ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
-                        Pro
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium text-muted bg-surface px-2.5 py-0.5 rounded-full border border-border flex-shrink-0">
-                        Pro
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    العب ألغاز الأيام السابقة
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Link>
+        {/* Featured / Hero Card */}
+        <div className="mb-4">
+          <HeroCard
+            href="/rubaei"
+            icon={<RubaeiIcon size="lg" />}
+            title="رباعي"
+            description="خمّن ٤ كلمات في وقت واحد بـ ٩ محاولات"
+            completed={rubaeiCompleted}
+            isNew
+          />
         </div>
+
+        {/* Games Grid */}
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold text-muted mb-3">جميع الألعاب</h2>
+          <div className="grid grid-cols-3 gap-2.5">
+            <GridCard href="/" icon={<HoroufIcon />} title="حروف" completed={gameCompleted} />
+            <GridCard href="/waffle" icon={<WaffleIcon />} title="وافل" completed={waffleCompleted} />
+            <GridCard href="/rawabet" icon={<RawabetIcon />} title="روابط" completed={rawabetCompleted} />
+            <GridCard href="/nahla" icon={<NahlaIcon />} title="نحلة" completed={false} />
+            <GridCard href="/kharbasha" icon={<KharbashaIcon />} title="خربشة" completed={false} />
+            <GridCard href="/tarteeb" icon={<TarteebIcon />} title="ترتيب" completed={false} />
+          </div>
+        </div>
+
+        {/* Archive */}
+        <Link href="/archive" className="block group">
+          <div className="bg-surface rounded-xl p-3.5 border border-border group-hover:border-primary/40 transition-colors flex items-center gap-3">
+            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+              <Archive size={18} className="text-primary" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-white">الأرشيف</h3>
+              <p className="text-xs text-muted">العب ألغاز الأيام السابقة</p>
+            </div>
+            {isPro ? (
+              <span className="text-[10px] font-bold text-primary-text bg-primary px-2 py-0.5 rounded-full">Pro</span>
+            ) : (
+              <span className="text-[10px] font-semibold text-muted bg-surface px-2 py-0.5 rounded-full border border-border">Pro</span>
+            )}
+          </div>
+        </Link>
       </div>
     </div>
   );
