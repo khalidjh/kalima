@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { evaluateGuess, LetterState } from "@/lib/gameState";
+import { WORD_LENGTH } from "@/data/words";
 
 interface GameBoardProps {
   guesses: string[];
@@ -94,7 +95,7 @@ export default function GameBoard({
     const currentChars = Array.from(currentGuess);
     const letters: string[] = [];
     const states: LetterState[] = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < WORD_LENGTH; i++) {
       letters.push(currentChars[i] ?? "");
       states.push(currentChars[i] ? "tbd" : "empty");
     }
@@ -104,8 +105,8 @@ export default function GameBoard({
   // Empty rows
   while (rows.length < 6) {
     rows.push({
-      letters: ["", "", "", "", ""],
-      states: ["empty", "empty", "empty", "empty", "empty"],
+      letters: Array(WORD_LENGTH).fill(""),
+      states: Array(WORD_LENGTH).fill("empty" as LetterState),
       animate: false,
     });
   }
@@ -113,12 +114,12 @@ export default function GameBoard({
   const winningRowIdx = won ? guesses.length - 1 : -1;
 
   return (
-    <div className="flex flex-col gap-1 my-1 mx-auto w-full px-2" style={{ maxWidth: "min(300px, calc((100dvh - 340px) * 5/6))" }}>
+    <div className="flex flex-col gap-1 my-1 mx-auto w-full px-2" style={{ maxWidth: "min(260px, calc((100dvh - 340px) * 4/6))" }}>
       {rows.map((row, rowIdx) => (
         <div
           key={rowIdx}
-          className={`grid grid-cols-5 gap-1 animate-tile-enter ${rowIdx === guesses.length && shake ? "animate-shake" : ""}`}
-          style={{ animationDelay: `${rowIdx * 50}ms` }}
+          className={`grid gap-1 animate-tile-enter ${rowIdx === guesses.length && shake ? "animate-shake" : ""}`}
+          style={{ gridTemplateColumns: `repeat(${WORD_LENGTH}, 1fr)`, animationDelay: `${rowIdx * 50}ms` }}
         >
           {row.letters.map((letter, colIdx) => (
             <Tile

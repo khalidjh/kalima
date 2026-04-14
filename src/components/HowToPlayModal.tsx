@@ -60,7 +60,7 @@ export default function HowToPlayModal({ onClose }: HowToPlayModalProps) {
           خمّن الكلمة في <strong className="text-white">6 محاولات</strong>.
         </p>
         <ul className="text-sm text-gray-300 space-y-2 mb-4 list-disc list-inside">
-          <li>كل تخمين يجب أن يكون كلمة عربية صحيحة مكونة من 5 أحرف.</li>
+          <li>كل تخمين يجب أن يكون كلمة عربية صحيحة مكونة من 4 أحرف.</li>
           <li>تتغير ألوان المربعات لتُشير إلى مدى قرب تخمينك من الكلمة.</li>
         </ul>
 

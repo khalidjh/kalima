@@ -1,4 +1,4 @@
-import { getPuzzleNumber } from "@/data/words";
+import { getPuzzleNumber, WORD_LENGTH } from "@/data/words";
 
 export type LetterState = "correct" | "present" | "absent" | "empty" | "tbd";
 
@@ -244,11 +244,11 @@ export function evaluateGuess(
 ): LetterState[] {
   const guessChars = Array.from(guess);
   const answerChars = Array.from(answer);
-  const result: LetterState[] = Array(5).fill("absent");
+  const result: LetterState[] = Array(WORD_LENGTH).fill("absent");
   const answerCounts: Record<string, number> = {};
 
   // First pass: mark correct positions
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < WORD_LENGTH; i++) {
     if (guessChars[i] === answerChars[i]) {
       result[i] = "correct";
     } else {
@@ -257,7 +257,7 @@ export function evaluateGuess(
   }
 
   // Second pass: mark present letters
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < WORD_LENGTH; i++) {
     if (result[i] === "correct") continue;
     const letter = guessChars[i];
     if (answerCounts[letter] && answerCounts[letter] > 0) {

@@ -289,7 +289,7 @@ export default function HomePage() {
             href="/"
             icon={<HoroufIcon />}
             title="حروف"
-            description="خمّن الكلمة اليومية في ٦ محاولات"
+            description="خمّن الكلمة اليومية من ٤ أحرف"
             completed={gameCompleted}
           />
         </div>

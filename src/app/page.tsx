@@ -27,7 +27,7 @@ import {
   validateHardMode,
   hardModeViolationMessage,
 } from "@/lib/gameState";
-import { getDailyWord, isValidGuess, getPuzzleNumber, getWordByPuzzleNumber } from "@/data/words";
+import { getDailyWord, isValidGuess, getPuzzleNumber, getWordByPuzzleNumber, WORD_LENGTH } from "@/data/words";
 import { track } from "@/lib/analytics";
 import { writeStatsToFirestore } from "@/lib/firestoreSync";
 import { useAuth } from "@/lib/auth";
@@ -140,8 +140,8 @@ function HomeInner() {
 
   const submitGuess = useCallback(() => {
     if (gameStatus !== "playing") return;
-    if (Array.from(currentGuess).length !== 5) {
-      showToast("الكلمة يجب أن تكون 5 أحرف");
+    if (Array.from(currentGuess).length !== WORD_LENGTH) {
+      showToast(`الكلمة يجب أن تكون ${WORD_LENGTH} أحرف`);
       triggerShake();
       return;
     }
@@ -204,7 +204,7 @@ function HomeInner() {
   const handleKey = useCallback(
     (key: string) => {
       if (gameStatus !== "playing") return;
-      if (Array.from(currentGuess).length >= 5) return;
+      if (Array.from(currentGuess).length >= WORD_LENGTH) return;
       if (ARABIC_LETTERS.has(key)) {
         setCurrentGuess((prev) => prev + key);
       }
