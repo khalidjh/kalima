@@ -7,6 +7,9 @@ import { loadStats, loadGameState } from "@/lib/gameState";
 import { loadRawabetGameState } from "@/lib/rawabetState";
 import { loadWaffleGameState } from "@/lib/waffleState";
 import { loadRubaeiGameState } from "@/lib/rubaeiState";
+import { loadTaqatu3GameState } from "@/lib/taqatu3State";
+import { loadSilsilaGameState } from "@/lib/silsilaState";
+import { loadIqtibasGameState } from "@/lib/iqtibasState";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
 import StreakFire from "@/components/StreakFire";
@@ -94,6 +97,38 @@ function TarteebIcon() {
       <div className="flex-1 rounded-sm bg-correct opacity-90" style={{ height: "55%" }} />
       <div className="flex-1 rounded-sm bg-primary opacity-90" style={{ height: "90%" }} />
       <div className="flex-1 rounded-sm bg-present opacity-90" style={{ height: "70%" }} />
+    </div>
+  );
+}
+
+function Taqatu3Icon() {
+  return (
+    <div className="grid grid-cols-5 gap-[1px] w-10 h-10 flex-shrink-0">
+      {[1,1,1,1,1, 1,0,0,1,0, 1,1,1,1,1, 0,1,0,0,1, 1,1,1,1,1].map((v, i) =>
+        v ? (
+          <div key={i} className={`rounded-[1px] ${i < 5 ? "bg-correct" : i < 15 ? "bg-primary" : "bg-present"} opacity-90`} />
+        ) : <div key={i} className="bg-background/30 rounded-[1px]" />
+      )}
+    </div>
+  );
+}
+
+function SilsilaIcon() {
+  return (
+    <div className="flex flex-col items-center gap-[3px] w-10 h-10 flex-shrink-0 justify-center">
+      <div className="w-7 h-2 rounded-sm bg-correct opacity-90" />
+      <div className="w-1 h-1 rounded-full bg-muted opacity-60" />
+      <div className="w-7 h-2 rounded-sm bg-primary opacity-90" />
+      <div className="w-1 h-1 rounded-full bg-muted opacity-60" />
+      <div className="w-7 h-2 rounded-sm bg-present opacity-90" />
+    </div>
+  );
+}
+
+function IqtibasIcon() {
+  return (
+    <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
+      <span className="text-2xl font-bold text-primary opacity-90">&ldquo;</span>
     </div>
   );
 }
@@ -189,6 +224,9 @@ export default function HomePage() {
   const [rawabetStatus, setRawabetStatus] = useState<"playing" | "won" | "lost" | null>(null);
   const [waffleStatus, setWaffleStatus] = useState<"playing" | "won" | "lost" | null>(null);
   const [rubaeiStatus, setRubaeiStatus] = useState<"playing" | "won" | "lost" | null>(null);
+  const [taqatu3Status, setTaqatu3Status] = useState<"playing" | "won" | null>(null);
+  const [silsilaStatus, setSilsilaStatus] = useState<"playing" | "won" | null>(null);
+  const [iqtibasStatus, setIqtibasStatus] = useState<"playing" | "won" | null>(null);
 
   useEffect(() => {
     const stats = loadStats();
@@ -205,16 +243,28 @@ export default function HomePage() {
 
     const rubaeiSaved = loadRubaeiGameState();
     if (rubaeiSaved) setRubaeiStatus(rubaeiSaved.gameStatus);
+
+    const taqatu3Saved = loadTaqatu3GameState();
+    if (taqatu3Saved) setTaqatu3Status(taqatu3Saved.gameStatus);
+
+    const silsilaSaved = loadSilsilaGameState();
+    if (silsilaSaved) setSilsilaStatus(silsilaSaved.gameStatus);
+
+    const iqtibasSaved = loadIqtibasGameState();
+    if (iqtibasSaved) setIqtibasStatus(iqtibasSaved.gameStatus);
   }, []);
 
   const gameCompleted = gameStatus === "won" || gameStatus === "lost";
   const rawabetCompleted = rawabetStatus === "won" || rawabetStatus === "lost";
   const waffleCompleted = waffleStatus === "won" || waffleStatus === "lost";
   const rubaeiCompleted = rubaeiStatus === "won" || rubaeiStatus === "lost";
+  const taqatu3Completed = taqatu3Status === "won";
+  const silsilaCompleted = silsilaStatus === "won";
+  const iqtibasCompleted = iqtibasStatus === "won";
 
   // Count completed games
-  const completedCount = [gameCompleted, rawabetCompleted, waffleCompleted, rubaeiCompleted].filter(Boolean).length;
-  const totalDailyGames = 7;
+  const completedCount = [gameCompleted, rawabetCompleted, waffleCompleted, rubaeiCompleted, taqatu3Completed, silsilaCompleted, iqtibasCompleted].filter(Boolean).length;
+  const totalDailyGames = 10;
 
   return (
     <div className="h-full overflow-y-auto bg-background" dir="rtl">
@@ -251,6 +301,9 @@ export default function HomePage() {
             <GridCard href="/rubaei" icon={<RubaeiIcon />} title="رباعي" completed={rubaeiCompleted} />
             <GridCard href="/waffle" icon={<WaffleIcon />} title="وافل" completed={waffleCompleted} />
             <GridCard href="/rawabet" icon={<RawabetIcon />} title="روابط" completed={rawabetCompleted} />
+            <GridCard href="/taqatu3" icon={<Taqatu3Icon />} title="متقاطعة" completed={taqatu3Completed} />
+            <GridCard href="/silsila" icon={<SilsilaIcon />} title="سلسلة" completed={silsilaCompleted} />
+            <GridCard href="/iqtibas" icon={<IqtibasIcon />} title="اقتباس" completed={iqtibasCompleted} />
             <GridCard href="/nahla" icon={<NahlaIcon />} title="نحلة" completed={false} />
             <GridCard href="/kharbasha" icon={<KharbashaIcon />} title="خربشة" completed={false} />
             <GridCard href="/tarteeb" icon={<TarteebIcon />} title="ترتيب" completed={false} />
