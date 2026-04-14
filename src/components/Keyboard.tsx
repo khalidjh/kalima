@@ -11,11 +11,11 @@ interface KeyboardProps {
   disabled: boolean;
 }
 
-// Arabic keyboard — matches iPhone Arabic layout
-const ROW1 = ["ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج", "د"];
-const ROW2 = ["ش", "س", "ي", "ب", "ل", "ا", "ت", "ن", "م", "ك", "ط"];
-const ROW3 = ["ذ", "ئ", "ء", "ؤ", "ر", "ى", "ة", "و", "ز", "ظ"];
-const ROW4 = ["إ", "أ", "آ"];
+// Arabic keyboard — matches iPhone iOS Arabic layout exactly
+const ROW1 = ["ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج"];
+const ROW2 = ["ش", "س", "ي", "ب", "ل", "ا", "ت", "ن", "م", "ك", "ة"];
+const ROW3 = ["ء", "ظ", "ط", "ذ", "د", "ز", "ر", "و", "ى"];
+const ROW4 = ["إ", "أ", "آ", "ئ", "ؤ"];
 
 function getKeyStyle(state: LetterState | undefined): string {
   switch (state) {
@@ -61,7 +61,7 @@ export default function Keyboard({
 }: KeyboardProps) {
   return (
     <div className="w-full max-w-[480px] mx-auto px-1 pb-safe overflow-hidden" dir="rtl">
-      {/* Row 1 — 12 keys */}
+      {/* Row 1 — 11 keys */}
       <div className="grid gap-[3px] mb-[3px]" style={{ gridTemplateColumns: `repeat(${ROW1.length}, 1fr)` }}>
         {ROW1.map((l) => (
           <LetterKey key={l} letter={l} state={letterStates[l]} onKey={onKey} disabled={disabled} />
@@ -75,7 +75,7 @@ export default function Keyboard({
         ))}
       </div>
 
-      {/* Row 3 — Enter + 10 keys + Delete */}
+      {/* Row 3 — Enter + 9 keys + Delete */}
       <div className="grid gap-[3px] mb-[3px]" style={{ gridTemplateColumns: `1.4fr repeat(${ROW3.length}, 1fr) 1.4fr` }}>
         {/* Enter — rightmost in RTL */}
         <button
@@ -100,8 +100,8 @@ export default function Keyboard({
         </button>
       </div>
 
-      {/* Row 4 — 3 hamza variants */}
-      <div className="grid gap-[3px] px-[30%]" style={{ gridTemplateColumns: `repeat(${ROW4.length}, 1fr)` }}>
+      {/* Row 4 — 5 hamza/special variants */}
+      <div className="grid gap-[3px] px-[20%]" style={{ gridTemplateColumns: `repeat(${ROW4.length}, 1fr)` }}>
         {ROW4.map((l) => (
           <LetterKey key={l} letter={l} state={letterStates[l]} onKey={onKey} disabled={disabled} />
         ))}
