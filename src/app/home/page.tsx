@@ -6,6 +6,7 @@ import { Archive } from "lucide-react";
 import { loadStats, loadGameState } from "@/lib/gameState";
 import { loadRawabetGameState } from "@/lib/rawabetState";
 import { loadWaffleGameState } from "@/lib/waffleState";
+import { loadRubaeiGameState } from "@/lib/rubaeiState";
 import { TrendingUp } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useIsPro } from "@/lib/subscription";
@@ -75,6 +76,25 @@ function WaffleIcon() {
   );
 }
 
+// رباعي icon: 2×2 mini Wordle boards
+function RubaeiIcon() {
+  const mini = (colors: string[]) => (
+    <div className="grid grid-cols-3 gap-[1px]">
+      {colors.map((c, i) => (
+        <div key={i} className={`w-[5px] h-[5px] rounded-[1px] ${c} opacity-90`} />
+      ))}
+    </div>
+  );
+  return (
+    <div className="grid grid-cols-2 gap-1 w-12 h-12 flex-shrink-0 p-0.5">
+      {mini(["bg-correct", "bg-absent", "bg-present", "bg-absent", "bg-correct", "bg-correct", "bg-present", "bg-absent", "bg-correct"])}
+      {mini(["bg-absent", "bg-present", "bg-correct", "bg-correct", "bg-absent", "bg-present", "bg-correct", "bg-correct", "bg-absent"])}
+      {mini(["bg-present", "bg-correct", "bg-absent", "bg-correct", "bg-present", "bg-absent", "bg-absent", "bg-correct", "bg-present"])}
+      {mini(["bg-correct", "bg-absent", "bg-correct", "bg-absent", "bg-correct", "bg-absent", "bg-present", "bg-absent", "bg-correct"])}
+    </div>
+  );
+}
+
 function RawabetIcon() {
   const colors = [
     "bg-primary",
@@ -110,6 +130,7 @@ export default function HomePage() {
   const [gameStatus, setGameStatus] = useState<"playing" | "won" | "lost" | null>(null);
   const [rawabetStatus, setRawabetStatus] = useState<"playing" | "won" | "lost" | null>(null);
   const [waffleStatus, setWaffleStatus] = useState<"playing" | "won" | "lost" | null>(null);
+  const [rubaeiStatus, setRubaeiStatus] = useState<"playing" | "won" | "lost" | null>(null);
 
   useEffect(() => {
     const stats = loadStats();
@@ -131,11 +152,17 @@ export default function HomePage() {
       setWaffleStatus(waffleSaved.gameStatus);
     }
 
+    const rubaeiSaved = loadRubaeiGameState();
+    if (rubaeiSaved) {
+      setRubaeiStatus(rubaeiSaved.gameStatus);
+    }
+
   }, []);
 
   const gameCompleted = gameStatus === "won" || gameStatus === "lost";
   const rawabetCompleted = rawabetStatus === "won" || rawabetStatus === "lost";
   const waffleCompleted = waffleStatus === "won" || waffleStatus === "lost";
+  const rubaeiCompleted = rubaeiStatus === "won" || rubaeiStatus === "lost";
 
   return (
     <div className="h-full overflow-y-auto bg-background" dir="rtl">
@@ -172,6 +199,37 @@ export default function HomePage() {
                   </div>
                   <p className="text-sm text-muted leading-relaxed">
                     بدّل الحروف في الشبكة لتكوين ٦ كلمات متقاطعة
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* رباعي card — NEW */}
+          <Link href="/rubaei" className="block group">
+            <div className="bg-surface rounded-2xl p-4 border border-primary/30 group-hover:border-primary-light transition-colors relative overflow-hidden">
+              <div className="flex items-start gap-4">
+                <RubaeiIcon />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-semibold text-white">رباعي</h3>
+                      <span className="text-[10px] font-bold text-primary-text bg-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                        جديد
+                      </span>
+                    </div>
+                    {rubaeiCompleted ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-correct bg-correct/10 px-2.5 py-0.5 rounded-full border border-correct/20 flex-shrink-0">
+                        ✓ أنهيت اليوم
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-primary-light bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20 flex-shrink-0">
+                        العب
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted leading-relaxed">
+                    خمّن ٤ كلمات في وقت واحد بـ ٩ محاولات
                   </p>
                 </div>
               </div>
