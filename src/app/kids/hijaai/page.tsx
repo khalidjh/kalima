@@ -635,7 +635,7 @@ export default function HijaaiPage() {
   const currentWord = LEVELS[currentLevel].words[currentWordIdx];
 
   return (
-    <div className="max-w-lg mx-auto px-5 pt-4 pb-12">
+    <div className="max-w-lg mx-auto px-5 pt-4 pb-8 overflow-y-auto">
       <style>{`
         @keyframes bubble-in {
           0% { opacity: 0; transform: scale(0.3) translateY(20px); }
@@ -712,9 +712,9 @@ export default function HijaaiPage() {
       </div>
 
       {/* Emoji Display */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-4">
         <div
-          className="text-8xl mb-2 inline-block"
+          className="text-6xl mb-1 inline-block"
           style={{ animation: "emoji-float 3s ease-in-out infinite" }}
         >
           {currentWord.emoji}
@@ -723,7 +723,7 @@ export default function HijaaiPage() {
 
       {/* Letter Slots */}
       <div
-        className="flex justify-center gap-2 mb-10 flex-row-reverse"
+        className="flex justify-center gap-2 mb-6 flex-row-reverse"
         style={{
           animation: isWrong ? "shake 0.5s ease-in-out" : undefined,
         }}

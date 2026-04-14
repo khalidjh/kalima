@@ -137,7 +137,7 @@ export default function AlwanPage() {
   if (phase === "done") {
     return (
       <div
-        className="flex flex-col items-center justify-center min-h-[80vh] px-4 gap-6"
+        className="flex flex-col items-center justify-center px-4 gap-6 overflow-y-auto"
         dir="rtl"
         style={{ background: "#FFF8F0" }}
       >
@@ -200,7 +200,7 @@ export default function AlwanPage() {
   // ── Playing screen ──
   return (
     <div
-      className="flex flex-col items-center px-4 pt-4 pb-8 gap-5 max-w-lg mx-auto min-h-screen relative overflow-hidden"
+      className="flex flex-col items-center px-4 pt-4 pb-8 gap-4 max-w-lg mx-auto relative overflow-y-auto"
       dir="rtl"
       style={{ background: "#FFF8F0" }}
     >
@@ -272,7 +272,7 @@ export default function AlwanPage() {
             </p>
             {/* Large colored circle */}
             <div
-              className={`w-32 h-32 rounded-full mx-auto shadow-lg transition-transform duration-300 ${
+              className={`w-24 h-24 rounded-full mx-auto shadow-lg transition-transform duration-300 ${
                 showEntry ? "scale-0" : "scale-100"
               }`}
               style={{

@@ -213,7 +213,7 @@ function Sparkles() {
 /* ─── Celebration screen ─── */
 function Celebration({ score, onRestart }: { score: number; onRestart: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] gap-6 px-4 text-center animate-pop">
+    <div className="flex flex-col items-center justify-center gap-6 px-4 text-center animate-pop overflow-y-auto">
       <div className="relative">
         <div className="text-7xl mb-2">🏆</div>
         <Sparkles />
@@ -343,7 +343,7 @@ export default function AshkalPage() {
         .animate-float-in { animation: float-in 0.4s ease-out both; }
       `}</style>
 
-      <div className="flex flex-col items-center px-4 py-6 gap-5 max-w-lg mx-auto">
+      <div className="flex flex-col items-center px-4 py-4 gap-3 max-w-lg mx-auto overflow-y-auto">
         {/* Top bar: back + progress */}
         <div className="w-full flex items-center justify-between">
           <Link
@@ -393,8 +393,9 @@ export default function AshkalPage() {
         <div
           className="relative flex items-center justify-center rounded-3xl shadow-lg animate-pop"
           style={{
-            width: 160,
-            height: 160,
+            width: 130,
+            height: 130,
+            maxHeight: "20vh",
             backgroundColor: "#FFFFFF",
             border: "3px solid #E8E8E8",
           }}

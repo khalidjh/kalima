@@ -413,7 +413,7 @@ export default function HoroufPage() {
 
     return (
       <div
-        className="min-h-screen flex flex-col items-center px-4 py-6 gap-6"
+        className="flex flex-col items-center px-4 py-6 gap-6 overflow-y-auto"
         style={{ background: "#FFF8F0" }}
       >
         <div className="w-full max-w-lg flex items-center justify-between">
@@ -504,7 +504,7 @@ export default function HoroufPage() {
   if (screen === "allComplete") {
     return (
       <div
-        className="min-h-screen flex flex-col items-center justify-center px-4 gap-6"
+        className="flex flex-col items-center justify-center px-4 gap-6 overflow-y-auto"
         style={{ background: "#FFF8F0" }}
       >
         <div className="text-8xl animate-bounce">🏆</div>
@@ -558,7 +558,7 @@ export default function HoroufPage() {
 
     return (
       <div
-        className="min-h-screen flex flex-col items-center justify-center px-4 gap-6"
+        className="flex flex-col items-center justify-center px-4 gap-6 overflow-y-auto"
         style={{ background: "#FFF8F0" }}
       >
         <div className="text-7xl animate-bounce">🎉</div>
@@ -625,7 +625,7 @@ export default function HoroufPage() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center px-4 pt-4 pb-8 gap-4 max-w-lg mx-auto"
+      className="flex flex-col items-center px-4 pt-4 pb-8 gap-3 max-w-lg mx-auto overflow-y-auto"
       style={{ background: "#FFF8F0" }}
     >
       {/* Top bar */}
@@ -672,7 +672,7 @@ export default function HoroufPage() {
       </div>
 
       {/* Question area - varies by level */}
-      <div className="mt-2 text-center w-full">
+      <div className="text-center w-full max-h-[30vh] flex flex-col items-center justify-center">
         {puzzle.type === 1 && (
           <>
             <p className="text-2xl font-bold mb-2" style={{ color: "#636E72" }}>
@@ -792,7 +792,7 @@ export default function HoroufPage() {
                 onClick={() => handleTap(option, idx)}
                 disabled={answerState === "correct"}
                 className={`
-                  h-32 rounded-3xl flex items-center justify-center
+                  h-24 rounded-3xl flex items-center justify-center
                   shadow-md active:scale-95 transition-all duration-200
                   ${showEntry ? "scale-0" : "scale-100"}
                   ${extraClass}
@@ -800,10 +800,10 @@ export default function HoroufPage() {
                 style={{
                   ...cardStyle,
                   transitionDelay: showEntry ? "0ms" : `${idx * 80}ms`,
-                  minHeight: "7rem",
+                  minHeight: "5rem",
                 }}
               >
-                <span className="text-6xl font-black" style={{ color: "#2D3436" }}>
+                <span className="text-5xl font-black" style={{ color: "#2D3436" }}>
                   {option}
                 </span>
               </button>

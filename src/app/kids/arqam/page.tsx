@@ -1,49 +1,48 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const ARABIC_NUMERALS = ["١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩", "١٠"];
-const COUNTING_EMOJIS = ["🍎", "🌟", "🐱", "🦋", "🎈", "🐠", "🍕", "🚀", "🌈", "🌸"];
-const ADDITION_EMOJIS = ["🍎", "🌟", "🐱", "🦋", "🎈"];
+const ARABIC_NUMS: Record<number, string> = {
+  0: "٠", 1: "١", 2: "٢", 3: "٣", 4: "٤", 5: "٥",
+  6: "٦", 7: "٧", 8: "٨", 9: "٩", 10: "١٠",
+  11: "١١", 12: "١٢", 13: "١٣", 14: "١٤", 15: "١٥",
+  16: "١٦", 17: "١٧", 18: "١٨", 19: "١٩", 20: "٢٠",
+  21: "٢١", 22: "٢٢", 23: "٢٣", 24: "٢٤", 25: "٢٥",
+  26: "٢٦", 27: "٢٧", 28: "٢٨", 29: "٢٩", 30: "٣٠",
+  35: "٣٥", 36: "٣٦", 40: "٤٠", 42: "٤٢", 45: "٤٥",
+  48: "٤٨", 49: "٤٩", 50: "٥٠", 54: "٥٤", 56: "٥٦",
+  60: "٦٠", 63: "٦٣", 64: "٦٤", 70: "٧٠", 72: "٧٢",
+  80: "٨٠", 81: "٨١", 90: "٩٠", 100: "١٠٠",
+};
+
+function toArabicNum(n: number): string {
+  if (ARABIC_NUMS[n]) return ARABIC_NUMS[n];
+  // Build digit by digit
+  const digits = String(n).split("");
+  return digits.map(d => "٠١٢٣٤٥٦٧٨٩"[parseInt(d)]).join("");
+}
+
+const COUNTING_EMOJIS = ["🍎", "🌟", "🐱", "🦋", "🎈", "🐠", "🍕", "🚀", "🌸", "⚽", "🍊", "🐝"];
 const TOTAL_ROUNDS = 8;
-const STORAGE_KEY = "kalima_kids_arqam_progress";
+const STORAGE_KEY = "kalima_kids_arqam_v2_progress";
 
 const OPTION_COLORS = ["#FFE0E0", "#D4F4DD", "#E0E8FF", "#FFF3D4"];
 const OPTION_BORDERS = ["#FF6B6B", "#51CF66", "#4A90D9", "#FFD43B"];
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type LevelId = 1 | 2 | 3;
+type LevelId = 1 | 2 | 3 | 4 | 5;
 
 interface LevelProgress {
   unlocked: boolean;
-  stars: number; // 0-3
+  stars: number;
 }
 
 interface Progress {
   levels: Record<LevelId, LevelProgress>;
-}
-
-interface CountingRound {
-  target: number;
-  emoji: string;
-  options: number[];
-}
-
-interface OrderRound {
-  numbers: number[];
-  sorted: number[];
-}
-
-interface AdditionRound {
-  a: number;
-  b: number;
-  emoji: string;
-  answer: number;
-  options: number[];
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -61,56 +60,43 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+function randInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function makeDistractors(correct: number, min: number, max: number, count: number): number[] {
+  const set = new Set<number>();
+  let attempts = 0;
+  while (set.size < count && attempts < 100) {
+    const n = randInt(min, max);
+    if (n !== correct) set.add(n);
+    attempts++;
+  }
+  return Array.from(set);
+}
+
 function generateScatterPositions(count: number) {
   const positions: { x: number; y: number; rotate: number; scale: number }[] = [];
+  // Grid-based scatter to avoid overlap
+  const cols = Math.ceil(Math.sqrt(count * 1.5));
+  const rows = Math.ceil(count / cols);
+  const cellW = 80 / cols;
+  const cellH = 80 / rows;
   for (let i = 0; i < count; i++) {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
     positions.push({
-      x: 8 + Math.random() * 78,
-      y: 5 + Math.random() * 75,
-      rotate: -20 + Math.random() * 40,
-      scale: 0.9 + Math.random() * 0.3,
+      x: 8 + col * cellW + Math.random() * cellW * 0.5,
+      y: 5 + row * cellH + Math.random() * cellH * 0.4,
+      rotate: -15 + Math.random() * 30,
+      scale: 0.85 + Math.random() * 0.2,
     });
   }
   return positions;
 }
 
-function makeDistractors(correct: number, max: number, count: number): number[] {
-  const set = new Set<number>();
-  while (set.size < count) {
-    const n = Math.floor(Math.random() * max) + 1;
-    if (n !== correct) set.add(n);
-  }
-  return Array.from(set);
-}
-
-function generateCountingRound(): CountingRound {
-  const target = Math.floor(Math.random() * 5) + 1; // 1-5
-  const emoji = pickRandom(COUNTING_EMOJIS);
-  const wrong = makeDistractors(target, 5, 3);
-  return { target, emoji, options: shuffle([target, ...wrong]) };
-}
-
-function generateOrderRound(): OrderRound {
-  const pool = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-  const picked = pool.slice(0, 4);
-  const sorted = [...picked].sort((a, b) => a - b);
-  return { numbers: shuffle(picked), sorted };
-}
-
-function generateAdditionRound(): AdditionRound {
-  const a = Math.floor(Math.random() * 5) + 1; // 1-5
-  const maxB = Math.min(10 - a, 5);
-  const b = Math.floor(Math.random() * maxB) + 1; // 1 to maxB
-  const answer = a + b;
-  const emoji = pickRandom(ADDITION_EMOJIS);
-  const wrong = makeDistractors(answer, 10, 3);
-  return { a, b, emoji, answer, options: shuffle([answer, ...wrong]) };
-}
-
 function loadProgress(): Progress {
-  if (typeof window === "undefined") {
-    return defaultProgress();
-  }
+  if (typeof window === "undefined") return defaultProgress();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw) as Progress;
@@ -124,6 +110,8 @@ function defaultProgress(): Progress {
       1: { unlocked: true, stars: 0 },
       2: { unlocked: false, stars: 0 },
       3: { unlocked: false, stars: 0 },
+      4: { unlocked: false, stars: 0 },
+      5: { unlocked: false, stars: 0 },
     },
   };
 }
@@ -227,12 +215,27 @@ const SHARED_STYLES = `
   }
 `;
 
+// ─── Game Container - fits within both headers ──────────────────────────────
+
+function GameContainer({ children, scroll }: { children: React.ReactNode; scroll?: boolean }) {
+  return (
+    <div
+      className={`h-[calc(100dvh-120px)] flex flex-col ${scroll ? "overflow-y-auto" : "overflow-hidden"}`}
+    >
+      <style>{SHARED_STYLES}</style>
+      {children}
+    </div>
+  );
+}
+
 // ─── Level Select Screen ─────────────────────────────────────────────────────
 
 const LEVEL_META: { id: LevelId; title: string; desc: string; icon: string; color: string }[] = [
-  { id: 1, title: "العد", desc: "عد الأشكال واختر الرقم", icon: "🔢", color: "#51CF66" },
-  { id: 2, title: "الترتيب", desc: "رتب الأرقام من الأصغر للأكبر", icon: "📊", color: "#4A90D9" },
-  { id: 3, title: "الجمع", desc: "اجمع الأرقام واختر الناتج", icon: "➕", color: "#CC5DE8" },
+  { id: 1, title: "العد", desc: "عد الأشكال واختر الرقم (١-٢٠)", icon: "🔢", color: "#51CF66" },
+  { id: 2, title: "العمليات", desc: "جمع وطرح أرقام حتى ٢٠", icon: "➕", color: "#4A90D9" },
+  { id: 3, title: "الضرب", desc: "جدول الضرب من ١ إلى ١٠", icon: "✖️", color: "#CC5DE8" },
+  { id: 4, title: "الأنماط", desc: "اكتشف الرقم المفقود في التسلسل", icon: "🔍", color: "#FF922B" },
+  { id: 5, title: "مسائل", desc: "حل مسائل كلامية بالعربية", icon: "📝", color: "#F06595" },
 ];
 
 function LevelSelect({
@@ -243,73 +246,68 @@ function LevelSelect({
   onSelect: (level: LevelId) => void;
 }) {
   return (
-    <div className="min-h-[calc(100dvh-56px)] flex flex-col items-center px-4 py-8 gap-6">
-      <style>{SHARED_STYLES}</style>
+    <GameContainer scroll>
+      <div className="flex flex-col items-center px-4 py-6 gap-4">
+        <h1 className="text-3xl font-black" style={{ color: "#2D3436" }}>
+          أرقامي
+        </h1>
+        <p className="text-base" style={{ color: "#636E72" }}>
+          اختر المستوى
+        </p>
 
-      <h1 className="text-4xl font-black" style={{ color: "#2D3436" }}>
-        الأرقام العربية
-      </h1>
-      <p className="text-lg" style={{ color: "#636E72" }}>
-        اختر المستوى
-      </p>
+        <div className="flex flex-col gap-4 w-full max-w-sm">
+          {LEVEL_META.map((lm, idx) => {
+            const lp = progress.levels[lm.id];
+            const locked = !lp.unlocked;
 
-      <div className="flex flex-col gap-5 w-full max-w-sm mt-2">
-        {LEVEL_META.map((lm, idx) => {
-          const lp = progress.levels[lm.id];
-          const locked = !lp.unlocked;
-
-          return (
-            <button
-              key={lm.id}
-              disabled={locked}
-              onClick={() => onSelect(lm.id)}
-              className="relative rounded-3xl shadow-lg p-6 flex items-center gap-4 transition-transform active:scale-95"
-              style={{
-                background: locked ? "#E8E8E8" : "#FFFFFF",
-                border: `3px solid ${locked ? "#CCC" : lm.color}`,
-                opacity: locked ? 0.6 : 1,
-                animation: `card-pop 0.4s ${idx * 0.12}s ease-out both`,
-              }}
-            >
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shrink-0"
-                style={{ background: locked ? "#DDD" : `${lm.color}22` }}
+            return (
+              <button
+                key={lm.id}
+                disabled={locked}
+                onClick={() => onSelect(lm.id)}
+                className="relative rounded-2xl shadow-lg p-4 flex items-center gap-3 transition-transform active:scale-95"
+                style={{
+                  background: locked ? "#E8E8E8" : "#FFFFFF",
+                  border: `3px solid ${locked ? "#CCC" : lm.color}`,
+                  opacity: locked ? 0.6 : 1,
+                  animation: `card-pop 0.4s ${idx * 0.1}s ease-out both`,
+                }}
               >
-                {locked ? "🔒" : lm.icon}
-              </div>
-              <div className="flex-1 text-right">
-                <div className="text-2xl font-black" style={{ color: locked ? "#AAA" : "#2D3436" }}>
-                  المستوى {ARABIC_NUMERALS[lm.id - 1]} - {lm.title}
+                <div
+                  className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0"
+                  style={{ background: locked ? "#DDD" : `${lm.color}22` }}
+                >
+                  {locked ? "🔒" : lm.icon}
                 </div>
-                <div className="text-sm mt-1" style={{ color: locked ? "#BBB" : "#636E72" }}>
-                  {lm.desc}
+                <div className="flex-1 text-right">
+                  <div className="text-lg font-black" style={{ color: locked ? "#AAA" : "#2D3436" }}>
+                    المستوى {toArabicNum(lm.id)} - {lm.title}
+                  </div>
+                  <div className="text-xs mt-0.5" style={{ color: locked ? "#BBB" : "#636E72" }}>
+                    {lm.desc}
+                  </div>
+                  <div className="flex gap-1 mt-1 justify-end">
+                    {[0, 1, 2].map((s) => (
+                      <span key={s} className="text-lg" style={{ opacity: s < lp.stars ? 1 : 0.2 }}>
+                        ⭐
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                {/* Stars */}
-                <div className="flex gap-1 mt-2 justify-end">
-                  {[0, 1, 2].map((s) => (
-                    <span
-                      key={s}
-                      className="text-2xl"
-                      style={{ opacity: s < lp.stars ? 1 : 0.2 }}
-                    >
-                      ⭐
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+              </button>
+            );
+          })}
+        </div>
 
-      <Link
-        href="/kids"
-        className="mt-4 px-8 py-4 rounded-3xl text-xl font-bold text-white shadow-lg active:scale-95 transition-transform"
-        style={{ background: "linear-gradient(135deg, #CC5DE8, #F06595)" }}
-      >
-        الألعاب ↩
-      </Link>
-    </div>
+        <Link
+          href="/kids"
+          className="mt-2 px-6 py-3 rounded-2xl text-lg font-bold text-white shadow-lg active:scale-95 transition-transform"
+          style={{ background: "linear-gradient(135deg, #CC5DE8, #F06595)" }}
+        >
+          الألعاب ↩
+        </Link>
+      </div>
+    </GameContainer>
   );
 }
 
@@ -329,66 +327,63 @@ function DoneScreen({
   onLevels: () => void;
 }) {
   const message =
-    stars >= 3
-      ? "ممتاز! أنت بطل! 🏆"
-      : stars >= 2
-      ? "أحسنت! رائع جدا! 🌟"
-      : stars >= 1
-      ? "جيد! استمر! 💪"
-      : "حاول مرة ثانية! 🔄";
+    stars >= 3 ? "ممتاز! أنت بطل! 🏆"
+    : stars >= 2 ? "أحسنت! رائع جدا! 🌟"
+    : stars >= 1 ? "جيد! استمر! 💪"
+    : "حاول مرة ثانية! 🔄";
 
   return (
-    <div className="min-h-[calc(100dvh-56px)] flex flex-col items-center justify-center px-4 py-8 gap-6">
-      <style>{SHARED_STYLES}</style>
+    <GameContainer scroll>
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-4 gap-4">
+        <div className="text-6xl" style={{ animation: "celebration-bounce 1s ease-in-out infinite" }}>
+          🎉
+        </div>
 
-      <div className="text-7xl" style={{ animation: "celebration-bounce 1s ease-in-out infinite" }}>
-        🎉
-      </div>
+        <h1 className="text-3xl font-black" style={{ color: "#CC5DE8" }}>
+          انتهى المستوى {toArabicNum(levelId)}!
+        </h1>
 
-      <h1 className="text-4xl font-black" style={{ color: "#CC5DE8" }}>
-        انتهى المستوى {ARABIC_NUMERALS[levelId - 1]}!
-      </h1>
+        <p className="text-xl font-bold" style={{ color: "#2D3436" }}>
+          {message}
+        </p>
 
-      <p className="text-2xl font-bold" style={{ color: "#2D3436" }}>
-        {message}
-      </p>
+        <div className="flex gap-1.5 flex-wrap justify-center">
+          {Array.from({ length: TOTAL_ROUNDS }).map((_, i) => (
+            <span
+              key={i}
+              className="text-3xl"
+              style={{
+                animation: i < score ? `star-pop 0.4s ${i * 0.1}s ease-out both` : "none",
+                opacity: i < score ? 1 : 0.2,
+              }}
+            >
+              ⭐
+            </span>
+          ))}
+        </div>
 
-      <div className="flex gap-2 flex-wrap justify-center my-2">
-        {Array.from({ length: TOTAL_ROUNDS }).map((_, i) => (
-          <span
-            key={i}
-            className="text-4xl"
-            style={{
-              animation: i < score ? `star-pop 0.4s ${i * 0.1}s ease-out both` : "none",
-              opacity: i < score ? 1 : 0.2,
-            }}
+        <p className="text-2xl font-black" style={{ color: "#FF922B" }}>
+          {toArabicNum(score)} / {toArabicNum(TOTAL_ROUNDS)}
+        </p>
+
+        <div className="flex gap-3 flex-wrap justify-center">
+          <button
+            onClick={onRestart}
+            className="px-6 py-3 rounded-2xl text-lg font-bold text-white shadow-lg active:scale-95 transition-transform"
+            style={{ background: "linear-gradient(135deg, #51CF66, #4A90D9)" }}
           >
-            ⭐
-          </span>
-        ))}
+            أعد المستوى 🔄
+          </button>
+          <button
+            onClick={onLevels}
+            className="px-6 py-3 rounded-2xl text-lg font-bold text-white shadow-lg active:scale-95 transition-transform"
+            style={{ background: "linear-gradient(135deg, #CC5DE8, #F06595)" }}
+          >
+            المستويات ↩
+          </button>
+        </div>
       </div>
-
-      <p className="text-3xl font-black" style={{ color: "#FF922B" }}>
-        {ARABIC_NUMERALS[score - 1] ?? "٠"} / {ARABIC_NUMERALS[TOTAL_ROUNDS - 1]}
-      </p>
-
-      <div className="flex gap-4 mt-4 flex-wrap justify-center">
-        <button
-          onClick={onRestart}
-          className="px-8 py-4 rounded-3xl text-2xl font-bold text-white shadow-lg active:scale-95 transition-transform"
-          style={{ background: "linear-gradient(135deg, #51CF66, #4A90D9)" }}
-        >
-          أعد المستوى 🔄
-        </button>
-        <button
-          onClick={onLevels}
-          className="px-8 py-4 rounded-3xl text-2xl font-bold text-white shadow-lg active:scale-95 transition-transform"
-          style={{ background: "linear-gradient(135deg, #CC5DE8, #F06595)" }}
-        >
-          المستويات ↩
-        </button>
-      </div>
-    </div>
+    </GameContainer>
   );
 }
 
@@ -404,10 +399,10 @@ function TopBar({
   onBack: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between shrink-0 px-4 pt-3 pb-1">
       <button
         onClick={onBack}
-        className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-md active:scale-90 transition-transform"
+        className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-md active:scale-90 transition-transform"
         style={{ background: "#FFFFFF", border: "2px solid #E0E0E0" }}
       >
         →
@@ -417,7 +412,7 @@ function TopBar({
         {Array.from({ length: TOTAL_ROUNDS }).map((_, i) => (
           <div
             key={i}
-            className="w-3 h-3 rounded-full transition-all duration-300"
+            className="w-2.5 h-2.5 rounded-full transition-all duration-300"
             style={{
               background: i < currentRound ? "#51CF66" : i === currentRound ? "#4A90D9" : "#DDD",
               transform: i === currentRound ? "scale(1.3)" : "scale(1)",
@@ -427,100 +422,176 @@ function TopBar({
       </div>
 
       <div
-        className="flex items-center gap-1 px-3 py-1.5 rounded-2xl shadow-md"
+        className="flex items-center gap-1 px-2.5 py-1 rounded-xl shadow-md"
         style={{ background: "#FFFFFF", border: "2px solid #FFD43B" }}
       >
-        <span className="text-xl">⭐</span>
-        <span className="text-lg font-bold" style={{ color: "#FF922B" }}>
-          {ARABIC_NUMERALS[score - 1] ?? "٠"}
+        <span className="text-lg">⭐</span>
+        <span className="text-base font-bold" style={{ color: "#FF922B" }}>
+          {toArabicNum(score)}
         </span>
       </div>
     </div>
   );
 }
 
-// ─── Level 1: Counting ──────────────────────────────────────────────────────
+// ─── Option Button Grid ─────────────────────────────────────────────────────
 
-function Level1Counting({ onFinish }: { onFinish: (score: number) => void }) {
+function OptionGrid({
+  options,
+  round,
+  state,
+  correctAnswer,
+  shakeWrong,
+  animateIn,
+  onSelect,
+  large,
+}: {
+  options: number[];
+  round: number;
+  state: "playing" | "correct" | "wrong";
+  correctAnswer: number;
+  shakeWrong: number | null;
+  animateIn: boolean;
+  onSelect: (v: number) => void;
+  large?: boolean;
+}) {
+  return (
+    <div className={`grid grid-cols-2 gap-2.5 shrink-0 px-4 pb-3`}>
+      {options.map((opt, i) => {
+        const isShaking = shakeWrong === opt;
+        const isCorrectHighlight = state === "correct" && opt === correctAnswer;
+
+        return (
+          <button
+            key={`${round}-${opt}-${i}`}
+            onClick={() => onSelect(opt)}
+            disabled={state === "correct"}
+            className="rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center"
+            style={{
+              background: isCorrectHighlight ? "#51CF66" : OPTION_COLORS[i],
+              border: `3px solid ${isCorrectHighlight ? "#2B9348" : OPTION_BORDERS[i]}`,
+              height: large ? "clamp(70px, 14vw, 90px)" : "clamp(60px, 12vw, 80px)",
+              animation: isShaking
+                ? "shake-wrong 0.4s ease-in-out"
+                : isCorrectHighlight
+                ? "correct-pulse 0.4s ease-in-out"
+                : animateIn
+                ? `scale-in 0.3s ${0.2 + i * 0.06}s ease-out both`
+                : "none",
+            }}
+          >
+            <span
+              className="font-black"
+              style={{
+                fontSize: large ? "clamp(2rem, 8vw, 3.5rem)" : "clamp(1.8rem, 7vw, 3rem)",
+                color: isCorrectHighlight ? "#FFFFFF" : "#2D3436",
+              }}
+            >
+              {toArabicNum(opt)}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Common answer handler hook ─────────────────────────────────────────────
+
+function useAnswerHandler(onFinish: (score: number) => void) {
   const [round, setRound] = useState(0);
   const [score, setScore] = useState(0);
-  const [data, setData] = useState(() => generateCountingRound());
-  const [scatter, setScatter] = useState(() => generateScatterPositions(data.target));
   const [state, setState] = useState<"playing" | "correct" | "wrong">("playing");
   const [showConfetti, setShowConfetti] = useState(false);
   const [shakeWrong, setShakeWrong] = useState<number | null>(null);
   const [animateIn, setAnimateIn] = useState(true);
 
-  const advance = useCallback(() => {
-    const next = round + 1;
-    if (next >= TOTAL_ROUNDS) {
-      // score already updated via setState callback; read from ref
-      return true;
-    }
-    const rd = generateCountingRound();
-    setRound(next);
-    setData(rd);
-    setScatter(generateScatterPositions(rd.target));
-    setState("playing");
-    setAnimateIn(true);
-    return false;
-  }, [round]);
-
-  const handleOption = useCallback(
-    (value: number) => {
+  const handleAnswer = useCallback(
+    (value: number, correctAnswer: number, generateNext: () => void) => {
       if (state !== "playing") return;
 
-      if (value === data.target) {
+      if (value === correctAnswer) {
         const newScore = score + 1;
         setScore(newScore);
         setState("correct");
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 900);
         setTimeout(() => {
-          setAnimateIn(false);
           const next = round + 1;
           if (next >= TOTAL_ROUNDS) {
             onFinish(newScore);
             return;
           }
-          const rd = generateCountingRound();
           setRound(next);
-          setData(rd);
-          setScatter(generateScatterPositions(rd.target));
+          generateNext();
           setState("playing");
           setAnimateIn(true);
-        }, 1200);
+        }, 1000);
       } else {
         setShakeWrong(value);
         setState("wrong");
         setTimeout(() => {
           setShakeWrong(null);
           setState("playing");
-        }, 600);
+        }, 500);
       }
     },
-    [state, data.target, score, round, onFinish]
+    [state, score, round, onFinish]
   );
 
-  return (
-    <div className="min-h-[calc(100dvh-56px)] flex flex-col px-4 py-4 gap-3 select-none">
-      <style>{SHARED_STYLES}</style>
-      {showConfetti && <ConfettiBurst />}
+  return { round, score, state, showConfetti, shakeWrong, animateIn, handleAnswer, setAnimateIn };
+}
 
+// ─── Level 1: Counting (1-20) ──────────────────────────────────────────────
+
+function generateCountingRound() {
+  const target = randInt(1, 20);
+  const emoji = pickRandom(COUNTING_EMOJIS);
+  const wrong = makeDistractors(target, 1, 20, 3);
+  return { target, emoji, options: shuffle([target, ...wrong]) };
+}
+
+function Level1Counting({ onFinish }: { onFinish: (score: number) => void }) {
+  const { round, score, state, showConfetti, shakeWrong, animateIn, handleAnswer } =
+    useAnswerHandler(onFinish);
+  const [data, setData] = useState(() => generateCountingRound());
+  const [scatter, setScatter] = useState(() => generateScatterPositions(data.target));
+
+  const handleOption = useCallback(
+    (value: number) => {
+      handleAnswer(value, data.target, () => {
+        const rd = generateCountingRound();
+        setData(rd);
+        setScatter(generateScatterPositions(rd.target));
+      });
+    },
+    [handleAnswer, data.target]
+  );
+
+  // Regenerate scatter when data changes
+  useEffect(() => {
+    setScatter(generateScatterPositions(data.target));
+  }, [data.target]);
+
+  return (
+    <GameContainer>
+      {showConfetti && <ConfettiBurst />}
       <TopBar currentRound={round} score={score} onBack={() => onFinish(-1)} />
 
-      <div className="text-center">
-        <p className="text-2xl font-bold" style={{ color: "#2D3436" }}>
+      <div className="text-center shrink-0 py-1">
+        <p className="text-xl font-bold" style={{ color: "#2D3436" }}>
           كم عدد الـ {data.emoji}؟
         </p>
       </div>
 
+      {/* Emoji scatter area */}
       <div
-        className="relative flex-1 min-h-[200px] rounded-3xl shadow-inner overflow-hidden"
+        className="relative flex-1 mx-4 rounded-2xl shadow-inner overflow-hidden"
         style={{
+          maxHeight: "40vh",
           background: "linear-gradient(180deg, #FFFFFF 0%, #FFF8F0 100%)",
           border: "3px dashed #E0E0E0",
-          animation: animateIn ? "scale-in 0.4s ease-out" : "none",
+          animation: animateIn ? "scale-in 0.3s ease-out" : "none",
         }}
       >
         {scatter.map((pos, i) => (
@@ -531,8 +602,8 @@ function Level1Counting({ onFinish }: { onFinish: (score: number) => void }) {
               left: `${pos.x}%`,
               top: `${pos.y}%`,
               transform: `rotate(${pos.rotate}deg) scale(${pos.scale})`,
-              fontSize: "clamp(2rem, 8vw, 3.5rem)",
-              animation: `scale-in 0.3s ${i * 0.05}s ease-out both, emoji-float 3s ${i * 0.2}s ease-in-out infinite`,
+              fontSize: data.target > 12 ? "clamp(1.2rem, 4vw, 1.8rem)" : "clamp(1.5rem, 6vw, 2.5rem)",
+              animation: `scale-in 0.2s ${i * 0.03}s ease-out both`,
               // @ts-expect-error CSS custom properties
               "--rot": `${pos.rotate}deg`,
             }}
@@ -542,347 +613,454 @@ function Level1Counting({ onFinish }: { onFinish: (score: number) => void }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pb-2">
-        {data.options.map((opt, i) => {
-          const isShaking = shakeWrong === opt;
-          const isCorrectHighlight = state === "correct" && opt === data.target;
-
-          return (
-            <button
-              key={`${round}-${opt}`}
-              onClick={() => handleOption(opt)}
-              disabled={state === "correct"}
-              className="rounded-3xl shadow-lg active:scale-95 transition-transform flex items-center justify-center"
-              style={{
-                background: isCorrectHighlight ? "#51CF66" : OPTION_COLORS[i],
-                border: `3px solid ${isCorrectHighlight ? "#2B9348" : OPTION_BORDERS[i]}`,
-                height: "clamp(80px, 15vw, 110px)",
-                animation: isShaking
-                  ? "shake-wrong 0.4s ease-in-out"
-                  : isCorrectHighlight
-                  ? "correct-pulse 0.4s ease-in-out"
-                  : animateIn
-                  ? `scale-in 0.3s ${0.2 + i * 0.08}s ease-out both`
-                  : "none",
-              }}
-            >
-              <span
-                className="font-black"
-                style={{
-                  fontSize: "clamp(2.5rem, 10vw, 4rem)",
-                  color: isCorrectHighlight ? "#FFFFFF" : "#2D3436",
-                }}
-              >
-                {ARABIC_NUMERALS[opt - 1]}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+      <div className="h-2 shrink-0" />
+      <OptionGrid
+        options={data.options}
+        round={round}
+        state={state}
+        correctAnswer={data.target}
+        shakeWrong={shakeWrong}
+        animateIn={animateIn}
+        onSelect={handleOption}
+        large
+      />
+    </GameContainer>
   );
 }
 
-// ─── Level 2: Number Order ──────────────────────────────────────────────────
+// ─── Level 2: Operations (Add & Subtract up to 20) ─────────────────────────
 
-function Level2Order({ onFinish }: { onFinish: (score: number) => void }) {
-  const [round, setRound] = useState(0);
-  const [score, setScore] = useState(0);
-  const [data, setData] = useState(() => generateOrderRound());
-  const [tappedIndex, setTappedIndex] = useState(0); // how many tapped correctly so far
-  const [confirmed, setConfirmed] = useState<number[]>([]); // numbers confirmed in order
-  const [shakeNum, setShakeNum] = useState<number | null>(null);
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [animateIn, setAnimateIn] = useState(true);
-  const [roundDone, setRoundDone] = useState(false);
-
-  const handleTap = useCallback(
-    (num: number) => {
-      if (roundDone) return;
-      if (confirmed.includes(num)) return; // already tapped
-
-      const expected = data.sorted[tappedIndex];
-      if (num === expected) {
-        const newConfirmed = [...confirmed, num];
-        setConfirmed(newConfirmed);
-        const nextIdx = tappedIndex + 1;
-        setTappedIndex(nextIdx);
-
-        if (nextIdx === data.sorted.length) {
-          // round complete
-          const newScore = score + 1;
-          setScore(newScore);
-          setRoundDone(true);
-          setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 900);
-          setTimeout(() => {
-            const next = round + 1;
-            if (next >= TOTAL_ROUNDS) {
-              onFinish(newScore);
-              return;
-            }
-            const rd = generateOrderRound();
-            setRound(next);
-            setData(rd);
-            setTappedIndex(0);
-            setConfirmed([]);
-            setRoundDone(false);
-            setAnimateIn(true);
-          }, 1200);
-        }
-      } else {
-        setShakeNum(num);
-        setTimeout(() => setShakeNum(null), 500);
-      }
-    },
-    [roundDone, confirmed, data.sorted, tappedIndex, score, round, onFinish]
-  );
-
-  return (
-    <div className="min-h-[calc(100dvh-56px)] flex flex-col px-4 py-4 gap-4 select-none">
-      <style>{SHARED_STYLES}</style>
-      {showConfetti && <ConfettiBurst />}
-
-      <TopBar currentRound={round} score={score} onBack={() => onFinish(-1)} />
-
-      <div className="text-center">
-        <p className="text-2xl font-bold" style={{ color: "#2D3436" }}>
-          رتب الأرقام من الأصغر للأكبر
-        </p>
-        <p className="text-base mt-1" style={{ color: "#636E72" }}>
-          اضغط على الأصغر أولا
-        </p>
-      </div>
-
-      {/* Sorted display - shows what's been picked */}
-      <div className="flex gap-3 justify-center items-center min-h-[80px]">
-        {data.sorted.map((num, i) => (
-          <div
-            key={`slot-${round}-${i}`}
-            className="w-16 h-16 rounded-2xl flex items-center justify-center border-2 border-dashed"
-            style={{
-              background: confirmed.includes(num) ? "#51CF66" : "#F0F0F0",
-              borderColor: confirmed.includes(num) ? "#2B9348" : "#CCC",
-              animation: confirmed.includes(num) ? "correct-pulse 0.3s ease-out" : "none",
-            }}
-          >
-            <span
-              className="text-3xl font-black"
-              style={{ color: confirmed.includes(num) ? "#FFFFFF" : "transparent" }}
-            >
-              {ARABIC_NUMERALS[num - 1]}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Tappable number cards */}
-      <div
-        className="flex-1 flex items-center justify-center"
-        style={{ animation: animateIn ? "scale-in 0.4s ease-out" : "none" }}
-      >
-        <div className="flex gap-4 flex-wrap justify-center">
-          {data.numbers.map((num, i) => {
-            const done = confirmed.includes(num);
-            const isShaking = shakeNum === num;
-
-            return (
-              <button
-                key={`num-${round}-${num}`}
-                onClick={() => handleTap(num)}
-                disabled={done}
-                className="rounded-3xl shadow-lg flex items-center justify-center transition-all"
-                style={{
-                  width: "clamp(80px, 20vw, 100px)",
-                  height: "clamp(80px, 20vw, 100px)",
-                  background: done ? "#E8E8E8" : OPTION_COLORS[i],
-                  border: `3px solid ${done ? "#CCC" : OPTION_BORDERS[i]}`,
-                  opacity: done ? 0.4 : 1,
-                  animation: isShaking
-                    ? "shake-wrong 0.4s ease-in-out"
-                    : animateIn
-                    ? `scale-in 0.3s ${0.1 + i * 0.08}s ease-out both`
-                    : "none",
-                }}
-              >
-                <span
-                  className="font-black"
-                  style={{
-                    fontSize: "clamp(2.5rem, 10vw, 4rem)",
-                    color: done ? "#CCC" : "#2D3436",
-                  }}
-                >
-                  {ARABIC_NUMERALS[num - 1]}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
+interface OperationRound {
+  a: number;
+  b: number;
+  op: "+" | "-";
+  answer: number;
+  options: number[];
 }
 
-// ─── Level 3: Addition ──────────────────────────────────────────────────────
+function generateOperationRound(): OperationRound {
+  const op = Math.random() < 0.5 ? "+" : "-";
+  let a: number, b: number, answer: number;
 
-function Level3Addition({ onFinish }: { onFinish: (score: number) => void }) {
-  const [round, setRound] = useState(0);
-  const [score, setScore] = useState(0);
-  const [data, setData] = useState(() => generateAdditionRound());
-  const [state, setState] = useState<"playing" | "correct" | "wrong">("playing");
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [shakeWrong, setShakeWrong] = useState<number | null>(null);
-  const [animateIn, setAnimateIn] = useState(true);
+  if (op === "+") {
+    a = randInt(3, 15);
+    b = randInt(2, 20 - a);
+    answer = a + b;
+  } else {
+    a = randInt(6, 20);
+    b = randInt(2, a - 1);
+    answer = a - b;
+  }
+
+  const wrong = makeDistractors(answer, Math.max(1, answer - 5), answer + 5, 3);
+  return { a, b, op, answer, options: shuffle([answer, ...wrong]) };
+}
+
+function Level2Operations({ onFinish }: { onFinish: (score: number) => void }) {
+  const { round, score, state, showConfetti, shakeWrong, animateIn, handleAnswer } =
+    useAnswerHandler(onFinish);
+  const [data, setData] = useState(() => generateOperationRound());
 
   const handleOption = useCallback(
     (value: number) => {
-      if (state !== "playing") return;
-
-      if (value === data.answer) {
-        const newScore = score + 1;
-        setScore(newScore);
-        setState("correct");
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 900);
-        setTimeout(() => {
-          const next = round + 1;
-          if (next >= TOTAL_ROUNDS) {
-            onFinish(newScore);
-            return;
-          }
-          const rd = generateAdditionRound();
-          setRound(next);
-          setData(rd);
-          setState("playing");
-          setAnimateIn(true);
-        }, 1200);
-      } else {
-        setShakeWrong(value);
-        setState("wrong");
-        setTimeout(() => {
-          setShakeWrong(null);
-          setState("playing");
-        }, 600);
-      }
+      handleAnswer(value, data.answer, () => {
+        setData(generateOperationRound());
+      });
     },
-    [state, data.answer, score, round, onFinish]
+    [handleAnswer, data.answer]
   );
 
-  return (
-    <div className="min-h-[calc(100dvh-56px)] flex flex-col px-4 py-4 gap-3 select-none">
-      <style>{SHARED_STYLES}</style>
-      {showConfetti && <ConfettiBurst />}
+  const opSymbol = data.op === "+" ? "+" : "−";
+  const opColor = data.op === "+" ? "#51CF66" : "#FF6B6B";
 
+  return (
+    <GameContainer>
+      {showConfetti && <ConfettiBurst />}
       <TopBar currentRound={round} score={score} onBack={() => onFinish(-1)} />
 
-      <div className="text-center">
-        <p className="text-2xl font-bold" style={{ color: "#2D3436" }}>
+      <div className="text-center shrink-0 py-1">
+        <p className="text-xl font-bold" style={{ color: "#2D3436" }}>
           كم الناتج؟
         </p>
       </div>
 
-      {/* Visual equation */}
+      {/* Equation display */}
       <div
-        className="flex-1 min-h-[180px] rounded-3xl shadow-inner overflow-hidden flex flex-col items-center justify-center gap-4 px-4"
+        className="flex-1 mx-4 rounded-2xl shadow-inner flex items-center justify-center"
         style={{
+          maxHeight: "35vh",
           background: "linear-gradient(180deg, #FFFFFF 0%, #FFF8F0 100%)",
           border: "3px dashed #E0E0E0",
-          animation: animateIn ? "scale-in 0.4s ease-out" : "none",
+          animation: animateIn ? "scale-in 0.3s ease-out" : "none",
         }}
       >
-        {/* Emoji groups row */}
-        <div className="flex items-center gap-3 flex-wrap justify-center">
-          {/* Group A */}
-          <div className="flex gap-1 flex-wrap justify-center">
-            {Array.from({ length: data.a }).map((_, i) => (
-              <span
-                key={`a-${round}-${i}`}
-                className="text-4xl"
-                style={{ animation: `scale-in 0.3s ${i * 0.06}s ease-out both` }}
-              >
-                {data.emoji}
-              </span>
-            ))}
-          </div>
-
-          {/* Plus sign */}
-          <span className="text-5xl font-black" style={{ color: "#51CF66" }}>
-            +
-          </span>
-
-          {/* Group B */}
-          <div className="flex gap-1 flex-wrap justify-center">
-            {Array.from({ length: data.b }).map((_, i) => (
-              <span
-                key={`b-${round}-${i}`}
-                className="text-4xl"
-                style={{ animation: `scale-in 0.3s ${(data.a + i) * 0.06}s ease-out both` }}
-              >
-                {data.emoji}
-              </span>
-            ))}
-          </div>
-
-          {/* Equals */}
-          <span className="text-5xl font-black" style={{ color: "#4A90D9" }}>
-            =
-          </span>
-
-          {/* Question mark */}
-          <span className="text-6xl font-black" style={{ color: "#FF922B" }}>
-            ؟
-          </span>
-        </div>
-
-        {/* Numeric equation */}
-        <div className="flex items-center gap-3 text-4xl font-black" style={{ color: "#2D3436" }}>
-          <span>{ARABIC_NUMERALS[data.a - 1]}</span>
-          <span style={{ color: "#51CF66" }}>+</span>
-          <span>{ARABIC_NUMERALS[data.b - 1]}</span>
+        <div className="flex items-center gap-3 text-5xl font-black" style={{ color: "#2D3436" }}>
+          <span>{toArabicNum(data.a)}</span>
+          <span style={{ color: opColor }}>{opSymbol}</span>
+          <span>{toArabicNum(data.b)}</span>
           <span style={{ color: "#4A90D9" }}>=</span>
           <span style={{ color: "#FF922B" }}>؟</span>
         </div>
       </div>
 
-      {/* Options */}
-      <div className="grid grid-cols-2 gap-3 pb-2">
-        {data.options.map((opt, i) => {
-          const isShaking = shakeWrong === opt;
-          const isCorrectHighlight = state === "correct" && opt === data.answer;
+      <div className="h-2 shrink-0" />
+      <OptionGrid
+        options={data.options}
+        round={round}
+        state={state}
+        correctAnswer={data.answer}
+        shakeWrong={shakeWrong}
+        animateIn={animateIn}
+        onSelect={handleOption}
+        large
+      />
+    </GameContainer>
+  );
+}
 
-          return (
-            <button
-              key={`${round}-${opt}`}
-              onClick={() => handleOption(opt)}
-              disabled={state === "correct"}
-              className="rounded-3xl shadow-lg active:scale-95 transition-transform flex items-center justify-center"
-              style={{
-                background: isCorrectHighlight ? "#51CF66" : OPTION_COLORS[i],
-                border: `3px solid ${isCorrectHighlight ? "#2B9348" : OPTION_BORDERS[i]}`,
-                height: "clamp(80px, 15vw, 110px)",
-                animation: isShaking
-                  ? "shake-wrong 0.4s ease-in-out"
-                  : isCorrectHighlight
-                  ? "correct-pulse 0.4s ease-in-out"
-                  : animateIn
-                  ? `scale-in 0.3s ${0.2 + i * 0.08}s ease-out both`
-                  : "none",
-              }}
-            >
-              <span
-                className="font-black"
-                style={{
-                  fontSize: "clamp(2.5rem, 10vw, 4rem)",
-                  color: isCorrectHighlight ? "#FFFFFF" : "#2D3436",
-                }}
-              >
-                {ARABIC_NUMERALS[opt - 1]}
-              </span>
-            </button>
-          );
-        })}
+// ─── Level 3: Multiplication Tables ─────────────────────────────────────────
+
+interface MultiplyRound {
+  a: number;
+  b: number;
+  answer: number;
+  options: number[];
+}
+
+function generateMultiplyRound(): MultiplyRound {
+  const a = randInt(2, 10);
+  const b = randInt(2, 10);
+  const answer = a * b;
+  const wrong = makeDistractors(answer, Math.max(2, answer - 10), answer + 10, 3);
+  return { a, b, answer, options: shuffle([answer, ...wrong]) };
+}
+
+function Level3Multiply({ onFinish }: { onFinish: (score: number) => void }) {
+  const { round, score, state, showConfetti, shakeWrong, animateIn, handleAnswer } =
+    useAnswerHandler(onFinish);
+  const [data, setData] = useState(() => generateMultiplyRound());
+
+  const handleOption = useCallback(
+    (value: number) => {
+      handleAnswer(value, data.answer, () => {
+        setData(generateMultiplyRound());
+      });
+    },
+    [handleAnswer, data.answer]
+  );
+
+  return (
+    <GameContainer>
+      {showConfetti && <ConfettiBurst />}
+      <TopBar currentRound={round} score={score} onBack={() => onFinish(-1)} />
+
+      <div className="text-center shrink-0 py-1">
+        <p className="text-xl font-bold" style={{ color: "#2D3436" }}>
+          كم الناتج؟
+        </p>
       </div>
-    </div>
+
+      {/* Equation display */}
+      <div
+        className="flex-1 mx-4 rounded-2xl shadow-inner flex items-center justify-center"
+        style={{
+          maxHeight: "35vh",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #FFF8F0 100%)",
+          border: "3px dashed #E0E0E0",
+          animation: animateIn ? "scale-in 0.3s ease-out" : "none",
+        }}
+      >
+        <div className="flex items-center gap-3 text-5xl font-black" style={{ color: "#2D3436" }}>
+          <span>{toArabicNum(data.a)}</span>
+          <span style={{ color: "#CC5DE8" }}>×</span>
+          <span>{toArabicNum(data.b)}</span>
+          <span style={{ color: "#4A90D9" }}>=</span>
+          <span style={{ color: "#FF922B" }}>؟</span>
+        </div>
+      </div>
+
+      <div className="h-2 shrink-0" />
+      <OptionGrid
+        options={data.options}
+        round={round}
+        state={state}
+        correctAnswer={data.answer}
+        shakeWrong={shakeWrong}
+        animateIn={animateIn}
+        onSelect={handleOption}
+        large
+      />
+    </GameContainer>
+  );
+}
+
+// ─── Level 4: Number Patterns ───────────────────────────────────────────────
+
+interface PatternRound {
+  sequence: (number | null)[];
+  answer: number;
+  options: number[];
+}
+
+function generatePatternRound(): PatternRound {
+  const patternTypes = [
+    // Count by 2s
+    () => {
+      const start = randInt(1, 10) * 2;
+      const seq = Array.from({ length: 5 }, (_, i) => start + i * 2);
+      return { seq, step: 2 };
+    },
+    // Count by 3s
+    () => {
+      const start = randInt(1, 6) * 3;
+      const seq = Array.from({ length: 5 }, (_, i) => start + i * 3);
+      return { seq, step: 3 };
+    },
+    // Count by 5s
+    () => {
+      const start = randInt(1, 8) * 5;
+      const seq = Array.from({ length: 5 }, (_, i) => start + i * 5);
+      return { seq, step: 5 };
+    },
+    // Count by 4s
+    () => {
+      const start = randInt(1, 5) * 4;
+      const seq = Array.from({ length: 5 }, (_, i) => start + i * 4);
+      return { seq, step: 4 };
+    },
+    // Descending by 2s
+    () => {
+      const start = randInt(12, 20);
+      const seq = Array.from({ length: 5 }, (_, i) => start - i * 2);
+      return { seq, step: -2 };
+    },
+    // Descending by 3s
+    () => {
+      const start = randInt(18, 30);
+      const seq = Array.from({ length: 5 }, (_, i) => start - i * 3);
+      return { seq, step: -3 };
+    },
+  ];
+
+  const gen = pickRandom(patternTypes)();
+  // Pick a random position (not first or last) to blank out
+  const blankIdx = randInt(1, 3);
+  const answer = gen.seq[blankIdx];
+  const display: (number | null)[] = gen.seq.map((n, i) => (i === blankIdx ? null : n));
+
+  const wrong = makeDistractors(answer, Math.max(1, answer - 8), answer + 8, 3);
+  return { sequence: display, answer, options: shuffle([answer, ...wrong]) };
+}
+
+function Level4Patterns({ onFinish }: { onFinish: (score: number) => void }) {
+  const { round, score, state, showConfetti, shakeWrong, animateIn, handleAnswer } =
+    useAnswerHandler(onFinish);
+  const [data, setData] = useState(() => generatePatternRound());
+
+  const handleOption = useCallback(
+    (value: number) => {
+      handleAnswer(value, data.answer, () => {
+        setData(generatePatternRound());
+      });
+    },
+    [handleAnswer, data.answer]
+  );
+
+  return (
+    <GameContainer>
+      {showConfetti && <ConfettiBurst />}
+      <TopBar currentRound={round} score={score} onBack={() => onFinish(-1)} />
+
+      <div className="text-center shrink-0 py-1">
+        <p className="text-xl font-bold" style={{ color: "#2D3436" }}>
+          ما الرقم المفقود؟
+        </p>
+      </div>
+
+      {/* Pattern display */}
+      <div
+        className="flex-1 mx-4 rounded-2xl shadow-inner flex items-center justify-center"
+        style={{
+          maxHeight: "35vh",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #FFF8F0 100%)",
+          border: "3px dashed #E0E0E0",
+          animation: animateIn ? "scale-in 0.3s ease-out" : "none",
+        }}
+      >
+        <div className="flex items-center gap-2 flex-wrap justify-center px-3">
+          {data.sequence.map((num, i) => (
+            <div key={`${round}-${i}`} className="flex items-center gap-2">
+              {num === null ? (
+                <div
+                  className="w-14 h-14 rounded-xl border-3 border-dashed flex items-center justify-center"
+                  style={{ borderColor: "#FF922B", background: "#FFF3D4" }}
+                >
+                  <span className="text-3xl font-black" style={{ color: "#FF922B" }}>؟</span>
+                </div>
+              ) : (
+                <span className="text-3xl font-black" style={{ color: "#2D3436" }}>
+                  {toArabicNum(num)}
+                </span>
+              )}
+              {i < data.sequence.length - 1 && (
+                <span className="text-xl" style={{ color: "#CCC" }}>،</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="h-2 shrink-0" />
+      <OptionGrid
+        options={data.options}
+        round={round}
+        state={state}
+        correctAnswer={data.answer}
+        shakeWrong={shakeWrong}
+        animateIn={animateIn}
+        onSelect={handleOption}
+        large
+      />
+    </GameContainer>
+  );
+}
+
+// ─── Level 5: Word Problems ─────────────────────────────────────────────────
+
+interface WordProblem {
+  text: string;
+  answer: number;
+  options: number[];
+}
+
+function generateWordProblem(): WordProblem {
+  const templates = [
+    () => {
+      const a = randInt(3, 12);
+      const b = randInt(2, 8);
+      return {
+        text: `عند أحمد ${toArabicNum(a)} تفاحات، أعطاه صديقه ${toArabicNum(b)} تفاحات أخرى. كم أصبح عنده؟`,
+        answer: a + b,
+      };
+    },
+    () => {
+      const a = randInt(10, 20);
+      const b = randInt(2, a - 2);
+      return {
+        text: `كان عند سارة ${toArabicNum(a)} قلما، أعطت صديقتها ${toArabicNum(b)} أقلام. كم بقي عندها؟`,
+        answer: a - b,
+      };
+    },
+    () => {
+      const a = randInt(2, 5);
+      const b = randInt(3, 6);
+      return {
+        text: `في كل صف ${toArabicNum(a)} كراسي، وعدد الصفوف ${toArabicNum(b)}. كم كرسيا في المجموع؟`,
+        answer: a * b,
+      };
+    },
+    () => {
+      const a = randInt(5, 15);
+      const b = randInt(3, 8);
+      return {
+        text: `اشترى خالد ${toArabicNum(a)} حلويات ثم اشترى ${toArabicNum(b)} أخرى. كم حلوى عنده الآن؟`,
+        answer: a + b,
+      };
+    },
+    () => {
+      const total = randInt(10, 20);
+      const eaten = randInt(2, total - 2);
+      return {
+        text: `كان في الصحن ${toArabicNum(total)} بسكويتات، أكل منها ${toArabicNum(eaten)}. كم بقي؟`,
+        answer: total - eaten,
+      };
+    },
+    () => {
+      const groups = randInt(3, 6);
+      const per = randInt(2, 5);
+      return {
+        text: `وزّعت المعلمة ${toArabicNum(groups)} مجموعات، في كل مجموعة ${toArabicNum(per)} طلاب. كم طالبا في الفصل؟`,
+        answer: groups * per,
+      };
+    },
+    () => {
+      const a = randInt(6, 12);
+      const b = randInt(4, 10);
+      return {
+        text: `في الحديقة ${toArabicNum(a)} شجرات زيتون و${toArabicNum(b)} شجرات برتقال. كم شجرة في المجموع؟`,
+        answer: a + b,
+      };
+    },
+    () => {
+      const total = randInt(12, 20);
+      const gave = randInt(3, total - 3);
+      return {
+        text: `جمع ياسر ${toArabicNum(total)} صدفة من الشاطئ، وأعطى أخاه ${toArabicNum(gave)} صدفات. كم بقي معه؟`,
+        answer: total - gave,
+      };
+    },
+  ];
+
+  const gen = pickRandom(templates)();
+  const wrong = makeDistractors(gen.answer, Math.max(1, gen.answer - 5), gen.answer + 5, 3);
+  return { text: gen.text, answer: gen.answer, options: shuffle([gen.answer, ...wrong]) };
+}
+
+function Level5WordProblems({ onFinish }: { onFinish: (score: number) => void }) {
+  const { round, score, state, showConfetti, shakeWrong, animateIn, handleAnswer } =
+    useAnswerHandler(onFinish);
+  const [data, setData] = useState(() => generateWordProblem());
+
+  const handleOption = useCallback(
+    (value: number) => {
+      handleAnswer(value, data.answer, () => {
+        setData(generateWordProblem());
+      });
+    },
+    [handleAnswer, data.answer]
+  );
+
+  return (
+    <GameContainer>
+      {showConfetti && <ConfettiBurst />}
+      <TopBar currentRound={round} score={score} onBack={() => onFinish(-1)} />
+
+      <div className="text-center shrink-0 py-1">
+        <p className="text-xl font-bold" style={{ color: "#2D3436" }}>
+          حل المسألة
+        </p>
+      </div>
+
+      {/* Word problem display */}
+      <div
+        className="flex-1 mx-4 rounded-2xl shadow-inner flex items-center justify-center overflow-y-auto"
+        style={{
+          maxHeight: "40vh",
+          background: "linear-gradient(180deg, #FFFFFF 0%, #FFF8F0 100%)",
+          border: "3px dashed #E0E0E0",
+          animation: animateIn ? "scale-in 0.3s ease-out" : "none",
+        }}
+      >
+        <p
+          className="text-xl font-bold leading-relaxed text-center px-5 py-4"
+          style={{ color: "#2D3436" }}
+        >
+          {data.text}
+        </p>
+      </div>
+
+      <div className="h-2 shrink-0" />
+      <OptionGrid
+        options={data.options}
+        round={round}
+        state={state}
+        correctAnswer={data.answer}
+        shakeWrong={shakeWrong}
+        animateIn={animateIn}
+        onSelect={handleOption}
+        large
+      />
+    </GameContainer>
   );
 }
 
@@ -893,20 +1071,20 @@ export default function ArqamPage() {
   const [screen, setScreen] = useState<"levels" | "playing" | "done">("levels");
   const [activeLevel, setActiveLevel] = useState<LevelId>(1);
   const [lastScore, setLastScore] = useState(0);
+  const [playKey, setPlayKey] = useState(0);
 
-  // Load progress from localStorage on mount
   useEffect(() => {
     setProgress(loadProgress());
   }, []);
 
   const handleSelectLevel = useCallback((level: LevelId) => {
     setActiveLevel(level);
+    setPlayKey((k) => k + 1);
     setScreen("playing");
   }, []);
 
   const handleFinish = useCallback(
     (score: number) => {
-      // score of -1 means user backed out
       if (score < 0) {
         setScreen("levels");
         return;
@@ -920,15 +1098,13 @@ export default function ArqamPage() {
           levels: { ...prev.levels },
         };
 
-        // Update stars for current level (keep best)
         const current = updated.levels[activeLevel];
         updated.levels[activeLevel] = {
           ...current,
           stars: Math.max(current.stars, stars),
         };
 
-        // Unlock next level if scored at least 1 star
-        if (stars >= 1 && activeLevel < 3) {
+        if (stars >= 1 && activeLevel < 5) {
           const nextId = (activeLevel + 1) as LevelId;
           updated.levels[nextId] = {
             ...updated.levels[nextId],
@@ -946,6 +1122,7 @@ export default function ArqamPage() {
   );
 
   const handleRestart = useCallback(() => {
+    setPlayKey((k) => k + 1);
     setScreen("playing");
   }, []);
 
@@ -969,13 +1146,20 @@ export default function ArqamPage() {
     );
   }
 
-  // Playing screen - render active level
-  // Use key to force fresh mount on restart
-  if (activeLevel === 1) {
-    return <Level1Counting key={`l1-${Date.now()}`} onFinish={handleFinish} />;
+  // Playing screen
+  const key = `level-${activeLevel}-${playKey}`;
+  switch (activeLevel) {
+    case 1:
+      return <Level1Counting key={key} onFinish={handleFinish} />;
+    case 2:
+      return <Level2Operations key={key} onFinish={handleFinish} />;
+    case 3:
+      return <Level3Multiply key={key} onFinish={handleFinish} />;
+    case 4:
+      return <Level4Patterns key={key} onFinish={handleFinish} />;
+    case 5:
+      return <Level5WordProblems key={key} onFinish={handleFinish} />;
+    default:
+      return <Level1Counting key={key} onFinish={handleFinish} />;
   }
-  if (activeLevel === 2) {
-    return <Level2Order key={`l2-${Date.now()}`} onFinish={handleFinish} />;
-  }
-  return <Level3Addition key={`l3-${Date.now()}`} onFinish={handleFinish} />;
 }
