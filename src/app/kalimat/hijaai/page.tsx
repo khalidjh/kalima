@@ -499,7 +499,7 @@ export default function HijaaiPage() {
         {/* Back */}
         <div className="text-center mt-8">
           <Link
-            href="/kids"
+            href="/kalimat"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-lg font-bold transition-transform active:scale-95"
             style={{ background: "#FFF0E0", color: "#FF922B" }}
           >
@@ -619,7 +619,7 @@ export default function HijaaiPage() {
             العودة للمستويات
           </button>
           <Link
-            href="/kids"
+            href="/kalimat"
             className="block w-full py-4 rounded-2xl text-xl font-bold transition-transform active:scale-95 text-center"
             style={{ background: "#FFF0E0", color: "#FF922B" }}
           >

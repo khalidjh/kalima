@@ -352,7 +352,7 @@ function LevelSelect({
         </div>
 
         <Link
-          href="/kids"
+          href="/kalimat"
           className="mt-2 px-6 py-3 rounded-2xl text-lg font-bold text-white shadow-lg active:scale-95 transition-transform"
           style={{ background: `linear-gradient(135deg, ${THEME}, #F06595)` }}
         >

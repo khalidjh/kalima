@@ -313,7 +313,7 @@ function LevelSelect({
       </div>
 
       <Link
-        href="/kids"
+        href="/kalimat"
         className="block text-center mt-8 text-sm font-semibold py-3 rounded-xl transition-all active:scale-95"
         style={{ color: "#636E72", background: "#F1F0EE" }}
       >

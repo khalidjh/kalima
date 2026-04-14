@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Sparks سبارك - العب وتعلّم",
+  title: "كلمات - ألعاب تعليمية",
   description:
     "ألعاب تعليمية ممتعة للأطفال باللغة العربية. تعلم الحروف والأرقام والأشكال والألوان!",
 };
@@ -92,37 +92,37 @@ export default function KidsLayout({
           className="absolute text-2xl"
           style={{ top: "12%", right: "8%", animation: "twinkle 3s ease-in-out infinite", animationDelay: "0s" }}
         >
-          ⚡
+          ✨
         </span>
         <span
           className="absolute text-xl"
           style={{ top: "25%", left: "5%", animation: "float-slow 5s ease-in-out infinite", animationDelay: "1s" }}
         >
-          ☁️
+          📖
         </span>
         <span
           className="absolute text-lg"
           style={{ top: "45%", right: "4%", animation: "twinkle 4s ease-in-out infinite", animationDelay: "2s" }}
         >
-          ⚡
+          ✏️
         </span>
         <span
           className="absolute text-2xl"
           style={{ top: "60%", left: "7%", animation: "float-slow 6s ease-in-out infinite", animationDelay: "0.5s" }}
         >
-          ☁️
+          📖
         </span>
         <span
           className="absolute text-sm"
           style={{ top: "70%", right: "12%", animation: "twinkle 3.5s ease-in-out infinite", animationDelay: "1.5s" }}
         >
-          ⚡
+          ✨
         </span>
         <span
           className="absolute text-lg"
           style={{ top: "85%", left: "15%", animation: "drift 7s ease-in-out infinite", animationDelay: "3s" }}
         >
-          ⚡
+          ✏️
         </span>
       </div>
 
@@ -133,30 +133,22 @@ export default function KidsLayout({
           background: "linear-gradient(135deg, #FF922B 0%, #FF6B6B 50%, #E64980 100%)",
         }}
       >
-        <div className="flex items-center gap-2">
+        <Link href="/kalimat" className="flex items-center gap-2 group">
           <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center text-lg"
+            className="w-8 h-8 rounded-xl flex items-center justify-center text-lg transition-transform group-hover:scale-110 group-active:scale-95"
             style={{
               background: "linear-gradient(135deg, #FF922B, #FFD43B)",
               boxShadow: "0 2px 8px rgba(255,146,43,0.3)",
             }}
           >
-            ⚡
+            📝
           </div>
           <div>
             <span className="text-white font-black text-lg block leading-tight" style={{ letterSpacing: "0.5px" }}>
-              Sparks
+              Kalimat
             </span>
-            <span className="text-white/60 text-[10px] font-medium">سبارك</span>
+            <span className="text-white/60 text-[10px] font-medium">كلمات</span>
           </div>
-        </div>
-
-        <Link
-          href="/home"
-          className="text-white/80 hover:text-white font-semibold text-xs px-3 py-1 rounded-full transition-all"
-          style={{ background: "rgba(255,255,255,0.15)" }}
-        >
-          الرئيسية ←
         </Link>
       </header>
 

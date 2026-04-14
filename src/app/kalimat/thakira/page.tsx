@@ -209,7 +209,7 @@ function LevelSelect({
 
       <div className="mt-8 text-center">
         <Link
-          href="/kids"
+          href="/kalimat"
           className="inline-flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-full transition-all hover:scale-105"
           style={{ background: "rgba(32,201,151,0.12)", color: "#20C997" }}
         >

@@ -240,7 +240,7 @@ function Celebration({ score, onRestart }: { score: number; onRestart: () => voi
           العب مرة ثانية
         </button>
         <Link
-          href="/kids"
+          href="/kalimat"
           className="px-8 py-4 rounded-2xl font-bold text-xl transition-transform active:scale-95"
           style={{ background: "#F0F0F0", color: "#2D3436" }}
         >
@@ -347,7 +347,7 @@ export default function AshkalPage() {
         {/* Top bar: back + progress */}
         <div className="w-full flex items-center justify-between">
           <Link
-            href="/kids"
+            href="/kalimat"
             className="flex items-center gap-1 text-sm font-bold px-4 py-2 rounded-2xl"
             style={{ background: "#F0F0F0", color: "#636E72" }}
           >

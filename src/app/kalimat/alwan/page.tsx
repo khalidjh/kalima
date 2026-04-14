@@ -186,7 +186,7 @@ export default function AlwanPage() {
             العب مرة ثانية
           </button>
           <Link
-            href="/kids"
+            href="/kalimat"
             className="px-8 py-4 rounded-3xl text-white text-xl font-bold shadow-lg active:scale-95 transition-transform"
             style={{ background: "#4A90D9" }}
           >
@@ -223,7 +223,7 @@ export default function AlwanPage() {
       {/* Top bar: back + stars */}
       <div className="w-full flex items-center justify-between z-10">
         <Link
-          href="/kids"
+          href="/kalimat"
           className="flex items-center gap-1 text-lg font-bold px-4 py-2 rounded-2xl"
           style={{ background: "#CC5DE8", color: "#fff" }}
         >

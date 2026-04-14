@@ -418,7 +418,7 @@ export default function HoroufPage() {
       >
         <div className="w-full max-w-lg flex items-center justify-between">
           <Link
-            href="/kids"
+            href="/kalimat"
             className="flex items-center gap-1 text-lg font-bold px-4 py-2 rounded-2xl"
             style={{ background: "#FF6B6B", color: "#fff" }}
           >
@@ -539,7 +539,7 @@ export default function HoroufPage() {
             المستويات
           </button>
           <Link
-            href="/kids"
+            href="/kalimat"
             className="px-8 py-4 rounded-3xl text-white text-xl font-bold shadow-lg active:scale-95 transition-transform"
             style={{ background: "#4A90D9" }}
           >

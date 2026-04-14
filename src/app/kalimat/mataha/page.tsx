@@ -172,7 +172,7 @@ function LevelSelect({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <Link
-          href="/kids"
+          href="/kalimat"
           className="flex items-center gap-1.5 text-sm font-bold px-3 py-2 rounded-xl transition-all hover:scale-105"
           style={{ color: "#FF922B", background: "#FF922B18" }}
         >

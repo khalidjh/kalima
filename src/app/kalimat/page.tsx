@@ -14,35 +14,35 @@ interface GameConfig {
 const learnGames: GameConfig[] = [
   {
     title: "حروفي",
-    href: "/kids/horouf",
+    href: "/kalimat/horouf",
     icon: "🔤",
     borderColor: "#FF6B6B",
     bgColor: "#FFF0F0",
   },
   {
     title: "أرقامي",
-    href: "/kids/arqam",
+    href: "/kalimat/arqam",
     icon: "🔢",
     borderColor: "#51CF66",
     bgColor: "#F0FFF4",
   },
   {
     title: "هجّائي",
-    href: "/kids/hijaai",
+    href: "/kalimat/hijaai",
     icon: "✏️",
     borderColor: "#FF922B",
     bgColor: "#FFF8F0",
   },
   {
     title: "أشكالي",
-    href: "/kids/ashkal",
+    href: "/kalimat/ashkal",
     icon: "🔷",
     borderColor: "#4A90D9",
     bgColor: "#F0F4FF",
   },
   {
     title: "ألواني",
-    href: "/kids/alwan",
+    href: "/kalimat/alwan",
     icon: "🎨",
     borderColor: "#CC5DE8",
     bgColor: "#F8F0FF",
@@ -52,42 +52,42 @@ const learnGames: GameConfig[] = [
 const playGames: GameConfig[] = [
   {
     title: "ذاكرة",
-    href: "/kids/thakira",
+    href: "/kalimat/thakira",
     icon: "🃏",
     borderColor: "#20C997",
     bgColor: "#E6FCF5",
   },
   {
     title: "متاهة",
-    href: "/kids/mataha",
+    href: "/kalimat/mataha",
     icon: "🏰",
     borderColor: "#5C7CFA",
     bgColor: "#EDF2FF",
   },
   {
     title: "فقاعات",
-    href: "/kids/fuqaat",
+    href: "/kalimat/fuqaat",
     icon: "🫧",
     borderColor: "#22B8CF",
     bgColor: "#E3FAFC",
   },
   {
     title: "صور",
-    href: "/kids/suwar",
+    href: "/kalimat/suwar",
     icon: "🧩",
     borderColor: "#E64980",
     bgColor: "#FFF0F6",
   },
   {
     title: "سرعة",
-    href: "/kids/suraa",
+    href: "/kalimat/suraa",
     icon: "⚡",
     borderColor: "#FCC419",
     bgColor: "#FFF9DB",
   },
   {
     title: "٢٠٤٨",
-    href: "/kids/2048",
+    href: "/kalimat/2048",
     icon: "🔢",
     borderColor: "#FF6B6B",
     bgColor: "#FFF0F0",
@@ -163,28 +163,12 @@ export default function KidsHomePage() {
 
   return (
     <div className="max-w-lg mx-auto px-5 pt-4 pb-12">
-      {/* Header area */}
-      <div
-        className="text-center mb-6"
-        style={{ animation: "bounce-in 0.4s ease-out both" }}
-      >
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <div
-            className="inline-block text-4xl"
-            style={{ animation: "wiggle 2s ease-in-out infinite" }}
-          >
-            ⚡
-          </div>
-          <h1
-            className="text-3xl font-black"
-            style={{ color: "#2D3436" }}
-          >
-            العب وتعلّم
-          </h1>
-        </div>
-
-        {/* Global star counter */}
-        {totalStars > 0 && (
+      {/* Star counter */}
+      {totalStars > 0 && (
+        <div
+          className="text-center mb-4"
+          style={{ animation: "bounce-in 0.4s ease-out both" }}
+        >
           <div
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold"
             style={{
@@ -196,8 +180,8 @@ export default function KidsHomePage() {
             <span>⭐</span>
             <span>{toArabicNumeral(totalStars)}</span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Section 1: Play */}
       <div className="mb-6">
@@ -215,7 +199,7 @@ export default function KidsHomePage() {
       </div>
 
       {/* Section 2: Learn */}
-      <div>
+      <div className="mb-6">
         <h2
           className="text-lg font-bold mb-3"
           style={{ color: "#2D3436" }}
@@ -227,6 +211,34 @@ export default function KidsHomePage() {
             <GameCard key={game.href} game={game} index={i + playGames.length} />
           ))}
         </div>
+      </div>
+
+      {/* Subscription promo */}
+      <Link href="/kalimat/pro" className="block group">
+        <div
+          className="rounded-2xl p-4 text-center transition-all duration-200 group-hover:shadow-lg group-active:scale-[0.98]"
+          style={{
+            background: "linear-gradient(135deg, #FF922B 0%, #FF6B6B 50%, #E64980 100%)",
+            boxShadow: "0 4px 20px rgba(255,105,135,0.3)",
+            animation: "bounce-in 0.5s ease-out 0.8s both",
+          }}
+        >
+          <div className="text-2xl mb-1">✨</div>
+          <h3 className="text-white font-black text-lg mb-1">Kalimat Plus</h3>
+          <p className="text-white/80 text-xs">افتح كل الألعاب وميزات إضافية</p>
+        </div>
+      </Link>
+
+      {/* Back to Kalima */}
+      <div className="text-center mt-6 mb-4">
+        <Link
+          href="/home"
+          className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full transition-colors"
+          style={{ color: "#636E72", background: "rgba(0,0,0,0.05)" }}
+        >
+          <span className="w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold" style={{ background: "#2D3436", color: "#CCFF00" }}>ك</span>
+          كلمة - ألعاب الكبار
+        </Link>
       </div>
     </div>
   );

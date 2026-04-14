@@ -414,7 +414,7 @@ export default function SuraaPage() {
         {/* Header */}
         <div className="flex items-center justify-between pt-4 pb-2">
           <Link
-            href="/kids"
+            href="/kalimat"
             className="flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-full"
             style={{ background: "#FFF3D4", color: "#E67700", border: "2px solid #FCC419" }}
           >
@@ -634,7 +634,7 @@ export default function SuraaPage() {
       </div>
 
       <Link
-        href="/kids"
+        href="/kalimat"
         className="text-sm font-bold px-4 py-2 rounded-full"
         style={{ background: "#FFF3D4", color: "#E67700", border: "2px solid #FCC419" }}
       >

@@ -339,7 +339,7 @@ export default function Game2048Page() {
       {/* Header */}
       <div className="w-full max-w-[400px] flex items-center justify-between pt-3 pb-2">
         <Link
-          href="/kids"
+          href="/kalimat"
           className="flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-full"
           style={{ background: "#FFE0E0", color: "#C92A2A", border: "2px solid #FF6B6B" }}
         >
