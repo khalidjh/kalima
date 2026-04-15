@@ -178,9 +178,9 @@ export default function KidsHomePage() {
           >
             <span className="text-[#FFF8F0] font-black text-2xl leading-none" style={{ fontFamily: "'Cairo', sans-serif" }}>ك</span>
           </div>
-          <div>
-            <span className="text-base font-black block leading-tight" style={{ color: "#2D3436" }}>Kalimat</span>
-            <span className="text-[10px] font-medium" style={{ color: "#636E72" }}>كلمات</span>
+          <div className="flex flex-col">
+            <span className="text-base font-black leading-none" style={{ color: "#2D3436" }}>Kalimat</span>
+            <span className="text-[10px] font-medium leading-none mt-0.5" style={{ color: "#636E72" }}>كلمات</span>
           </div>
         </div>
         {totalStars > 0 && (

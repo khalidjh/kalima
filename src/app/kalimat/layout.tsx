@@ -143,11 +143,11 @@ export default function KidsLayout({
           >
             <span className="text-[#FFF8F0] font-bold text-lg leading-none" style={{ fontFamily: "'Cairo', sans-serif" }}>ك</span>
           </div>
-          <div>
-            <span className="text-white font-black text-lg block leading-tight" style={{ letterSpacing: "0.5px" }}>
+          <div className="flex flex-col">
+            <span className="text-white font-black text-lg leading-none" style={{ letterSpacing: "0.5px" }}>
               Kalimat
             </span>
-            <span className="text-white/60 text-[10px] font-medium">كلمات</span>
+            <span className="text-white/60 text-[10px] font-medium leading-none mt-0.5">كلمات</span>
           </div>
         </Link>
       </header>
