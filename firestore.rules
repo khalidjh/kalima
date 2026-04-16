@@ -9,5 +9,28 @@ service cloud.firestore {
         && !("subscribedAt" in request.resource.data)
         && !("lastPaymentId" in request.resource.data);
     }
+
+    // Jasoos multiplayer rooms — open to anonymous players
+    match /jasoos_rooms/{roomId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(["roomId", "status", "hostPlayerId", "puzzleNumber", "players", "votes", "createdAt"])
+        && request.resource.data.status == "lobby"
+        && request.resource.data.spyPlayerId == "";
+      allow update: if resource != null
+        && (
+          // Players joining lobby
+          (resource.data.status == "lobby")
+          // Host starting game or moving phases
+          || (resource.data.status in ["playing", "voting"])
+        );
+      // Auto-cleanup: rooms older than 4 hours can be deleted by anyone
+      allow delete: if resource.data.createdAt < request.time.toMillis() - 4 * 60 * 60 * 1000;
+
+      match /messages/{messageId} {
+        allow read: if true;
+        allow create: if request.resource.data.keys().hasAll(["playerId", "playerName", "text", "timestamp"])
+          && request.resource.data.text.size() <= 200;
+      }
+    }
   }
 }

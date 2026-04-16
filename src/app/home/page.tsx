@@ -133,6 +133,14 @@ function IqtibasIcon() {
   );
 }
 
+function JasoosIcon() {
+  return (
+    <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
+      <span className="text-2xl">🕵️</span>
+    </div>
+  );
+}
+
 // ── Completion Badge ──
 
 function CompletedBadge() {
@@ -307,6 +315,7 @@ export default function HomePage() {
             <GridCard href="/nahla" icon={<NahlaIcon />} title="نحلة" completed={false} />
             <GridCard href="/kharbasha" icon={<KharbashaIcon />} title="خربشة" completed={false} />
             <GridCard href="/tarteeb" icon={<TarteebIcon />} title="ترتيب" completed={false} />
+            <GridCard href="/jasoos" icon={<JasoosIcon />} title="الجاسوس" completed={false} />
           </div>
         </div>
 
