@@ -12,10 +12,10 @@ interface KeyboardProps {
 }
 
 // Arabic keyboard — matches iPhone iOS Arabic layout exactly
-const ROW1 = ["ض", "ص", "ث", "ق", "ف", "غ", "ع", "ه", "خ", "ح", "ج"];
-const ROW2 = ["ش", "س", "ي", "ب", "ل", "ا", "ت", "ن", "م", "ك", "ة"];
-const ROW3 = ["ء", "ظ", "ط", "ذ", "د", "ز", "ر", "و", "ى"];
-const ROW4 = ["إ", "أ", "آ", "ئ", "ؤ"];
+const ROW1 = ["ج", "ح", "خ", "ه", "ع", "غ", "ف", "ق", "ث", "ص", "ض"];
+const ROW2 = ["ة", "ك", "م", "ن", "ت", "ا", "ل", "ب", "ي", "س", "ش"];
+const ROW3 = ["ى", "و", "ر", "ز", "د", "ذ", "ط", "ظ", "ء"];
+const ROW4 = ["ؤ", "ئ", "آ", "أ", "إ"];
 
 function getKeyStyle(state: LetterState | undefined): string {
   switch (state) {
@@ -45,7 +45,7 @@ function LetterKey({ letter, state, onKey, disabled }: LetterKeyProps) {
         if (!disabled) { playTap(); onKey(letter); }
       }}
       disabled={disabled}
-      className={`h-10 sm:h-12 w-full rounded text-sm font-bold select-none touch-manipulation transition-colors ${getKeyStyle(state)}`}
+      className={`h-10 sm:h-12 lg:h-14 w-full rounded lg:rounded-md text-sm lg:text-base font-bold select-none touch-manipulation transition-colors ${getKeyStyle(state)}`}
     >
       {letter}
     </button>
@@ -60,7 +60,7 @@ export default function Keyboard({
   disabled,
 }: KeyboardProps) {
   return (
-    <div className="w-full max-w-[480px] mx-auto px-1 pb-safe overflow-hidden" dir="rtl">
+    <div className="w-full max-w-[480px] lg:max-w-[580px] mx-auto px-1 pb-safe overflow-hidden" dir="rtl">
       {/* Row 1 — 11 keys */}
       <div className="grid gap-[3px] mb-[3px]" style={{ gridTemplateColumns: `repeat(${ROW1.length}, 1fr)` }}>
         {ROW1.map((l) => (
@@ -81,7 +81,7 @@ export default function Keyboard({
         <button
           onPointerDown={(e) => { e.preventDefault(); if (!disabled) onEnter(); }}
           disabled={disabled}
-          className="h-10 sm:h-12 rounded bg-primary text-[#0A0A0A] text-xs font-bold select-none touch-manipulation disabled:opacity-40 hover:opacity-90 transition-opacity"
+          className="h-10 sm:h-12 lg:h-14 rounded lg:rounded-md bg-primary text-[#0A0A0A] text-xs lg:text-sm font-bold select-none touch-manipulation disabled:opacity-40 hover:opacity-90 transition-opacity"
         >
           إدخال
         </button>
@@ -94,7 +94,7 @@ export default function Keyboard({
         <button
           onPointerDown={(e) => { e.preventDefault(); if (!disabled) { playDelete(); onDelete(); } }}
           disabled={disabled}
-          className="h-10 sm:h-12 rounded bg-surface border border-border text-muted text-xs font-bold select-none touch-manipulation disabled:opacity-40 hover:text-white hover:border-white/30 transition-colors"
+          className="h-10 sm:h-12 lg:h-14 rounded lg:rounded-md bg-surface border border-border text-muted text-xs lg:text-sm font-bold select-none touch-manipulation disabled:opacity-40 hover:text-white hover:border-white/30 transition-colors"
         >
           ⌫
         </button>

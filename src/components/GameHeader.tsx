@@ -11,7 +11,7 @@ interface GameHeaderProps {
 export default function GameHeader({ left, center, right }: GameHeaderProps) {
   return (
     <div className="w-full border-b border-border flex-shrink-0">
-      <div className="max-w-lg mx-auto px-4 h-12 flex items-center justify-between gap-2">
+      <div className="max-w-lg lg:max-w-2xl mx-auto px-4 h-12 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           {left ?? <BackToHome />}
         </div>

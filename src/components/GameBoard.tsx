@@ -39,7 +39,7 @@ interface TileProps {
 
 function Tile({ letter, state, animate, delay = 0, waveBounce, waveDelay = 0 }: TileProps) {
   const base =
-    "w-full aspect-square flex items-center justify-center text-xl sm:text-2xl font-bold border-2 select-none";
+    "w-full aspect-square flex items-center justify-center text-xl sm:text-2xl lg:text-3xl font-bold border-2 select-none";
   // When animating, start without color and reveal it at the midpoint (250ms into 500ms animation)
   const [revealed, setRevealed] = useState(!animate);
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function GameBoard({
   const winningRowIdx = won ? guesses.length - 1 : -1;
 
   return (
-    <div className="flex flex-col gap-1 my-1 mx-auto w-full px-2" style={{ maxWidth: "min(260px, calc((100dvh - 340px) * 4/6))" }}>
+    <div className="flex flex-col gap-1 lg:gap-1.5 my-1 mx-auto w-full px-2" style={{ maxWidth: "min(350px, calc((100dvh - 340px) * 4/6))" }}>
       {rows.map((row, rowIdx) => (
         <div
           key={rowIdx}

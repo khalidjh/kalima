@@ -276,7 +276,7 @@ export default function HomePage() {
 
   return (
     <div className="h-full overflow-y-auto bg-background" dir="rtl">
-      <div className="max-w-lg mx-auto px-4 pt-5 pb-8">
+      <div className="max-w-lg lg:max-w-2xl mx-auto px-4 pt-5 pb-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -291,8 +291,8 @@ export default function HomePage() {
           {streak > 0 && <StreakFire streak={streak} size="sm" />}
         </div>
 
-        {/* Featured / Hero Card */}
-        <div className="mb-4">
+        {/* Featured / Hero Cards */}
+        <div className="mb-4 flex flex-col gap-3">
           <HeroCard
             href="/"
             icon={<HoroufIcon />}
@@ -300,12 +300,20 @@ export default function HomePage() {
             description="خمّن الكلمة اليومية من ٤ أحرف"
             completed={gameCompleted}
           />
+          <HeroCard
+            href="/jasoos"
+            icon={<JasoosIcon />}
+            title="الجاسوس"
+            description="العب مع أصدقائك — من بينكم الجاسوس؟"
+            completed={false}
+            isNew
+          />
         </div>
 
         {/* Games Grid */}
         <div className="mb-4">
           <h2 className="text-sm font-semibold text-muted mb-3">جميع الألعاب</h2>
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-2.5 lg:gap-3">
             <GridCard href="/rubaei" icon={<RubaeiIcon />} title="رباعي" completed={rubaeiCompleted} />
             <GridCard href="/waffle" icon={<WaffleIcon />} title="وافل" completed={waffleCompleted} />
             <GridCard href="/rawabet" icon={<RawabetIcon />} title="روابط" completed={rawabetCompleted} />
@@ -315,7 +323,6 @@ export default function HomePage() {
             <GridCard href="/nahla" icon={<NahlaIcon />} title="نحلة" completed={false} />
             <GridCard href="/kharbasha" icon={<KharbashaIcon />} title="خربشة" completed={false} />
             <GridCard href="/tarteeb" icon={<TarteebIcon />} title="ترتيب" completed={false} />
-            <GridCard href="/jasoos" icon={<JasoosIcon />} title="الجاسوس" completed={false} />
           </div>
         </div>
 
