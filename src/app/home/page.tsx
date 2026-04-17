@@ -209,7 +209,7 @@ function GridCard({
 }) {
   return (
     <Link href={href} className="block group">
-      <div className={`bg-surface rounded-xl p-3 border ${completed ? "border-correct/20" : "border-border"} group-hover:border-primary/40 transition-all duration-200 flex flex-col items-center gap-2 aspect-square justify-center relative`}>
+      <div className={`bg-surface rounded-xl p-3 border ${completed ? "border-correct/20" : "border-border"} group-hover:border-primary/40 transition-all duration-200 flex flex-col items-center gap-2 aspect-square lg:aspect-auto lg:py-4 justify-center relative`}>
         {completed && (
           <div className="absolute top-2 left-2">
             <span className="text-correct text-xs">✓</span>
@@ -275,10 +275,10 @@ export default function HomePage() {
   const totalDailyGames = 10;
 
   return (
-    <div className="h-full overflow-y-auto bg-background" dir="rtl">
-      <div className="max-w-lg lg:max-w-2xl mx-auto px-4 pt-5 pb-8">
+    <div className="h-full overflow-y-auto lg:overflow-hidden bg-background" dir="rtl">
+      <div className="max-w-lg lg:max-w-4xl mx-auto px-4 pt-5 pb-8 lg:pb-4 lg:h-full lg:flex lg:flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-5 lg:mb-3">
           <div>
             <h1 className="text-2xl font-bold text-white">كلمة</h1>
             <p className="text-xs text-muted mt-0.5">
@@ -291,72 +291,81 @@ export default function HomePage() {
           {streak > 0 && <StreakFire streak={streak} size="sm" />}
         </div>
 
-        {/* Featured / Hero Cards */}
-        <div className="mb-4 flex flex-col gap-3">
-          <HeroCard
-            href="/"
-            icon={<HoroufIcon />}
-            title="حروف"
-            description="خمّن الكلمة اليومية من ٤ أحرف"
-            completed={gameCompleted}
-          />
-          <HeroCard
-            href="/jasoos"
-            icon={<JasoosIcon />}
-            title="الجاسوس"
-            description="العب مع أصدقائك — من بينكم الجاسوس؟"
-            completed={false}
-            isNew
-          />
-        </div>
+        {/* Desktop: two-column layout */}
+        <div className="lg:flex lg:gap-5 lg:flex-1 lg:min-h-0">
+          {/* Left column — featured + grid */}
+          <div className="lg:flex-1 lg:min-w-0">
+            {/* Featured / Hero Cards */}
+            <div className="mb-4 lg:mb-3 flex flex-col lg:flex-row gap-3">
+              <HeroCard
+                href="/"
+                icon={<HoroufIcon />}
+                title="حروف"
+                description="خمّن الكلمة اليومية من ٤ أحرف"
+                completed={gameCompleted}
+              />
+              <HeroCard
+                href="/jasoos"
+                icon={<JasoosIcon />}
+                title="الجاسوس"
+                description="العب مع أصدقائك — من بينكم الجاسوس؟"
+                completed={false}
+                isNew
+              />
+            </div>
 
-        {/* Games Grid */}
-        <div className="mb-4">
-          <h2 className="text-sm font-semibold text-muted mb-3">جميع الألعاب</h2>
-          <div className="grid grid-cols-3 lg:grid-cols-4 gap-2.5 lg:gap-3">
-            <GridCard href="/rubaei" icon={<RubaeiIcon />} title="رباعي" completed={rubaeiCompleted} />
-            <GridCard href="/waffle" icon={<WaffleIcon />} title="وافل" completed={waffleCompleted} />
-            <GridCard href="/rawabet" icon={<RawabetIcon />} title="روابط" completed={rawabetCompleted} />
-            <GridCard href="/taqatu3" icon={<Taqatu3Icon />} title="متقاطعة" completed={taqatu3Completed} />
-            <GridCard href="/silsila" icon={<SilsilaIcon />} title="سلسلة" completed={silsilaCompleted} />
-            <GridCard href="/iqtibas" icon={<IqtibasIcon />} title="اقتباس" completed={iqtibasCompleted} />
-            <GridCard href="/nahla" icon={<NahlaIcon />} title="نحلة" completed={false} />
-            <GridCard href="/kharbasha" icon={<KharbashaIcon />} title="خربشة" completed={false} />
-            <GridCard href="/tarteeb" icon={<TarteebIcon />} title="ترتيب" completed={false} />
+            {/* Games Grid */}
+            <div className="mb-4 lg:mb-0">
+              <h2 className="text-sm font-semibold text-muted mb-3 lg:mb-2">جميع الألعاب</h2>
+              <div className="grid grid-cols-3 lg:grid-cols-5 gap-2.5 lg:gap-2">
+                <GridCard href="/rubaei" icon={<RubaeiIcon />} title="رباعي" completed={rubaeiCompleted} />
+                <GridCard href="/waffle" icon={<WaffleIcon />} title="وافل" completed={waffleCompleted} />
+                <GridCard href="/rawabet" icon={<RawabetIcon />} title="روابط" completed={rawabetCompleted} />
+                <GridCard href="/taqatu3" icon={<Taqatu3Icon />} title="متقاطعة" completed={taqatu3Completed} />
+                <GridCard href="/silsila" icon={<SilsilaIcon />} title="سلسلة" completed={silsilaCompleted} />
+                <GridCard href="/iqtibas" icon={<IqtibasIcon />} title="اقتباس" completed={iqtibasCompleted} />
+                <GridCard href="/nahla" icon={<NahlaIcon />} title="نحلة" completed={false} />
+                <GridCard href="/kharbasha" icon={<KharbashaIcon />} title="خربشة" completed={false} />
+                <GridCard href="/tarteeb" icon={<TarteebIcon />} title="ترتيب" completed={false} />
+              </div>
+            </div>
+          </div>
+
+          {/* Right column on desktop — archive + kids */}
+          <div className="lg:w-64 lg:flex-shrink-0 flex flex-col gap-3">
+            {/* Archive */}
+            <Link href="/archive" className="block group">
+              <div className="bg-surface rounded-xl p-3.5 border border-border group-hover:border-primary/40 transition-colors flex items-center gap-3">
+                <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
+                  <Archive size={18} className="text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-white">الأرشيف</h3>
+                  <p className="text-xs text-muted">العب ألغاز الأيام السابقة</p>
+                </div>
+                {isPro ? (
+                  <span className="text-[10px] font-bold text-primary-text bg-primary px-2 py-0.5 rounded-full">Pro</span>
+                ) : (
+                  <span className="text-[10px] font-semibold text-muted bg-surface px-2 py-0.5 rounded-full border border-border">Pro</span>
+                )}
+              </div>
+            </Link>
+
+            {/* Kids Section */}
+            <Link href="/kalimat" className="block group">
+              <div className="bg-gradient-to-l from-[#FFE8CC]/10 to-[#FF922B]/10 rounded-xl p-3.5 border border-[#FF922B]/20 group-hover:border-[#FF922B]/40 transition-colors flex items-center gap-3">
+                <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg" style={{ background: "linear-gradient(135deg, #FF922B, #FF6B6B)" }}>
+                  <span className="text-[#FFF8F0] font-bold text-lg leading-none" style={{ fontFamily: "'Cairo', sans-serif" }}>ك</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-white">Kalimat كلمات</h3>
+                  <p className="text-xs text-muted">ألعاب الأطفال</p>
+                </div>
+                <span className="text-[10px] font-bold text-[#2D3436] bg-[#FF922B] px-2 py-0.5 rounded-full">كلمات</span>
+              </div>
+            </Link>
           </div>
         </div>
-
-        {/* Archive */}
-        <Link href="/archive" className="block group">
-          <div className="bg-surface rounded-xl p-3.5 border border-border group-hover:border-primary/40 transition-colors flex items-center gap-3">
-            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
-              <Archive size={18} className="text-primary" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-white">الأرشيف</h3>
-              <p className="text-xs text-muted">العب ألغاز الأيام السابقة</p>
-            </div>
-            {isPro ? (
-              <span className="text-[10px] font-bold text-primary-text bg-primary px-2 py-0.5 rounded-full">Pro</span>
-            ) : (
-              <span className="text-[10px] font-semibold text-muted bg-surface px-2 py-0.5 rounded-full border border-border">Pro</span>
-            )}
-          </div>
-        </Link>
-
-        {/* Kids Section */}
-        <Link href="/kalimat" className="block group mt-3">
-          <div className="bg-gradient-to-l from-[#FFE8CC]/10 to-[#FF922B]/10 rounded-xl p-3.5 border border-[#FF922B]/20 group-hover:border-[#FF922B]/40 transition-colors flex items-center gap-3">
-            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg" style={{ background: "linear-gradient(135deg, #FF922B, #FF6B6B)" }}>
-              <span className="text-[#FFF8F0] font-bold text-lg leading-none" style={{ fontFamily: "'Cairo', sans-serif" }}>ك</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-white">Kalimat كلمات</h3>
-              <p className="text-xs text-muted">ألعاب الأطفال</p>
-            </div>
-            <span className="text-[10px] font-bold text-[#2D3436] bg-[#FF922B] px-2 py-0.5 rounded-full">كلمات</span>
-          </div>
-        </Link>
       </div>
     </div>
   );
