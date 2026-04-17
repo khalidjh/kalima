@@ -196,3 +196,24 @@ html, body {
 .animate-fire-pulse {
   animation: fire-pulse 1.4s ease-in-out infinite;
 }
+
+/* Custom scrollbar — desktop */
+@media (min-width: 1024px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-filled);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) var(--color-background);
+  }
+}
