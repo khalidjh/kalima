@@ -3,8 +3,9 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 describe('App', () => {
-  it('renders the Kalima heading', () => {
+  it('renders the Kalima heading with display font class', () => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: /kalima/i })).toBeInTheDocument();
+    const heading = screen.getByRole('heading', { name: /kalima/i });
+    expect(heading).toHaveClass('font-display');
   });
 });
