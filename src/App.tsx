@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { useDirection } from './hooks/useDirection';
 import Landing from './pages/Landing';
 import Onboarding from './pages/Onboarding';
 import Hub from './pages/Hub';
@@ -7,6 +8,7 @@ import Trophies from './pages/Trophies';
 import Settings from './pages/Settings';
 
 export default function App() {
+  useDirection();
   return (
     <main className="min-h-screen bg-surface">
       <Routes>

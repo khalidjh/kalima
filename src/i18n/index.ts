@@ -1,0 +1,27 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import en from './locales/en.json';
+import ar from './locales/ar.json';
+
+export const SUPPORTED_LANGS = ['ar', 'en'] as const;
+export type Lang = (typeof SUPPORTED_LANGS)[number];
+
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: 'ar',
+    supportedLngs: SUPPORTED_LANGS,
+    resources: {
+      en: { translation: en },
+      ar: { translation: ar },
+    },
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
+  });
+
+export default i18n;
