@@ -32,7 +32,7 @@ afterEach(() => {
   useUserStore.getState().reset();
 });
 
-async function playLevel(targetChar: string, targetName: string, mistakes: number) {
+async function playLevel(_targetChar: string, targetName: string, mistakes: number) {
   // Pick level 0 from the grid
   fireEvent.click(screen.getByTestId('level-card-0'));
   // 3 prompts

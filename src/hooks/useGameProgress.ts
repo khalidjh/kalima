@@ -18,18 +18,17 @@ export interface UseGameProgress {
 
 export function useGameProgress(gameId: string, lang: Lang): UseGameProgress {
   const profileId = useUserStore((s) => s.profile?.id) ?? null;
+  const fetchKey = profileId === null ? null : `${profileId}|${gameId}|${lang}`;
   const [progress, setProgress] = useState<ProgressMap>(new Map());
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [fetchedKey, setFetchedKey] = useState<string | null>(null);
+
+  // Derived: loading whenever we have a fetch target whose result hasn't landed yet.
+  const loading = fetchKey !== null && fetchedKey !== fetchKey;
 
   useEffect(() => {
+    if (!profileId || fetchKey === null) return;
     let cancelled = false;
-    if (!profileId) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null);
     supabase
       .from('game_progress')
       .select('level_index, stars')
@@ -45,13 +44,14 @@ export function useGameProgress(gameId: string, lang: Lang): UseGameProgress {
           const map: ProgressMap = new Map();
           for (const row of data ?? []) map.set(row.level_index, row.stars);
           setProgress(map);
+          setError(null);
         }
-        setLoading(false);
+        setFetchedKey(fetchKey);
       });
     return () => {
       cancelled = true;
     };
-  }, [profileId, gameId, lang]);
+  }, [profileId, gameId, lang, fetchKey]);
 
   const upsert = useCallback(
     async (levelIndex: number, stars: number) => {
