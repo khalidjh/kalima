@@ -25,4 +25,18 @@ describe('useDirection', () => {
     expect(document.documentElement.dir).toBe('ltr');
     expect(document.documentElement.lang).toBe('en');
   });
+
+  it('reacts when language changes after mount', async () => {
+    await act(async () => {
+      await i18n.changeLanguage('ar');
+    });
+    renderHook(() => useDirection());
+    expect(document.documentElement.dir).toBe('rtl');
+
+    await act(async () => {
+      await i18n.changeLanguage('en');
+    });
+    expect(document.documentElement.dir).toBe('ltr');
+    expect(document.documentElement.lang).toBe('en');
+  });
 });

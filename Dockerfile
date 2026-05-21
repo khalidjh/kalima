@@ -20,5 +20,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 COPY server.mjs ./
+RUN chown -R node:node /app
+USER node
 EXPOSE 8080
 CMD ["node", "server.mjs"]
