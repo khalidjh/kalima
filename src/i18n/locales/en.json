@@ -17,5 +17,10 @@
   },
   "common": {
     "loading": "Loading…"
+  },
+  "hub": {
+    "greeting": "Hi, {{name}}!",
+    "greeting_fallback": "Welcome!",
+    "coming_soon": "Games coming soon"
   }
 }

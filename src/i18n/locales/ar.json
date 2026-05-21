@@ -17,5 +17,10 @@
   },
   "common": {
     "loading": "جارٍ التحميل…"
+  },
+  "hub": {
+    "greeting": "مرحباً، {{name}}!",
+    "greeting_fallback": "مرحباً بك!",
+    "coming_soon": "ألعاب قادمة قريباً"
   }
 }
