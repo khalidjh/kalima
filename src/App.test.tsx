@@ -75,4 +75,17 @@ describe('App routing', () => {
     renderAt('/hub');
     expect(screen.getByTestId('onboarding-page')).toBeInTheDocument();
   });
+
+  it('redirects /hub to /onboarding when learnLang set but ageGroup missing', () => {
+    const store = useUserStore.getState();
+    store.setProfile({ id: 'test-user', displayName: 'Test', avatarUrl: null });
+    store.setLearnLang('ar');
+    renderAt('/hub');
+    expect(screen.getByTestId('onboarding-page')).toBeInTheDocument();
+  });
+
+  it('renders /auth/callback when unauthenticated (no profile redirect)', () => {
+    renderAt('/auth/callback');
+    expect(screen.getByTestId('auth-callback')).toBeInTheDocument();
+  });
 });
