@@ -6,6 +6,15 @@
   "auth": {
     "signing_in": "جارٍ تسجيل الدخول..."
   },
+  "onboarding": {
+    "learn_lang_title": "ماذا تريد أن تتعلم؟",
+    "learn_lang_ar": "أتعلم العربية",
+    "learn_lang_en": "I'm learning English",
+    "age_title": "كم عمرك؟",
+    "age_3_5": "3 إلى 5 سنوات",
+    "age_6_8": "6 إلى 8 سنوات",
+    "age_9_12": "9 إلى 12 سنة"
+  },
   "common": {
     "loading": "جارٍ التحميل…"
   }
