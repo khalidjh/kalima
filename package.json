@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
+    "framer-motion": "^12.39.0",
     "howler": "^2.2.4",
     "i18next": "^26.2.0",
     "i18next-browser-languagedetector": "^8.2.1",
