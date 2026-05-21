@@ -22,5 +22,14 @@
     "greeting": "مرحباً، {{name}}!",
     "greeting_fallback": "مرحباً بك!",
     "coming_soon": "ألعاب قادمة قريباً"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "ui_lang": "لغة التطبيق",
+    "switch_to_en": "English",
+    "switch_to_ar": "العربية",
+    "change_learn_lang": "غيّر لغة التعلّم",
+    "change_age": "غيّر الفئة العمرية",
+    "logout": "تسجيل الخروج"
   }
 }

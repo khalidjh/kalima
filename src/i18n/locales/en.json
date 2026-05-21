@@ -22,5 +22,14 @@
     "greeting": "Hi, {{name}}!",
     "greeting_fallback": "Welcome!",
     "coming_soon": "Games coming soon"
+  },
+  "settings": {
+    "title": "Settings",
+    "ui_lang": "App language",
+    "switch_to_en": "English",
+    "switch_to_ar": "العربية",
+    "change_learn_lang": "Change learning language",
+    "change_age": "Change age group",
+    "logout": "Sign out"
   }
 }

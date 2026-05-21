@@ -17,9 +17,9 @@ interface UserState {
   ageGroup: AgeGroup | null;
   isPremium: boolean;
   setProfile: (p: Profile | null) => void;
-  setLearnLang: (l: Lang) => void;
+  setLearnLang: (l: Lang | null) => void;
   setUiLang: (l: Lang) => void;
-  setAgeGroup: (a: AgeGroup) => void;
+  setAgeGroup: (a: AgeGroup | null) => void;
   setPremium: (v: boolean) => void;
   reset: () => void;
 }
