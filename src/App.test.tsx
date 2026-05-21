@@ -13,7 +13,7 @@ function renderAt(path: string) {
 describe('App routing', () => {
   it.each([
     ['/', 'landing-page'],
-    ['/onboarding', 'choose-ar'],
+    ['/onboarding', 'onboarding-page'],
     ['/hub', 'hub-page'],
     ['/trophies', 'trophies-page'],
     ['/settings', 'settings-page'],

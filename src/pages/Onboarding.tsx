@@ -10,9 +10,11 @@ export default function Onboarding() {
   if (ageGroup && learnLang) return <Navigate to="/hub" replace />;
 
   return (
-    <Routes>
-      <Route index element={learnLang ? <AgeGroupSelect /> : <LearnLanguage />} />
-      <Route path="age" element={<AgeGroupSelect />} />
-    </Routes>
+    <div data-testid="onboarding-page">
+      <Routes>
+        <Route index element={learnLang ? <AgeGroupSelect /> : <LearnLanguage />} />
+        <Route path="age" element={<AgeGroupSelect />} />
+      </Routes>
+    </div>
   );
 }
