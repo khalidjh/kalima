@@ -5,16 +5,25 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   signIn: vi.fn(),
+  navigate: vi.fn(),
 }));
 vi.mock('../lib/auth', () => ({
   signInWithGoogle: mocks.signIn,
   signOut: vi.fn(),
 }));
 
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+  return { ...actual, useNavigate: () => mocks.navigate };
+});
+
 import Landing from './Landing';
+import { useUserStore } from '../stores/userStore';
 
 beforeEach(() => {
+  useUserStore.getState().reset();
   mocks.signIn.mockReset();
+  mocks.navigate.mockReset();
 });
 
 describe('Landing', () => {
@@ -27,5 +36,17 @@ describe('Landing', () => {
     );
     await userEvent.click(screen.getByRole('button', { name: /start|ابدأ/i }));
     expect(mocks.signIn).toHaveBeenCalledOnce();
+  });
+
+  it('redirects to /hub when signed in with a complete profile', () => {
+    useUserStore.getState().setProfile({ id: 'u1', displayName: 'Khalid', avatarUrl: null });
+    useUserStore.getState().setLearnLang('ar');
+    useUserStore.getState().setAgeGroup('6-8');
+    render(
+      <MemoryRouter>
+        <Landing />
+      </MemoryRouter>,
+    );
+    expect(mocks.navigate).toHaveBeenCalledWith('/hub', { replace: true });
   });
 });
