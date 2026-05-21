@@ -4,7 +4,9 @@
     "cta_start": "ابدأ التعلّم"
   },
   "auth": {
-    "signing_in": "جارٍ تسجيل الدخول..."
+    "signing_in": "جارٍ تسجيل الدخول...",
+    "error_taking_too_long": "تأخّر تسجيل الدخول. حاول مرة أخرى.",
+    "try_again": "حاول مرة أخرى"
   },
   "onboarding": {
     "learn_lang_title": "ماذا تريد أن تتعلم؟",

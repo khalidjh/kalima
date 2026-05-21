@@ -4,7 +4,9 @@
     "cta_start": "Start Learning"
   },
   "auth": {
-    "signing_in": "Signing in..."
+    "signing_in": "Signing in...",
+    "error_taking_too_long": "Sign-in is taking too long. Please try again.",
+    "try_again": "Try again"
   },
   "onboarding": {
     "learn_lang_title": "What do you want to learn?",
