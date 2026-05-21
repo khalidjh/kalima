@@ -15,7 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
-        <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/onboarding/*" element={<Onboarding />} />
         <Route path="/hub" element={<Hub />} />
         <Route path="/game/:gameId" element={<Game />} />
         <Route path="/trophies" element={<Trophies />} />
