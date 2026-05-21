@@ -25,6 +25,18 @@
     "greeting_fallback": "Welcome!",
     "coming_soon": "Games coming soon"
   },
+  "game": {
+    "letter_tap_sound": {
+      "name": "Letter Tap & Sound"
+    },
+    "level": "Level {{n}}",
+    "tap_speaker": "Tap to hear the letter",
+    "next_level": "Next level",
+    "replay": "Replay",
+    "back_to_levels": "Back to levels",
+    "level_complete": "Great job!",
+    "stars_earned": "You earned {{stars}} stars"
+  },
   "settings": {
     "title": "Settings",
     "ui_lang": "App language",

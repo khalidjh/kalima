@@ -25,6 +25,18 @@
     "greeting_fallback": "مرحباً بك!",
     "coming_soon": "ألعاب قادمة قريباً"
   },
+  "game": {
+    "letter_tap_sound": {
+      "name": "اضغط الحرف"
+    },
+    "level": "المستوى {{n}}",
+    "tap_speaker": "اضغط لسماع الحرف",
+    "next_level": "المستوى التالي",
+    "replay": "إعادة",
+    "back_to_levels": "العودة إلى المستويات",
+    "level_complete": "أحسنت!",
+    "stars_earned": "حصلت على {{stars}} نجوم"
+  },
   "settings": {
     "title": "الإعدادات",
     "ui_lang": "لغة التطبيق",
