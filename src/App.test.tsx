@@ -12,7 +12,16 @@ vi.mock('./lib/supabase', () => ({
         data: { subscription: { unsubscribe: vi.fn() } },
       }),
     },
-    from: vi.fn(),
+    from: vi.fn(() => ({
+      select: () => ({
+        eq: () => ({
+          eq: () => ({
+            eq: () => Promise.resolve({ data: [], error: null }),
+          }),
+        }),
+      }),
+      upsert: vi.fn(() => Promise.resolve({ error: null })),
+    })),
   },
 }));
 
@@ -58,10 +67,16 @@ describe('App routing', () => {
     expect(screen.getByTestId(testId)).toBeInTheDocument();
   });
 
-  it('renders game page with gameId param', () => {
+  it('renders game page for a registered game id', () => {
     seedCompleteProfile();
-    renderAt('/game/letter-tap-ar');
-    expect(screen.getByTestId('game-page')).toHaveTextContent('letter-tap-ar');
+    renderAt('/game/letter-tap-sound');
+    expect(screen.getByTestId('game-page')).toBeInTheDocument();
+  });
+
+  it('redirects to /hub when game id is unknown', () => {
+    seedCompleteProfile();
+    renderAt('/game/unknown-game');
+    expect(screen.getByTestId('hub-page')).toBeInTheDocument();
   });
 
   it('redirects /hub to / when not signed in', () => {
