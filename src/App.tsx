@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { useDirection } from './hooks/useDirection';
 import Landing from './pages/Landing';
+import AuthCallback from './pages/AuthCallback';
 import Onboarding from './pages/Onboarding';
 import Hub from './pages/Hub';
 import Game from './pages/Game';
@@ -13,6 +14,7 @@ export default function App() {
     <main className="min-h-screen bg-surface">
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/hub" element={<Hub />} />
         <Route path="/game/:gameId" element={<Game />} />

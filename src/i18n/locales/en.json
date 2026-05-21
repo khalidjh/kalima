@@ -3,6 +3,9 @@
     "tagline": "Learn letters, words, and wonder.",
     "cta_start": "Start Learning"
   },
+  "auth": {
+    "signing_in": "Signing in..."
+  },
   "common": {
     "loading": "Loading…"
   }
