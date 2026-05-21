@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { motion, type HTMLMotionProps } from 'framer-motion';
+import type { ReactNode } from 'react';
 
 type Variant = 'primary' | 'secondary' | 'accent';
 
@@ -9,7 +9,7 @@ const variantClasses: Record<Variant, string> = {
   accent: 'bg-accent text-white hover:brightness-110',
 };
 
-interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
+interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   variant?: Variant;
   children: ReactNode;
 }
