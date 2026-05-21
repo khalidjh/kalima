@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   signIn: vi.fn(),
@@ -26,6 +26,10 @@ beforeEach(() => {
   mocks.navigate.mockReset();
 });
 
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe('Landing', () => {
   it('calls signInWithGoogle when CTA is clicked', async () => {
     mocks.signIn.mockResolvedValue({ data: {}, error: null });
@@ -48,5 +52,20 @@ describe('Landing', () => {
       </MemoryRouter>,
     );
     expect(mocks.navigate).toHaveBeenCalledWith('/hub', { replace: true });
+  });
+
+  it('shows an inline error when signInWithGoogle rejects', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    mocks.signIn.mockRejectedValue(new Error('boom'));
+    render(
+      <MemoryRouter>
+        <Landing />
+      </MemoryRouter>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: /start|ابدأ/i }));
+    await waitFor(() => {
+      expect(screen.getByTestId('landing-error')).toBeInTheDocument();
+    });
+    expect(mocks.navigate).not.toHaveBeenCalled();
   });
 });

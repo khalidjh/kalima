@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   navigate: vi.fn(),
@@ -29,8 +29,14 @@ beforeEach(() => {
   useUserStore.getState().reset();
   useUserStore.getState().setProfile({ id: 'u1', displayName: null, avatarUrl: null });
   mocks.navigate.mockReset();
-  mocks.signOut.mockClear();
-  mocks.updateProfile.mockClear();
+  mocks.signOut.mockReset();
+  mocks.signOut.mockResolvedValue(undefined);
+  mocks.updateProfile.mockReset();
+  mocks.updateProfile.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
 });
 
 describe('Settings', () => {
@@ -56,5 +62,18 @@ describe('Settings', () => {
     expect(useUserStore.getState().learnLang).toBeNull();
     expect(mocks.updateProfile).toHaveBeenCalledWith('u1', { learn_lang: null });
     expect(mocks.navigate).toHaveBeenCalledWith('/onboarding', { replace: true });
+  });
+
+  it('reverts UI language and shows error when toggleUiLang updateProfile rejects', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    await i18n.changeLanguage('ar');
+    useUserStore.getState().setUiLang('ar');
+    mocks.updateProfile.mockRejectedValue(new Error('boom'));
+    render(<MemoryRouter><Settings /></MemoryRouter>);
+    await userEvent.click(screen.getByTestId('toggle-ui-lang'));
+    await waitFor(() => {
+      expect(screen.getByTestId('settings-error')).toBeInTheDocument();
+    });
+    expect(useUserStore.getState().uiLang).toBe('ar');
   });
 });

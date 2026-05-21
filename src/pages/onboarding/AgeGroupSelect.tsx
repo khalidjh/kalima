@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button';
@@ -16,12 +17,21 @@ export default function AgeGroupSelect() {
   const navigate = useNavigate();
   const profile = useUserStore((s) => s.profile);
   const setAgeGroup = useUserStore((s) => s.setAgeGroup);
+  const [error, setError] = useState<string | null>(null);
 
   async function choose(age: AgeGroup) {
     if (!profile) return;
+    const previous = useUserStore.getState().ageGroup;
+    setError(null);
     setAgeGroup(age);
-    await updateProfile(profile.id, { age_group: age });
-    navigate('/hub', { replace: true });
+    try {
+      await updateProfile(profile.id, { age_group: age });
+      navigate('/hub', { replace: true });
+    } catch (err) {
+      console.error('updateProfile (age_group) failed:', err);
+      setAgeGroup(previous);
+      setError(t('errors.action_failed'));
+    }
   }
 
   return (
@@ -36,6 +46,11 @@ export default function AgeGroupSelect() {
           </Button>
         ))}
       </div>
+      {error && (
+        <p data-testid="age-group-error" role="alert" className="text-red-600 text-sm">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

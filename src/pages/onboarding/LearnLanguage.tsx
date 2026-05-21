@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button';
@@ -10,12 +11,21 @@ export default function LearnLanguage() {
   const navigate = useNavigate();
   const profile = useUserStore((s) => s.profile);
   const setLearnLang = useUserStore((s) => s.setLearnLang);
+  const [error, setError] = useState<string | null>(null);
 
   async function choose(lang: Lang) {
     if (!profile) return;
+    const previous = useUserStore.getState().learnLang;
+    setError(null);
     setLearnLang(lang);
-    await updateProfile(profile.id, { learn_lang: lang });
-    navigate('/onboarding/age', { replace: true });
+    try {
+      await updateProfile(profile.id, { learn_lang: lang });
+      navigate('/onboarding/age', { replace: true });
+    } catch (err) {
+      console.error('updateProfile (learn_lang) failed:', err);
+      setLearnLang(previous);
+      setError(t('errors.action_failed'));
+    }
   }
 
   return (
@@ -31,6 +41,11 @@ export default function LearnLanguage() {
           {t('onboarding.learn_lang_en')}
         </Button>
       </div>
+      {error && (
+        <p data-testid="learn-lang-error" role="alert" className="text-red-600 text-sm">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

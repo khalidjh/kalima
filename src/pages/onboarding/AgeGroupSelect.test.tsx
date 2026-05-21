@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   navigate: vi.fn(),
@@ -23,7 +23,12 @@ beforeEach(() => {
   useUserStore.getState().setProfile({ id: 'u1', displayName: null, avatarUrl: null });
   useUserStore.getState().setLearnLang('ar');
   mocks.navigate.mockReset();
-  mocks.updateProfile.mockClear();
+  mocks.updateProfile.mockReset();
+  mocks.updateProfile.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
 });
 
 describe('AgeGroupSelect', () => {
@@ -33,5 +38,17 @@ describe('AgeGroupSelect', () => {
     expect(mocks.updateProfile).toHaveBeenCalledWith('u1', { age_group: '6-8' });
     expect(useUserStore.getState().ageGroup).toBe('6-8');
     expect(mocks.navigate).toHaveBeenCalledWith('/hub', { replace: true });
+  });
+
+  it('reverts local state and shows error when updateProfile rejects', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    mocks.updateProfile.mockRejectedValue(new Error('boom'));
+    render(<MemoryRouter><AgeGroupSelect /></MemoryRouter>);
+    await userEvent.click(screen.getByTestId('age-6-8'));
+    await waitFor(() => {
+      expect(screen.getByTestId('age-group-error')).toBeInTheDocument();
+    });
+    expect(useUserStore.getState().ageGroup).toBeNull();
+    expect(mocks.navigate).not.toHaveBeenCalled();
   });
 });

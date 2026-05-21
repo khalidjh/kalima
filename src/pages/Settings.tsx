@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
@@ -15,32 +16,64 @@ export default function Settings() {
   const setUiLang = useUserStore((s) => s.setUiLang);
   const setLearnLang = useUserStore((s) => s.setLearnLang);
   const setAgeGroup = useUserStore((s) => s.setAgeGroup);
+  const [error, setError] = useState<string | null>(null);
 
   async function toggleUiLang() {
     if (!profile) return;
+    const previous = uiLang;
     const next: Lang = uiLang === 'ar' ? 'en' : 'ar';
+    setError(null);
     setUiLang(next);
-    await i18n.changeLanguage(next);
-    await updateProfile(profile.id, { ui_lang: next });
+    try {
+      await i18n.changeLanguage(next);
+      await updateProfile(profile.id, { ui_lang: next });
+    } catch (err) {
+      console.error('toggleUiLang failed:', err);
+      setUiLang(previous);
+      await i18n.changeLanguage(previous).catch(() => {});
+      setError(t('errors.action_failed'));
+    }
   }
 
   async function changeLearnLang() {
     if (!profile) return;
+    const previous = useUserStore.getState().learnLang;
+    setError(null);
     setLearnLang(null);
-    await updateProfile(profile.id, { learn_lang: null });
-    navigate('/onboarding', { replace: true });
+    try {
+      await updateProfile(profile.id, { learn_lang: null });
+      navigate('/onboarding', { replace: true });
+    } catch (err) {
+      console.error('changeLearnLang failed:', err);
+      setLearnLang(previous);
+      setError(t('errors.action_failed'));
+    }
   }
 
   async function changeAgeGroup() {
     if (!profile) return;
+    const previous = useUserStore.getState().ageGroup;
+    setError(null);
     setAgeGroup(null);
-    await updateProfile(profile.id, { age_group: null });
-    navigate('/onboarding', { replace: true });
+    try {
+      await updateProfile(profile.id, { age_group: null });
+      navigate('/onboarding', { replace: true });
+    } catch (err) {
+      console.error('changeAgeGroup failed:', err);
+      setAgeGroup(previous);
+      setError(t('errors.action_failed'));
+    }
   }
 
   async function logout() {
-    await signOut();
-    navigate('/', { replace: true });
+    setError(null);
+    try {
+      await signOut();
+      navigate('/', { replace: true });
+    } catch (err) {
+      console.error('signOut failed:', err);
+      setError(t('errors.action_failed'));
+    }
   }
 
   return (
@@ -65,6 +98,12 @@ export default function Settings() {
       <Button variant="accent" data-testid="logout" onClick={logout}>
         {t('settings.logout')}
       </Button>
+
+      {error && (
+        <p data-testid="settings-error" role="alert" className="text-red-600 text-sm">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

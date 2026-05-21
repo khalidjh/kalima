@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   navigate: vi.fn(),
@@ -22,7 +22,12 @@ beforeEach(() => {
   useUserStore.getState().reset();
   useUserStore.getState().setProfile({ id: 'u1', displayName: null, avatarUrl: null });
   mocks.navigate.mockReset();
-  mocks.updateProfile.mockClear();
+  mocks.updateProfile.mockReset();
+  mocks.updateProfile.mockResolvedValue(undefined);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
 });
 
 describe('LearnLanguage', () => {
@@ -39,5 +44,17 @@ describe('LearnLanguage', () => {
     await userEvent.click(screen.getByTestId('choose-en'));
     expect(mocks.updateProfile).toHaveBeenCalledWith('u1', { learn_lang: 'en' });
     expect(useUserStore.getState().learnLang).toBe('en');
+  });
+
+  it('reverts local state and shows error when updateProfile rejects', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    mocks.updateProfile.mockRejectedValue(new Error('boom'));
+    render(<MemoryRouter><LearnLanguage /></MemoryRouter>);
+    await userEvent.click(screen.getByTestId('choose-ar'));
+    await waitFor(() => {
+      expect(screen.getByTestId('learn-lang-error')).toBeInTheDocument();
+    });
+    expect(useUserStore.getState().learnLang).toBeNull();
+    expect(mocks.navigate).not.toHaveBeenCalled();
   });
 });

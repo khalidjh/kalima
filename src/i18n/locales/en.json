@@ -33,5 +33,8 @@
     "change_learn_lang": "Change learning language",
     "change_age": "Change age group",
     "logout": "Sign out"
+  },
+  "errors": {
+    "action_failed": "Something went wrong. Please try again."
   }
 }
