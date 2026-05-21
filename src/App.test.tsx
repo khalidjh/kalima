@@ -1,11 +1,29 @@
-// src/App.test.tsx
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 
-describe('App', () => {
-  it('renders the Kalima heading with display font class', () => {
-    render(<App />);
-    const heading = screen.getByRole('heading', { name: /kalima/i });
-    expect(heading).toHaveClass('font-display');
+function renderAt(path: string) {
+  return render(
+    <MemoryRouter initialEntries={[path]}>
+      <App />
+    </MemoryRouter>,
+  );
+}
+
+describe('App routing', () => {
+  it.each([
+    ['/', 'landing-page'],
+    ['/onboarding', 'onboarding-page'],
+    ['/hub', 'hub-page'],
+    ['/trophies', 'trophies-page'],
+    ['/settings', 'settings-page'],
+  ])('renders %s -> %s', (path, testId) => {
+    renderAt(path);
+    expect(screen.getByTestId(testId)).toBeInTheDocument();
+  });
+
+  it('renders game page with gameId param', () => {
+    renderAt('/game/letter-tap-ar');
+    expect(screen.getByTestId('game-page')).toHaveTextContent('letter-tap-ar');
   });
 });
