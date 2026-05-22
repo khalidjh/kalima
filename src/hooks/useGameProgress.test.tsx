@@ -127,3 +127,37 @@ describe('useGameProgress', () => {
     expect(result.current.progress.get(5)).toBe(2);
   });
 });
+
+describe('useGameProgress (guest path)', () => {
+  beforeEach(() => {
+    useUserStore.getState().reset();
+    localStorage.clear();
+  });
+
+  it('reads from localStorage when isGuest', async () => {
+    useUserStore.getState().startGuestSession();
+    localStorage.setItem(
+      'kalima.guestProgress.letter-tap-sound.ar',
+      JSON.stringify([
+        [0, 2],
+        [1, 3],
+      ]),
+    );
+    const { result } = renderHook(() => useGameProgress('letter-tap-sound', 'ar'));
+    await waitFor(() => expect(result.current.progress.size).toBe(2));
+    expect(result.current.progress.get(0)).toBe(2);
+    expect(result.current.progress.get(1)).toBe(3);
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('upserts to localStorage when isGuest', async () => {
+    useUserStore.getState().startGuestSession();
+    const { result } = renderHook(() => useGameProgress('letter-tap-sound', 'ar'));
+    await act(async () => {
+      await result.current.upsert(0, 3);
+    });
+    expect(result.current.progress.get(0)).toBe(3);
+    const persisted = localStorage.getItem('kalima.guestProgress.letter-tap-sound.ar');
+    expect(persisted).toContain('[0,3]');
+  });
+});
