@@ -1,5 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom';
-import { getGame } from '../games/registry';
+import { getGame } from '../games/loader';
 
 export default function Game() {
   const { gameId } = useParams<{ gameId: string }>();

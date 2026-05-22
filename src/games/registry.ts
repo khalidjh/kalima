@@ -1,5 +1,4 @@
 import type { AgeGroup } from '../stores/userStore';
-import type { GameDefinition } from '../types/game';
 
 export type GameStatus = 'playable' | 'coming-soon' | 'locked';
 export type GameBadgeTone = 'free' | 'soon' | 'locked';
@@ -72,24 +71,4 @@ export function gamesForAge(age: AgeGroup): GameMeta[] {
 export function otherGames(age: AgeGroup): GameMeta[] {
   const inFocus = new Set(gamesForAge(age).map((g) => g.id));
   return GAMES_REGISTRY.filter((g) => !inFocus.has(g.id));
-}
-
-/**
- * Backward compatibility: load game definitions from dynamic modules
- * Used by Game.tsx page routing
- * @deprecated Task 3 will refactor to use GAMES_REGISTRY directly
- */
-interface GameModule {
-  game: GameDefinition;
-}
-
-const modules = import.meta.glob<GameModule>('./*/index.ts', { eager: true });
-
-const GAMES: Record<string, GameDefinition> = {};
-for (const mod of Object.values(modules)) {
-  GAMES[mod.game.id] = mod.game;
-}
-
-export function getGame(id: string): GameDefinition | undefined {
-  return GAMES[id];
 }

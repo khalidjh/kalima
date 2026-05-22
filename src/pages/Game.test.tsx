@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-vi.mock('../games/registry', () => {
+vi.mock('../games/loader', () => {
   const FakeGame = () => <div data-testid="fake-game">hello</div>;
   return {
     getGame: (id: string) => (id === 'letter-tap-sound' ? { id, nameKey: 'x', Component: FakeGame } : undefined),
