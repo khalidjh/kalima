@@ -11,6 +11,7 @@ export default function LearnLanguage() {
   const navigate = useNavigate();
   const profile = useUserStore((s) => s.profile);
   const setLearnLang = useUserStore((s) => s.setLearnLang);
+  const isGuest = useUserStore((s) => s.isGuest);
   const [error, setError] = useState<string | null>(null);
 
   async function choose(lang: Lang) {
@@ -18,6 +19,10 @@ export default function LearnLanguage() {
     const previous = useUserStore.getState().learnLang;
     setError(null);
     setLearnLang(lang);
+    if (isGuest) {
+      navigate('/onboarding/age', { replace: true });
+      return;
+    }
     try {
       await updateProfile(profile.id, { learn_lang: lang });
       navigate('/onboarding/age', { replace: true });

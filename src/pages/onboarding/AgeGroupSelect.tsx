@@ -17,6 +17,7 @@ export default function AgeGroupSelect() {
   const navigate = useNavigate();
   const profile = useUserStore((s) => s.profile);
   const setAgeGroup = useUserStore((s) => s.setAgeGroup);
+  const isGuest = useUserStore((s) => s.isGuest);
   const [error, setError] = useState<string | null>(null);
 
   async function choose(age: AgeGroup) {
@@ -24,6 +25,10 @@ export default function AgeGroupSelect() {
     const previous = useUserStore.getState().ageGroup;
     setError(null);
     setAgeGroup(age);
+    if (isGuest) {
+      navigate('/hub', { replace: true });
+      return;
+    }
     try {
       await updateProfile(profile.id, { age_group: age });
       navigate('/hub', { replace: true });
