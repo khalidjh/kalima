@@ -7,9 +7,9 @@ import { updateProfile } from '../../lib/profile';
 import type { AgeGroup } from '../../stores/userStore';
 
 const GROUPS: { value: AgeGroup; key: string; testId: string }[] = [
-  { value: '3-5', key: 'onboarding.age_3_5', testId: 'age-3-5' },
-  { value: '6-8', key: 'onboarding.age_6_8', testId: 'age-6-8' },
-  { value: '9-12', key: 'onboarding.age_9_12', testId: 'age-9-12' },
+  { value: '3-4', key: 'onboarding.age_3_4', testId: 'age-3-4' },
+  { value: '5-7', key: 'onboarding.age_5_7', testId: 'age-5-7' },
+  { value: '8-10', key: 'onboarding.age_8_10', testId: 'age-8-10' },
 ];
 
 export default function AgeGroupSelect() {

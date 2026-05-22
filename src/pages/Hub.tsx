@@ -18,9 +18,9 @@ import {
 } from '../components/icons';
 
 const AGE_OPTIONS: { value: AgeGroup; key: string }[] = [
-  { value: '3-5', key: 'onboarding.age_3_5' },
-  { value: '6-8', key: 'onboarding.age_6_8' },
-  { value: '9-12', key: 'onboarding.age_9_12' },
+  { value: '3-4', key: 'onboarding.age_3_4' },
+  { value: '5-7', key: 'onboarding.age_5_7' },
+  { value: '8-10', key: 'onboarding.age_8_10' },
 ];
 
 interface GameTileProps {
@@ -336,21 +336,21 @@ export default function Hub() {
             testId: 'hub-card-letter-tap-sound',
             icon: <LetterTileIcon size={44} />,
             title: t('landing.card_letter_tap'),
-            subtitle: t('landing.card_age_3_5'),
+            subtitle: t('landing.card_age_3_4'),
             badge: { label: t('landing.free_badge'), tone: 'free' },
             bg: 'bg-white',
             onClick: openLetterTap,
-            ageGroups: ['3-5', '6-8'],
+            ageGroups: ['3-4', '5-7'],
           },
           {
             testId: 'hub-card-word-builder',
             icon: <PuzzleIcon size={44} />,
             title: t('landing.card_word_builder'),
-            subtitle: t('landing.card_age_6_8'),
+            subtitle: t('landing.card_age_5_7'),
             badge: { label: t('hub.coming_soon'), tone: 'soon' },
             bg: 'bg-cream',
             disabled: true,
-            ageGroups: ['6-8', '9-12'],
+            ageGroups: ['5-7', '8-10'],
           },
           {
             testId: 'hub-card-locked-1',

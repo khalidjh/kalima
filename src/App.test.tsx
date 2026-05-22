@@ -37,7 +37,7 @@ function seedCompleteProfile() {
   const store = useUserStore.getState();
   store.setProfile({ id: 'test-user', displayName: 'Test', avatarUrl: null });
   store.setLearnLang('ar');
-  store.setAgeGroup('6-8');
+  store.setAgeGroup('5-7');
 }
 
 describe('App routing', () => {

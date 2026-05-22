@@ -30,7 +30,7 @@ const completeRow = {
   id: 'u1',
   display_name: 'Khalid',
   avatar_url: 'http://x/a.png',
-  age_group: '6-8',
+  age_group: '5-7',
   learn_lang: 'ar',
   ui_lang: 'ar',
   is_premium: false,
@@ -68,7 +68,7 @@ describe('useAuth', () => {
     await waitFor(() => {
       expect(useUserStore.getState().profile?.id).toBe('u1');
       expect(useUserStore.getState().learnLang).toBe('ar');
-      expect(useUserStore.getState().ageGroup).toBe('6-8');
+      expect(useUserStore.getState().ageGroup).toBe('5-7');
     });
   });
 

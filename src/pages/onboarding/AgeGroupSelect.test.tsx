@@ -34,9 +34,9 @@ afterEach(() => {
 describe('AgeGroupSelect', () => {
   it('persists choice and navigates to /hub', async () => {
     render(<MemoryRouter><AgeGroupSelect /></MemoryRouter>);
-    await userEvent.click(screen.getByTestId('age-6-8'));
-    expect(mocks.updateProfile).toHaveBeenCalledWith('u1', { age_group: '6-8' });
-    expect(useUserStore.getState().ageGroup).toBe('6-8');
+    await userEvent.click(screen.getByTestId('age-5-7'));
+    expect(mocks.updateProfile).toHaveBeenCalledWith('u1', { age_group: '5-7' });
+    expect(useUserStore.getState().ageGroup).toBe('5-7');
     expect(mocks.navigate).toHaveBeenCalledWith('/hub', { replace: true });
   });
 
@@ -44,7 +44,7 @@ describe('AgeGroupSelect', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     mocks.updateProfile.mockRejectedValue(new Error('boom'));
     render(<MemoryRouter><AgeGroupSelect /></MemoryRouter>);
-    await userEvent.click(screen.getByTestId('age-6-8'));
+    await userEvent.click(screen.getByTestId('age-5-7'));
     await waitFor(() => {
       expect(screen.getByTestId('age-group-error')).toBeInTheDocument();
     });

@@ -9,8 +9,8 @@
     "free_badge": "FREE",
     "card_letter_tap": "Letter Tap",
     "card_word_builder": "Word Builder",
-    "card_age_3_5": "Ages 3 – 5",
-    "card_age_6_8": "Ages 6 – 8"
+    "card_age_3_4": "Ages 3 – 4",
+    "card_age_5_7": "Ages 5 – 7"
   },
   "header": {
     "brand": "KALIMA",
@@ -26,9 +26,9 @@
     "learn_lang_ar": "أتعلم العربية",
     "learn_lang_en": "I'm learning English",
     "age_title": "How old are you?",
-    "age_3_5": "Ages 3 to 5",
-    "age_6_8": "Ages 6 to 8",
-    "age_9_12": "Ages 9 to 12"
+    "age_3_4": "Ages 3 to 4",
+    "age_5_7": "Ages 5 to 7",
+    "age_8_10": "Ages 8 to 10"
   },
   "common": {
     "loading": "Loading…"

@@ -132,7 +132,7 @@ export default function Landing() {
             {t('landing.card_letter_tap')}
           </div>
           <div className="text-xs font-bold text-ink/60 mt-0.5">
-            {t('landing.card_age_3_5')}
+            {t('landing.card_age_3_4')}
           </div>
           <div className="text-[10px] font-black text-lime mt-1">
             ★ {t('landing.free_badge')}
@@ -146,7 +146,7 @@ export default function Landing() {
             {t('landing.card_word_builder')}
           </div>
           <div className="text-xs font-bold text-ink/60 mt-0.5">
-            {t('landing.card_age_6_8')}
+            {t('landing.card_age_5_7')}
           </div>
           <div className="text-[10px] font-black text-lime mt-1">
             ★ {t('landing.free_badge')}

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type Lang = 'ar' | 'en';
-export type AgeGroup = '3-5' | '6-8' | '9-12';
+export type AgeGroup = '3-4' | '5-7' | '8-10';
 
 export interface Profile {
   id: string;

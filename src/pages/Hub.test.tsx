@@ -77,7 +77,7 @@ describe('Hub', () => {
   describe('age picker', () => {
     beforeEach(() => {
       useUserStore.getState().setProfile({ id: 'u1', displayName: 'Khalid', avatarUrl: null });
-      useUserStore.getState().setAgeGroup('3-5');
+      useUserStore.getState().setAgeGroup('3-4');
     });
 
     it('toggles the picker open and closed when the age badge is tapped', () => {
@@ -85,8 +85,8 @@ describe('Hub', () => {
       expect(screen.queryByTestId('hub-age-picker')).not.toBeInTheDocument();
       fireEvent.click(screen.getByTestId('hub-age-badge'));
       expect(screen.getByTestId('hub-age-picker')).toBeInTheDocument();
-      expect(screen.getByTestId('hub-age-option-3-5')).toHaveAttribute('aria-pressed', 'true');
-      expect(screen.getByTestId('hub-age-option-6-8')).toHaveAttribute('aria-pressed', 'false');
+      expect(screen.getByTestId('hub-age-option-3-4')).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByTestId('hub-age-option-5-7')).toHaveAttribute('aria-pressed', 'false');
       fireEvent.click(screen.getByTestId('hub-age-badge'));
       // exit animation may keep node briefly; assert badge state instead
       expect(screen.getByTestId('hub-age-badge')).toHaveAttribute('aria-expanded', 'false');
@@ -95,20 +95,20 @@ describe('Hub', () => {
     it('updates the age group and persists to Supabase for signed-in users', async () => {
       render(<MemoryRouter><Hub /></MemoryRouter>);
       fireEvent.click(screen.getByTestId('hub-age-badge'));
-      fireEvent.click(screen.getByTestId('hub-age-option-6-8'));
+      fireEvent.click(screen.getByTestId('hub-age-option-5-7'));
       await waitFor(() =>
-        expect(updateProfileMock).toHaveBeenCalledWith('u1', { age_group: '6-8' }),
+        expect(updateProfileMock).toHaveBeenCalledWith('u1', { age_group: '5-7' }),
       );
-      expect(useUserStore.getState().ageGroup).toBe('6-8');
+      expect(useUserStore.getState().ageGroup).toBe('5-7');
     });
 
     it('skips Supabase upsert when in guest mode', () => {
       useUserStore.getState().startGuestSession();
-      useUserStore.getState().setAgeGroup('3-5');
+      useUserStore.getState().setAgeGroup('3-4');
       render(<MemoryRouter><Hub /></MemoryRouter>);
       fireEvent.click(screen.getByTestId('hub-age-badge'));
-      fireEvent.click(screen.getByTestId('hub-age-option-9-12'));
-      expect(useUserStore.getState().ageGroup).toBe('9-12');
+      fireEvent.click(screen.getByTestId('hub-age-option-8-10'));
+      expect(useUserStore.getState().ageGroup).toBe('8-10');
       expect(updateProfileMock).not.toHaveBeenCalled();
     });
   });
@@ -118,8 +118,8 @@ describe('Hub', () => {
       useUserStore.getState().setProfile({ id: 'u1', displayName: 'Khalid', avatarUrl: null });
     });
 
-    it('flags Letter Tap as "for you" when ageGroup is 3-5', () => {
-      useUserStore.getState().setAgeGroup('3-5');
+    it('flags Letter Tap as "for you" when ageGroup is 3-4', () => {
+      useUserStore.getState().setAgeGroup('3-4');
       render(<MemoryRouter><Hub /></MemoryRouter>);
       expect(
         screen.getByTestId('hub-card-letter-tap-sound-recommended'),
@@ -129,8 +129,8 @@ describe('Hub', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('flags Word Builder but not Letter Tap when ageGroup is 9-12', () => {
-      useUserStore.getState().setAgeGroup('9-12');
+    it('flags Word Builder but not Letter Tap when ageGroup is 8-10', () => {
+      useUserStore.getState().setAgeGroup('8-10');
       render(<MemoryRouter><Hub /></MemoryRouter>);
       expect(
         screen.getByTestId('hub-card-word-builder-recommended'),
@@ -141,7 +141,7 @@ describe('Hub', () => {
     });
 
     it('places recommended tiles before non-recommended ones', () => {
-      useUserStore.getState().setAgeGroup('9-12');
+      useUserStore.getState().setAgeGroup('8-10');
       render(<MemoryRouter><Hub /></MemoryRouter>);
       const ids = screen
         .getAllByRole('button')
@@ -155,7 +155,7 @@ describe('Hub', () => {
     });
 
     it('never marks locked placeholder tiles as recommended', () => {
-      useUserStore.getState().setAgeGroup('6-8');
+      useUserStore.getState().setAgeGroup('5-7');
       render(<MemoryRouter><Hub /></MemoryRouter>);
       expect(
         screen.queryByTestId('hub-card-locked-1-recommended'),

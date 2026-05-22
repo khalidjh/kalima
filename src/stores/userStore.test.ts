@@ -24,13 +24,13 @@ describe('userStore', () => {
   });
 
   it('updates ageGroup via setAgeGroup', () => {
-    useUserStore.getState().setAgeGroup('6-8');
-    expect(useUserStore.getState().ageGroup).toBe('6-8');
+    useUserStore.getState().setAgeGroup('5-7');
+    expect(useUserStore.getState().ageGroup).toBe('5-7');
   });
 
   it('resets via reset()', () => {
     useUserStore.getState().setLearnLang('en');
-    useUserStore.getState().setAgeGroup('9-12');
+    useUserStore.getState().setAgeGroup('8-10');
     useUserStore.getState().reset();
     expect(useUserStore.getState().learnLang).toBeNull();
     expect(useUserStore.getState().ageGroup).toBeNull();
