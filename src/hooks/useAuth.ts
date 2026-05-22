@@ -11,7 +11,9 @@ export function useAuth() {
     async function hydrate(user: User | null) {
       const store = useUserStore.getState();
       if (!user) {
-        store.reset();
+        if (!store.isGuest) {
+          store.reset();
+        }
         return;
       }
       const row = await ensureProfile(user);
