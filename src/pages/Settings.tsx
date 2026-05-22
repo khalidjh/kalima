@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { useUserStore } from '../stores/userStore';
-import { signOut } from '../lib/auth';
+import { signInWithGoogle, signOut } from '../lib/auth';
 import { updateProfile } from '../lib/profile';
 import type { Lang } from '../stores/userStore';
 import i18n from '../i18n';
@@ -13,6 +13,7 @@ export default function Settings() {
   const navigate = useNavigate();
   const profile = useUserStore((s) => s.profile);
   const uiLang = useUserStore((s) => s.uiLang);
+  const isGuest = useUserStore((s) => s.isGuest);
   const setUiLang = useUserStore((s) => s.setUiLang);
   const setLearnLang = useUserStore((s) => s.setLearnLang);
   const setAgeGroup = useUserStore((s) => s.setAgeGroup);
@@ -26,7 +27,9 @@ export default function Settings() {
     setUiLang(next);
     try {
       await i18n.changeLanguage(next);
-      await updateProfile(profile.id, { ui_lang: next });
+      if (!isGuest) {
+        await updateProfile(profile.id, { ui_lang: next });
+      }
     } catch (err) {
       console.error('toggleUiLang failed:', err);
       setUiLang(previous);
@@ -40,6 +43,10 @@ export default function Settings() {
     const previous = useUserStore.getState().learnLang;
     setError(null);
     setLearnLang(null);
+    if (isGuest) {
+      navigate('/onboarding', { replace: true });
+      return;
+    }
     try {
       await updateProfile(profile.id, { learn_lang: null });
       navigate('/onboarding', { replace: true });
@@ -55,6 +62,10 @@ export default function Settings() {
     const previous = useUserStore.getState().ageGroup;
     setError(null);
     setAgeGroup(null);
+    if (isGuest) {
+      navigate('/onboarding', { replace: true });
+      return;
+    }
     try {
       await updateProfile(profile.id, { age_group: null });
       navigate('/onboarding', { replace: true });
@@ -72,6 +83,20 @@ export default function Settings() {
       navigate('/', { replace: true });
     } catch (err) {
       console.error('signOut failed:', err);
+      setError(t('errors.action_failed'));
+    }
+  }
+
+  async function signInForUpgrade() {
+    setError(null);
+    try {
+      const { error: oauthError } = await signInWithGoogle();
+      if (oauthError) {
+        console.error('signInWithGoogle (upgrade) error:', oauthError);
+        setError(t('errors.action_failed'));
+      }
+    } catch (err) {
+      console.error('signInWithGoogle (upgrade) threw:', err);
       setError(t('errors.action_failed'));
     }
   }
@@ -95,9 +120,27 @@ export default function Settings() {
         {t('settings.change_age')}
       </Button>
 
-      <Button variant="accent" data-testid="logout" onClick={logout}>
-        {t('settings.logout')}
-      </Button>
+      {isGuest ? (
+        <>
+          <Button
+            variant="accent"
+            data-testid="guest-upgrade-cta"
+            onClick={signInForUpgrade}
+          >
+            {t('settings.guest_upgrade')}
+          </Button>
+          <p
+            data-testid="guest-upgrade-warning"
+            className="text-xs font-bold text-ink/70 text-center max-w-xs"
+          >
+            {t('settings.guest_upgrade_warning')}
+          </p>
+        </>
+      ) : (
+        <Button variant="accent" data-testid="logout" onClick={logout}>
+          {t('settings.logout')}
+        </Button>
+      )}
 
       {error && (
         <p data-testid="settings-error" role="alert" className="text-red-600 text-sm">
