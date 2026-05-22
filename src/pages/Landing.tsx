@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Button } from '../components/Button';
 import { signInWithGoogle } from '../lib/auth';
 import { useUserStore } from '../stores/userStore';
+import { BeeMascot, LetterTileIcon, PlayIcon, PuzzleIcon } from '../components/icons';
 
 export default function Landing() {
   const { t } = useTranslation();
@@ -60,10 +61,10 @@ export default function Landing() {
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute inset-0 rounded-full bg-cobalt border-4 border-ink shadow-pop-lg flex items-center justify-center text-7xl sm:text-8xl"
+            className="absolute inset-0 rounded-full bg-cobalt border-4 border-ink shadow-pop-lg flex items-center justify-center"
             aria-hidden="true"
           >
-            🐝
+            <BeeMascot size={140} />
           </motion.div>
           <motion.span
             initial={{ rotate: -12, scale: 0 }}
@@ -95,7 +96,10 @@ export default function Landing() {
             disabled={pending}
             data-testid="landing-start-button"
           >
-            ▶ {t('landing.cta_start')}
+            <span className="inline-flex items-center gap-2">
+              <PlayIcon size={28} />
+              {t('landing.cta_start')}
+            </span>
           </Button>
           <button
             type="button"
@@ -121,8 +125,8 @@ export default function Landing() {
       {/* Game preview cards */}
       <div className="mt-10 grid grid-cols-2 gap-4">
         <div className="bg-white border-4 border-ink rounded-2xl p-4 shadow-pop">
-          <div className="text-3xl" aria-hidden="true">
-            🔤
+          <div aria-hidden="true">
+            <LetterTileIcon size={36} />
           </div>
           <div className="font-black text-sm mt-2 text-ink">
             {t('landing.card_letter_tap')}
@@ -135,8 +139,8 @@ export default function Landing() {
           </div>
         </div>
         <div className="bg-white border-4 border-ink rounded-2xl p-4 shadow-pop">
-          <div className="text-3xl" aria-hidden="true">
-            🧩
+          <div aria-hidden="true">
+            <PuzzleIcon size={36} />
           </div>
           <div className="font-black text-sm mt-2 text-ink">
             {t('landing.card_word_builder')}
