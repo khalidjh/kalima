@@ -26,13 +26,13 @@ export function Quiz({ target, choices, lang, onCorrect, onWrong }: QuizProps) {
   }, [play]);
 
   return (
-    <div data-testid="quiz" className="flex flex-col items-center gap-6">
+    <div data-testid="quiz" className="flex flex-col items-center gap-6 px-4 py-6">
       <button
         type="button"
         data-testid="quiz-speaker"
         onClick={play}
         aria-label={t('game.tap_speaker')}
-        className="text-5xl rounded-full bg-surface shadow-card w-20 h-20"
+        className="text-4xl rounded-full bg-sunny border-4 border-ink shadow-pop w-20 h-20 flex items-center justify-center active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
       >
         🔊
       </button>
@@ -43,7 +43,7 @@ export function Quiz({ target, choices, lang, onCorrect, onWrong }: QuizProps) {
             type="button"
             data-testid="quiz-tile"
             aria-label={c.name}
-            className="font-display text-5xl bg-surface rounded-2xl shadow-card w-24 h-24 flex items-center justify-center"
+            className="font-display font-black text-5xl text-ink bg-white border-4 border-ink rounded-2xl shadow-pop w-24 h-24 flex items-center justify-center active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
             onClick={() => (c.char === target.char ? onCorrect() : onWrong())}
           >
             {c.char}
