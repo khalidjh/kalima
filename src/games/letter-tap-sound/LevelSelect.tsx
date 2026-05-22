@@ -1,4 +1,5 @@
 import type { Letter, ProgressMap } from '../../types/game';
+import { StarIcon } from '../../components/icons';
 
 interface LevelSelectProps {
   letters: Letter[];
@@ -25,7 +26,11 @@ export function LevelSelect({ letters, progress, onPick }: LevelSelectProps) {
           >
             <span className="font-display text-3xl">{l.char}</span>
             {stars > 0 && (
-              <span className="text-xs">{'⭐'.repeat(stars)}</span>
+              <span className="inline-flex items-center gap-0.5" aria-hidden="true">
+                {Array.from({ length: stars }).map((_, idx) => (
+                  <StarIcon key={idx} size={14} />
+                ))}
+              </span>
             )}
           </button>
         );

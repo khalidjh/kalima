@@ -18,9 +18,9 @@ describe('LevelSelect', () => {
   it('shows star count when level has progress', () => {
     const progress: ProgressMap = new Map([[0, 3], [2, 1]]);
     render(<LevelSelect letters={letters} progress={progress} onPick={() => {}} />);
-    expect(screen.getByTestId('level-card-0').textContent).toContain('⭐⭐⭐');
-    expect(screen.getByTestId('level-card-2').textContent).toContain('⭐');
-    expect(screen.getByTestId('level-card-1').textContent).not.toContain('⭐');
+    expect(screen.getByTestId('level-card-0').querySelectorAll('svg')).toHaveLength(3);
+    expect(screen.getByTestId('level-card-2').querySelectorAll('svg')).toHaveLength(1);
+    expect(screen.getByTestId('level-card-1').querySelectorAll('svg')).toHaveLength(0);
   });
 
   it('calls onPick with index when card tapped', () => {
