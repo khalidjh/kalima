@@ -3,9 +3,9 @@ import { useUserStore } from './userStore';
 
 describe('userStore', () => {
   beforeEach(() => {
-    useUserStore.getState().reset();
     // Persist middleware writes to localStorage — clear so tests don't leak
     localStorage.removeItem('kalima.user');
+    useUserStore.getState().reset();
   });
 
   it('has correct defaults', () => {
@@ -15,6 +15,7 @@ describe('userStore', () => {
     expect(state.uiLang).toBe('ar');
     expect(state.ageGroup).toBeNull();
     expect(state.isPremium).toBe(false);
+    expect(state.isGuest).toBe(false);
   });
 
   it('updates learnLang via setLearnLang', () => {

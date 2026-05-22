@@ -51,11 +51,7 @@ export const useUserStore = create<UserState>()(
       setAgeGroup: (ageGroup) => set({ ageGroup }),
       setPremium: (isPremium) => set({ isPremium }),
       startGuestSession: () => {
-        const existing = get().profile;
-        if (existing && existing.id.startsWith('guest-')) {
-          set({ isGuest: true });
-          return;
-        }
+        if (get().isGuest) return;
         set({
           isGuest: true,
           profile: { id: generateGuestId(), displayName: null, avatarUrl: null },
