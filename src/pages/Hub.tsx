@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -6,10 +6,19 @@ import { useUserStore } from '../stores/userStore';
 import { useGameProgress } from '../hooks/useGameProgress';
 import { LETTERS_AR } from '../games/letter-tap-sound/data/letters-ar';
 import { LETTERS_EN } from '../games/letter-tap-sound/data/letters-en';
+import {
+  StarIcon,
+  LetterTileIcon,
+  PuzzleIcon,
+  LockIcon,
+  TrophyIcon,
+  GearIcon,
+  PlayIcon,
+} from '../components/icons';
 
 interface GameTileProps {
   testId?: string;
-  emoji: string;
+  icon: ReactNode;
   title: string;
   subtitle: string;
   badge?: { label: string; tone: 'free' | 'soon' | 'locked' };
@@ -20,7 +29,7 @@ interface GameTileProps {
 
 function GameTile({
   testId,
-  emoji,
+  icon,
   title,
   subtitle,
   badge,
@@ -50,9 +59,7 @@ function GameTile({
           : 'shadow-pop active:shadow-none transition-shadow',
       ].join(' ')}
     >
-      <div className="text-4xl leading-none" aria-hidden="true">
-        {emoji}
-      </div>
+      <div aria-hidden="true">{icon}</div>
       <div className="mt-2 font-black text-sm text-ink">{title}</div>
       <div className="text-[11px] font-bold text-ink/70 mt-0.5">{subtitle}</div>
       {badge && (
@@ -136,7 +143,9 @@ export default function Hub() {
           data-testid="hub-stars"
           className="shrink-0 flex items-center gap-1.5 bg-primary border-4 border-ink rounded-2xl px-3 py-1.5 shadow-pop"
         >
-          <span className="text-xl leading-none" aria-hidden="true">⭐</span>
+          <span aria-hidden="true" className="leading-none">
+            <StarIcon size={20} />
+          </span>
           <span className="font-black text-ink text-lg leading-none">{totalStars}</span>
         </motion.div>
       </div>
@@ -153,10 +162,10 @@ export default function Hub() {
           <motion.div
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="shrink-0 w-16 h-16 rounded-2xl bg-sunny border-4 border-ink flex items-center justify-center text-3xl shadow-pop"
+            className="shrink-0 w-16 h-16 rounded-2xl bg-sunny border-4 border-ink flex items-center justify-center shadow-pop"
             aria-hidden="true"
           >
-            🔤
+            <LetterTileIcon size={40} />
           </motion.div>
           <div className="min-w-0 flex-1">
             <div className="font-black text-lg leading-tight">
@@ -175,7 +184,10 @@ export default function Hub() {
             whileTap={{ x: 3, y: 3 }}
             className="shrink-0 bg-tomato text-white border-4 border-ink rounded-2xl px-4 py-2 font-black text-base shadow-pop active:shadow-none transition-shadow"
           >
-            ▶ {t('hub.play_cta')}
+            <span className="inline-flex items-center gap-1.5">
+              <PlayIcon size={20} />
+              {t('hub.play_cta')}
+            </span>
           </motion.button>
         </div>
 
@@ -207,7 +219,7 @@ export default function Hub() {
       <div className="mt-3 grid grid-cols-2 gap-3">
         <GameTile
           testId="hub-card-letter-tap-sound"
-          emoji="🔤"
+          icon={<LetterTileIcon size={44} />}
           title={t('landing.card_letter_tap')}
           subtitle={t('landing.card_age_3_5')}
           badge={{ label: t('landing.free_badge'), tone: 'free' }}
@@ -216,7 +228,7 @@ export default function Hub() {
         />
         <GameTile
           testId="hub-card-word-builder"
-          emoji="🧩"
+          icon={<PuzzleIcon size={44} />}
           title={t('landing.card_word_builder')}
           subtitle={t('landing.card_age_6_8')}
           badge={{ label: t('hub.coming_soon'), tone: 'soon' }}
@@ -225,7 +237,7 @@ export default function Hub() {
         />
         <GameTile
           testId="hub-card-locked-1"
-          emoji="🔒"
+          icon={<LockIcon size={44} />}
           title="???"
           subtitle={t('hub.locked')}
           bg="bg-white"
@@ -233,7 +245,7 @@ export default function Hub() {
         />
         <GameTile
           testId="hub-card-locked-2"
-          emoji="🔒"
+          icon={<LockIcon size={44} />}
           title="???"
           subtitle={t('hub.locked')}
           bg="bg-white"
@@ -248,7 +260,9 @@ export default function Hub() {
           data-testid="hub-menu-trophies"
           className="flex items-center justify-center gap-2 bg-accent text-white border-4 border-ink rounded-2xl py-3 font-black shadow-pop active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
         >
-          <span aria-hidden="true">🏆</span>
+          <span aria-hidden="true">
+            <TrophyIcon size={24} />
+          </span>
           <span>{t('hub.menu_trophies')}</span>
         </Link>
         <Link
@@ -256,7 +270,9 @@ export default function Hub() {
           data-testid="hub-menu-settings"
           className="flex items-center justify-center gap-2 bg-white text-ink border-4 border-ink rounded-2xl py-3 font-black shadow-pop active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
         >
-          <span aria-hidden="true">⚙️</span>
+          <span aria-hidden="true">
+            <GearIcon size={24} />
+          </span>
           <span>{t('hub.menu_settings')}</span>
         </Link>
       </div>
