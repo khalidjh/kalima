@@ -29,6 +29,8 @@ interface GameTileProps {
   title: string;
   subtitle: string;
   badge?: { label: string; tone: 'free' | 'soon' | 'locked' };
+  recommended?: boolean;
+  recommendedLabel?: string;
   bg: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -40,6 +42,8 @@ function GameTile({
   title,
   subtitle,
   badge,
+  recommended = false,
+  recommendedLabel,
   bg,
   onClick,
   disabled = false,
@@ -69,6 +73,15 @@ function GameTile({
       <div aria-hidden="true">{icon}</div>
       <div className="mt-2 font-black text-sm text-ink">{title}</div>
       <div className="text-[11px] font-bold text-ink/70 mt-0.5">{subtitle}</div>
+      {recommended && recommendedLabel && (
+        <span
+          data-testid={testId ? `${testId}-recommended` : undefined}
+          className="absolute -top-2 -start-2 inline-flex items-center gap-0.5 bg-sunny text-ink border-2 border-ink rounded-full px-2 py-0.5 text-[10px] font-black tracking-wide shadow-pop"
+        >
+          <StarIcon size={10} />
+          {recommendedLabel}
+        </span>
+      )}
       {badge && (
         <span
           className={[
@@ -314,42 +327,75 @@ export default function Hub() {
         {t('hub.all_games')}
       </h2>
 
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <GameTile
-          testId="hub-card-letter-tap-sound"
-          icon={<LetterTileIcon size={44} />}
-          title={t('landing.card_letter_tap')}
-          subtitle={t('landing.card_age_3_5')}
-          badge={{ label: t('landing.free_badge'), tone: 'free' }}
-          bg="bg-white"
-          onClick={openLetterTap}
-        />
-        <GameTile
-          testId="hub-card-word-builder"
-          icon={<PuzzleIcon size={44} />}
-          title={t('landing.card_word_builder')}
-          subtitle={t('landing.card_age_6_8')}
-          badge={{ label: t('hub.coming_soon'), tone: 'soon' }}
-          bg="bg-cream"
-          disabled
-        />
-        <GameTile
-          testId="hub-card-locked-1"
-          icon={<LockIcon size={44} />}
-          title="???"
-          subtitle={t('hub.locked')}
-          bg="bg-white"
-          disabled
-        />
-        <GameTile
-          testId="hub-card-locked-2"
-          icon={<LockIcon size={44} />}
-          title="???"
-          subtitle={t('hub.locked')}
-          bg="bg-white"
-          disabled
-        />
-      </div>
+      {(() => {
+        const recommendedLabel = t('hub.recommended_badge');
+        const games: (Omit<GameTileProps, 'recommended' | 'recommendedLabel'> & {
+          ageGroups: AgeGroup[];
+        })[] = [
+          {
+            testId: 'hub-card-letter-tap-sound',
+            icon: <LetterTileIcon size={44} />,
+            title: t('landing.card_letter_tap'),
+            subtitle: t('landing.card_age_3_5'),
+            badge: { label: t('landing.free_badge'), tone: 'free' },
+            bg: 'bg-white',
+            onClick: openLetterTap,
+            ageGroups: ['3-5', '6-8'],
+          },
+          {
+            testId: 'hub-card-word-builder',
+            icon: <PuzzleIcon size={44} />,
+            title: t('landing.card_word_builder'),
+            subtitle: t('landing.card_age_6_8'),
+            badge: { label: t('hub.coming_soon'), tone: 'soon' },
+            bg: 'bg-cream',
+            disabled: true,
+            ageGroups: ['6-8', '9-12'],
+          },
+          {
+            testId: 'hub-card-locked-1',
+            icon: <LockIcon size={44} />,
+            title: '???',
+            subtitle: t('hub.locked'),
+            bg: 'bg-white',
+            disabled: true,
+            ageGroups: [],
+          },
+          {
+            testId: 'hub-card-locked-2',
+            icon: <LockIcon size={44} />,
+            title: '???',
+            subtitle: t('hub.locked'),
+            bg: 'bg-white',
+            disabled: true,
+            ageGroups: [],
+          },
+        ];
+
+        const sorted = ageGroup
+          ? [...games].sort((a, b) => {
+              const aRec = a.ageGroups.includes(ageGroup);
+              const bRec = b.ageGroups.includes(ageGroup);
+              return Number(bRec) - Number(aRec);
+            })
+          : games;
+
+        return (
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            {sorted.map(({ ageGroups, ...tile }) => {
+              const recommended = !!ageGroup && ageGroups.includes(ageGroup);
+              return (
+                <GameTile
+                  key={tile.testId}
+                  {...tile}
+                  recommended={recommended}
+                  recommendedLabel={recommendedLabel}
+                />
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* Menu strip */}
       <div className="mt-7 grid grid-cols-2 gap-3">

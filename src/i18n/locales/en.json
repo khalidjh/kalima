@@ -51,7 +51,8 @@
     "menu_trophies": "Trophies",
     "menu_settings": "Settings",
     "age_label": "Ages {{range}}",
-    "change_age_label": "Change age group"
+    "change_age_label": "Change age group",
+    "recommended_badge": "For you!"
   },
   "game": {
     "letter_tap_sound": {

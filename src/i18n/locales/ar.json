@@ -55,7 +55,8 @@
     "menu_trophies": "الجوائز",
     "menu_settings": "الإعدادات",
     "age_label": "{{range}} سنوات",
-    "change_age_label": "تغيير الفئة العمرية"
+    "change_age_label": "تغيير الفئة العمرية",
+    "recommended_badge": "لك!"
   },
   "game": {
     "letter_tap_sound": {

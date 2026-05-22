@@ -112,4 +112,68 @@ describe('Hub', () => {
       expect(updateProfileMock).not.toHaveBeenCalled();
     });
   });
+
+  describe('age-based recommendations', () => {
+    beforeEach(() => {
+      useUserStore.getState().setProfile({ id: 'u1', displayName: 'Khalid', avatarUrl: null });
+    });
+
+    it('flags Letter Tap as "for you" when ageGroup is 3-5', () => {
+      useUserStore.getState().setAgeGroup('3-5');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      expect(
+        screen.getByTestId('hub-card-letter-tap-sound-recommended'),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('hub-card-word-builder-recommended'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('flags Word Builder but not Letter Tap when ageGroup is 9-12', () => {
+      useUserStore.getState().setAgeGroup('9-12');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      expect(
+        screen.getByTestId('hub-card-word-builder-recommended'),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByTestId('hub-card-letter-tap-sound-recommended'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('places recommended tiles before non-recommended ones', () => {
+      useUserStore.getState().setAgeGroup('9-12');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      const ids = screen
+        .getAllByRole('button')
+        .map((el) => el.getAttribute('data-testid'))
+        .filter((id): id is string => !!id && id.startsWith('hub-card-'));
+      const wordBuilderIdx = ids.indexOf('hub-card-word-builder');
+      const letterTapIdx = ids.indexOf('hub-card-letter-tap-sound');
+      expect(wordBuilderIdx).toBeGreaterThan(-1);
+      expect(letterTapIdx).toBeGreaterThan(-1);
+      expect(wordBuilderIdx).toBeLessThan(letterTapIdx);
+    });
+
+    it('never marks locked placeholder tiles as recommended', () => {
+      useUserStore.getState().setAgeGroup('6-8');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      expect(
+        screen.queryByTestId('hub-card-locked-1-recommended'),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('hub-card-locked-2-recommended'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows no recommended badges when no age group is selected', () => {
+      useUserStore.getState().reset();
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      expect(
+        screen.queryByTestId('hub-card-letter-tap-sound-recommended'),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId('hub-card-word-builder-recommended'),
+      ).not.toBeInTheDocument();
+    });
+  });
 });
