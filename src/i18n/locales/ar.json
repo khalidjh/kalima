@@ -35,7 +35,25 @@
   "hub": {
     "greeting": "مرحباً، {{name}}!",
     "greeting_fallback": "مرحباً بك!",
-    "coming_soon": "ألعاب قادمة قريباً"
+    "coming_soon": "قريباً!",
+    "locked": "مقفول",
+    "stars_count_zero": "بدون نجوم",
+    "stars_count_one": "نجمة واحدة",
+    "stars_count_two": "نجمتان",
+    "stars_count_few": "{{count}} نجوم",
+    "stars_count_many": "{{count}} نجمة",
+    "stars_count_other": "{{count}} نجمة",
+    "level_count": "المستوى {{n}}",
+    "continue_title": "تابع التعلّم!",
+    "continue_subtitle": "أكمل من حيث توقفت",
+    "start_title": "ابدأ أوّل لعبة!",
+    "start_subtitle": "اضغط على الحرف واسمع صوته",
+    "play_cta": "العب",
+    "progress_label": "{{done}} / {{total}} مكتمل",
+    "all_games": "كل الألعاب",
+    "menu_trophies": "الجوائز",
+    "menu_settings": "الإعدادات",
+    "age_label": "{{range}} سنوات"
   },
   "game": {
     "letter_tap_sound": {

@@ -35,7 +35,21 @@
   "hub": {
     "greeting": "Hi, {{name}}!",
     "greeting_fallback": "Welcome!",
-    "coming_soon": "Games coming soon"
+    "coming_soon": "Soon!",
+    "locked": "Locked",
+    "stars_count_one": "{{count}} star",
+    "stars_count_other": "{{count}} stars",
+    "level_count": "Level {{n}}",
+    "continue_title": "Keep going!",
+    "continue_subtitle": "Pick up where you left off",
+    "start_title": "Start your first game!",
+    "start_subtitle": "Tap a letter, hear a sound",
+    "play_cta": "Play",
+    "progress_label": "{{done}} / {{total}} done",
+    "all_games": "All Games",
+    "menu_trophies": "Trophies",
+    "menu_settings": "Settings",
+    "age_label": "Ages {{range}}"
   },
   "game": {
     "letter_tap_sound": {

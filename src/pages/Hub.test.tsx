@@ -8,6 +8,15 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useNavigate: () => navigateMock };
 });
 
+vi.mock('../hooks/useGameProgress', () => ({
+  useGameProgress: () => ({
+    progress: new Map(),
+    loading: false,
+    error: null,
+    upsert: vi.fn(),
+  }),
+}));
+
 import Hub from './Hub';
 import { useUserStore } from '../stores/userStore';
 
@@ -38,5 +47,23 @@ describe('Hub', () => {
     render(<MemoryRouter><Hub /></MemoryRouter>);
     fireEvent.click(screen.getByTestId('hub-card-letter-tap-sound'));
     expect(navigateMock).toHaveBeenCalledWith('/game/letter-tap-sound');
+  });
+
+  it('navigates to /game/letter-tap-sound from the hero Play button', () => {
+    render(<MemoryRouter><Hub /></MemoryRouter>);
+    fireEvent.click(screen.getByTestId('hub-continue-cta'));
+    expect(navigateMock).toHaveBeenCalledWith('/game/letter-tap-sound');
+  });
+
+  it('renders progress bar and total stars at zero by default', () => {
+    render(<MemoryRouter><Hub /></MemoryRouter>);
+    expect(screen.getByTestId('hub-progress-bar')).toBeInTheDocument();
+    expect(screen.getByTestId('hub-stars')).toHaveTextContent('0');
+  });
+
+  it('renders menu links to Trophies and Settings', () => {
+    render(<MemoryRouter><Hub /></MemoryRouter>);
+    expect(screen.getByTestId('hub-menu-trophies')).toHaveAttribute('href', '/trophies');
+    expect(screen.getByTestId('hub-menu-settings')).toHaveAttribute('href', '/settings');
   });
 });
