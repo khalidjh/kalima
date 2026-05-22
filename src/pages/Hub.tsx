@@ -327,27 +327,26 @@ export default function Hub() {
       </motion.div>
 
       {(() => {
-        const renderTile = (game: GameMeta) => (
-          <GameTile
-            key={game.id}
-            testId={`hub-card-${game.testIdSlug}`}
-            icon={iconForGame(game.id)}
-            title={t(game.titleKey)}
-            subtitle={t(game.subtitleKey)}
-            badge={
-              game.badge
-                ? { label: t(game.badge.labelKey), tone: game.badge.tone }
-                : undefined
-            }
-            bg={game.bg}
-            onClick={
-              game.route
-                ? () => navigate(game.route as string)
-                : undefined
-            }
-            disabled={game.status !== 'playable'}
-          />
-        );
+        const renderTile = (game: GameMeta) => {
+          const { route } = game;
+          return (
+            <GameTile
+              key={game.id}
+              testId={`hub-card-${game.testIdSlug}`}
+              icon={iconForGame(game.id)}
+              title={t(game.titleKey)}
+              subtitle={t(game.subtitleKey)}
+              badge={
+                game.badge
+                  ? { label: t(game.badge.labelKey), tone: game.badge.tone }
+                  : undefined
+              }
+              bg={game.bg}
+              onClick={route ? () => navigate(route) : undefined}
+              disabled={game.status !== 'playable'}
+            />
+          );
+        };
 
         if (!ageGroup) {
           return (
