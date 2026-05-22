@@ -182,5 +182,20 @@ describe('Hub', () => {
       expect(screen.getByTestId('hub-card-locked-1')).toBeInTheDocument();
       expect(screen.getByTestId('hub-card-locked-2')).toBeInTheDocument();
     });
+
+    it('does not navigate when the coming-soon Word Builder tile is clicked', () => {
+      useUserStore.getState().setAgeGroup('5-7');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      fireEvent.click(screen.getByTestId('hub-card-word-builder'));
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
+
+    it('does not navigate when a locked tile is clicked', () => {
+      useUserStore.getState().setAgeGroup('5-7');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      fireEvent.click(screen.getByTestId('hub-card-locked-1'));
+      fireEvent.click(screen.getByTestId('hub-card-locked-2'));
+      expect(navigateMock).not.toHaveBeenCalled();
+    });
   });
 });
