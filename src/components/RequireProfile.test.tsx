@@ -25,7 +25,7 @@ describe('RequireProfile', () => {
 
   it('redirects to /onboarding when learn_lang missing', () => {
     useUserStore.getState().setProfile({ id: 'u1', displayName: null, avatarUrl: null });
-    useUserStore.getState().setAgeGroup('3-5');
+    useUserStore.getState().setAgeGroup('3-4');
     render(tree('/hub'));
     expect(screen.getByTestId('onboarding')).toBeInTheDocument();
   });
@@ -40,7 +40,7 @@ describe('RequireProfile', () => {
   it('renders child when both fields set', () => {
     useUserStore.getState().setProfile({ id: 'u1', displayName: null, avatarUrl: null });
     useUserStore.getState().setLearnLang('ar');
-    useUserStore.getState().setAgeGroup('3-5');
+    useUserStore.getState().setAgeGroup('3-4');
     render(tree('/hub'));
     expect(screen.getByTestId('inner')).toBeInTheDocument();
   });

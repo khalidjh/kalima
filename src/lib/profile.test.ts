@@ -13,12 +13,12 @@ const base: ProfileRow = {
 
 describe('isProfileComplete', () => {
   it('returns false when learn_lang missing', () => {
-    expect(isProfileComplete({ ...base, age_group: '3-5' })).toBe(false);
+    expect(isProfileComplete({ ...base, age_group: '3-4' })).toBe(false);
   });
   it('returns false when age_group missing', () => {
     expect(isProfileComplete({ ...base, learn_lang: 'ar' })).toBe(false);
   });
   it('returns true when both set', () => {
-    expect(isProfileComplete({ ...base, learn_lang: 'ar', age_group: '3-5' })).toBe(true);
+    expect(isProfileComplete({ ...base, learn_lang: 'ar', age_group: '3-4' })).toBe(true);
   });
 });

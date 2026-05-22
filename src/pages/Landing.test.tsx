@@ -45,7 +45,7 @@ describe('Landing', () => {
   it('redirects to /hub when signed in with a complete profile', () => {
     useUserStore.getState().setProfile({ id: 'u1', displayName: 'Khalid', avatarUrl: null });
     useUserStore.getState().setLearnLang('ar');
-    useUserStore.getState().setAgeGroup('6-8');
+    useUserStore.getState().setAgeGroup('5-7');
     render(
       <MemoryRouter>
         <Landing />
