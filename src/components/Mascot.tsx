@@ -1,14 +1,11 @@
-export type MascotMood = 'idle' | 'success' | 'fail';
+import { FoxMascot, type FoxMood } from './icons/FoxMascot';
+
+export type MascotMood = FoxMood;
 
 interface MascotProps {
   mood?: MascotMood;
+  size?: number;
 }
-
-const EMOJI: Record<MascotMood, string> = {
-  idle: '🦊',
-  success: '🎉',
-  fail: '😅',
-};
 
 const ANIM: Record<MascotMood, string> = {
   idle: '',
@@ -16,15 +13,15 @@ const ANIM: Record<MascotMood, string> = {
   fail: 'animate-pulse',
 };
 
-export function Mascot({ mood = 'idle' }: MascotProps) {
+export function Mascot({ mood = 'idle', size = 96 }: MascotProps) {
   return (
     <div
       data-testid="mascot"
       data-mood={mood}
-      className={`text-6xl inline-block ${ANIM[mood]}`}
+      className={`inline-block ${ANIM[mood]}`}
       aria-hidden="true"
     >
-      {EMOJI[mood]}
+      <FoxMascot mood={mood} size={size} />
     </div>
   );
 }
