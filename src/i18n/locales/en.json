@@ -52,7 +52,9 @@
     "menu_settings": "Settings",
     "age_label": "Ages {{range}}",
     "change_age_label": "Change age group",
-    "recommended_badge": "For you!"
+    "for_age_section": "For Ages {{range}}",
+    "more_to_explore": "More to explore",
+    "locked_title": "???"
   },
   "game": {
     "letter_tap_sound": {

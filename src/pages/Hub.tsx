@@ -16,6 +16,12 @@ import {
   GearIcon,
   PlayIcon,
 } from '../components/icons';
+import {
+  GAMES_REGISTRY,
+  gamesForAge,
+  otherGames,
+  type GameMeta,
+} from '../games/registry';
 
 const AGE_OPTIONS: { value: AgeGroup; key: string }[] = [
   { value: '3-4', key: 'onboarding.age_3_4' },
@@ -23,14 +29,23 @@ const AGE_OPTIONS: { value: AgeGroup; key: string }[] = [
   { value: '8-10', key: 'onboarding.age_8_10' },
 ];
 
+function iconForGame(id: string): ReactNode {
+  switch (id) {
+    case 'letter-tap-sound':
+      return <LetterTileIcon size={44} />;
+    case 'word-builder':
+      return <PuzzleIcon size={44} />;
+    default:
+      return <LockIcon size={44} />;
+  }
+}
+
 interface GameTileProps {
   testId?: string;
   icon: ReactNode;
   title: string;
   subtitle: string;
   badge?: { label: string; tone: 'free' | 'soon' | 'locked' };
-  recommended?: boolean;
-  recommendedLabel?: string;
   bg: string;
   onClick?: () => void;
   disabled?: boolean;
@@ -42,8 +57,6 @@ function GameTile({
   title,
   subtitle,
   badge,
-  recommended = false,
-  recommendedLabel,
   bg,
   onClick,
   disabled = false,
@@ -73,15 +86,6 @@ function GameTile({
       <div aria-hidden="true">{icon}</div>
       <div className="mt-2 font-black text-sm text-ink">{title}</div>
       <div className="text-[11px] font-bold text-ink/70 mt-0.5">{subtitle}</div>
-      {recommended && recommendedLabel && (
-        <span
-          data-testid={testId ? `${testId}-recommended` : undefined}
-          className="absolute -top-2 -start-2 inline-flex items-center gap-0.5 bg-sunny text-ink border-2 border-ink rounded-full px-2 py-0.5 text-[10px] font-black tracking-wide shadow-pop"
-        >
-          <StarIcon size={10} />
-          {recommendedLabel}
-        </span>
-      )}
       {badge && (
         <span
           className={[
@@ -322,78 +326,69 @@ export default function Hub() {
         </div>
       </motion.div>
 
-      {/* All games section */}
-      <h2 className="mt-7 font-display font-black text-xl text-ink">
-        {t('hub.all_games')}
-      </h2>
-
       {(() => {
-        const recommendedLabel = t('hub.recommended_badge');
-        const games: (Omit<GameTileProps, 'recommended' | 'recommendedLabel'> & {
-          ageGroups: AgeGroup[];
-        })[] = [
-          {
-            testId: 'hub-card-letter-tap-sound',
-            icon: <LetterTileIcon size={44} />,
-            title: t('landing.card_letter_tap'),
-            subtitle: t('landing.card_age_3_4'),
-            badge: { label: t('landing.free_badge'), tone: 'free' },
-            bg: 'bg-white',
-            onClick: openLetterTap,
-            ageGroups: ['3-4', '5-7'],
-          },
-          {
-            testId: 'hub-card-word-builder',
-            icon: <PuzzleIcon size={44} />,
-            title: t('landing.card_word_builder'),
-            subtitle: t('landing.card_age_5_7'),
-            badge: { label: t('hub.coming_soon'), tone: 'soon' },
-            bg: 'bg-cream',
-            disabled: true,
-            ageGroups: ['5-7', '8-10'],
-          },
-          {
-            testId: 'hub-card-locked-1',
-            icon: <LockIcon size={44} />,
-            title: '???',
-            subtitle: t('hub.locked'),
-            bg: 'bg-white',
-            disabled: true,
-            ageGroups: [],
-          },
-          {
-            testId: 'hub-card-locked-2',
-            icon: <LockIcon size={44} />,
-            title: '???',
-            subtitle: t('hub.locked'),
-            bg: 'bg-white',
-            disabled: true,
-            ageGroups: [],
-          },
-        ];
+        const renderTile = (game: GameMeta) => (
+          <GameTile
+            key={game.id}
+            testId={`hub-card-${game.testIdSlug}`}
+            icon={iconForGame(game.id)}
+            title={t(game.titleKey)}
+            subtitle={t(game.subtitleKey)}
+            badge={
+              game.badge
+                ? { label: t(game.badge.labelKey), tone: game.badge.tone }
+                : undefined
+            }
+            bg={game.bg}
+            onClick={
+              game.route
+                ? () => navigate(game.route as string)
+                : undefined
+            }
+            disabled={game.status !== 'playable'}
+          />
+        );
 
-        const sorted = ageGroup
-          ? [...games].sort((a, b) => {
-              const aRec = a.ageGroups.includes(ageGroup);
-              const bRec = b.ageGroups.includes(ageGroup);
-              return Number(bRec) - Number(aRec);
-            })
-          : games;
+        if (!ageGroup) {
+          return (
+            <>
+              <h2 className="mt-7 font-display font-black text-xl text-ink">
+                {t('hub.all_games')}
+              </h2>
+              <div
+                data-testid="hub-all-games-section"
+                className="mt-3 grid grid-cols-2 gap-3"
+              >
+                {GAMES_REGISTRY.map(renderTile)}
+              </div>
+            </>
+          );
+        }
+
+        const focus = gamesForAge(ageGroup);
+        const rest = otherGames(ageGroup);
 
         return (
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            {sorted.map(({ ageGroups, ...tile }) => {
-              const recommended = !!ageGroup && ageGroups.includes(ageGroup);
-              return (
-                <GameTile
-                  key={tile.testId}
-                  {...tile}
-                  recommended={recommended}
-                  recommendedLabel={recommendedLabel}
-                />
-              );
-            })}
-          </div>
+          <>
+            <div data-testid="hub-for-age-section">
+              <h2 className="mt-7 font-display font-black text-xl text-ink">
+                {t('hub.for_age_section', { range: ageGroup })}
+              </h2>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                {focus.map(renderTile)}
+              </div>
+            </div>
+            {rest.length > 0 && (
+              <div data-testid="hub-more-to-explore-section">
+                <h3 className="mt-6 font-display font-black text-base text-ink/80">
+                  {t('hub.more_to_explore')}
+                </h3>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  {rest.map(renderTile)}
+                </div>
+              </div>
+            )}
+          </>
         );
       })()}
 

@@ -113,67 +113,74 @@ describe('Hub', () => {
     });
   });
 
-  describe('age-based recommendations', () => {
+  describe('age-based sections', () => {
     beforeEach(() => {
       useUserStore.getState().setProfile({ id: 'u1', displayName: 'Khalid', avatarUrl: null });
     });
 
-    it('flags Letter Tap as "for you" when ageGroup is 3-4', () => {
-      useUserStore.getState().setAgeGroup('3-4');
-      render(<MemoryRouter><Hub /></MemoryRouter>);
-      expect(
-        screen.getByTestId('hub-card-letter-tap-sound-recommended'),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByTestId('hub-card-word-builder-recommended'),
-      ).not.toBeInTheDocument();
-    });
-
-    it('flags Word Builder but not Letter Tap when ageGroup is 8-10', () => {
-      useUserStore.getState().setAgeGroup('8-10');
-      render(<MemoryRouter><Hub /></MemoryRouter>);
-      expect(
-        screen.getByTestId('hub-card-word-builder-recommended'),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByTestId('hub-card-letter-tap-sound-recommended'),
-      ).not.toBeInTheDocument();
-    });
-
-    it('places recommended tiles before non-recommended ones', () => {
-      useUserStore.getState().setAgeGroup('8-10');
-      render(<MemoryRouter><Hub /></MemoryRouter>);
-      const ids = screen
-        .getAllByRole('button')
-        .map((el) => el.getAttribute('data-testid'))
-        .filter((id): id is string => !!id && id.startsWith('hub-card-'));
-      const wordBuilderIdx = ids.indexOf('hub-card-word-builder');
-      const letterTapIdx = ids.indexOf('hub-card-letter-tap-sound');
-      expect(wordBuilderIdx).toBeGreaterThan(-1);
-      expect(letterTapIdx).toBeGreaterThan(-1);
-      expect(wordBuilderIdx).toBeLessThan(letterTapIdx);
-    });
-
-    it('never marks locked placeholder tiles as recommended', () => {
+    it('renders the "For Ages 5 – 7" section header when ageGroup is 5-7', () => {
       useUserStore.getState().setAgeGroup('5-7');
       render(<MemoryRouter><Hub /></MemoryRouter>);
-      expect(
-        screen.queryByTestId('hub-card-locked-1-recommended'),
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByTestId('hub-card-locked-2-recommended'),
-      ).not.toBeInTheDocument();
+      expect(screen.getByTestId('hub-for-age-section')).toHaveTextContent('5-7');
     });
 
-    it('shows no recommended badges when no age group is selected', () => {
-      useUserStore.getState().reset();
+    it('places Letter Tap and Word Builder in the for-you section when age is 5-7', () => {
+      useUserStore.getState().setAgeGroup('5-7');
       render(<MemoryRouter><Hub /></MemoryRouter>);
-      expect(
-        screen.queryByTestId('hub-card-letter-tap-sound-recommended'),
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByTestId('hub-card-word-builder-recommended'),
-      ).not.toBeInTheDocument();
+      const forYou = screen.getByTestId('hub-for-age-section');
+      expect(forYou).toContainElement(screen.getByTestId('hub-card-letter-tap-sound'));
+      expect(forYou).toContainElement(screen.getByTestId('hub-card-word-builder'));
+    });
+
+    it('places locked tiles in the "More to explore" section, not the for-you section', () => {
+      useUserStore.getState().setAgeGroup('5-7');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      const forYou = screen.getByTestId('hub-for-age-section');
+      const explore = screen.getByTestId('hub-more-to-explore-section');
+      expect(forYou).not.toContainElement(screen.getByTestId('hub-card-locked-1'));
+      expect(forYou).not.toContainElement(screen.getByTestId('hub-card-locked-2'));
+      expect(explore).toContainElement(screen.getByTestId('hub-card-locked-1'));
+      expect(explore).toContainElement(screen.getByTestId('hub-card-locked-2'));
+    });
+
+    it('renders the for-you section before "More to explore" in DOM order', () => {
+      useUserStore.getState().setAgeGroup('5-7');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      const forYou = screen.getByTestId('hub-for-age-section');
+      const explore = screen.getByTestId('hub-more-to-explore-section');
+      const order = forYou.compareDocumentPosition(explore);
+      expect(order & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+
+    it('shows Letter Tap as the only for-you tile for age 3-4', () => {
+      useUserStore.getState().setAgeGroup('3-4');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      const forYou = screen.getByTestId('hub-for-age-section');
+      expect(forYou).toContainElement(screen.getByTestId('hub-card-letter-tap-sound'));
+      expect(forYou).not.toContainElement(screen.getByTestId('hub-card-word-builder'));
+    });
+
+    it('shows Word Builder as the only for-you tile for age 8-10', () => {
+      useUserStore.getState().setAgeGroup('8-10');
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      const forYou = screen.getByTestId('hub-for-age-section');
+      expect(forYou).toContainElement(screen.getByTestId('hub-card-word-builder'));
+      expect(forYou).not.toContainElement(screen.getByTestId('hub-card-letter-tap-sound'));
+    });
+
+    it('falls back to a single "All Games" grid when no age group is selected', () => {
+      // beforeEach sets a profile but no ageGroup. reset() clears both — reapply profile.
+      useUserStore.getState().reset();
+      useUserStore.getState().setProfile({ id: 'u1', displayName: 'Khalid', avatarUrl: null });
+      render(<MemoryRouter><Hub /></MemoryRouter>);
+      expect(screen.queryByTestId('hub-for-age-section')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('hub-more-to-explore-section')).not.toBeInTheDocument();
+      expect(screen.getByTestId('hub-all-games-section')).toBeInTheDocument();
+      // All four tiles still render in the fallback grid
+      expect(screen.getByTestId('hub-card-letter-tap-sound')).toBeInTheDocument();
+      expect(screen.getByTestId('hub-card-word-builder')).toBeInTheDocument();
+      expect(screen.getByTestId('hub-card-locked-1')).toBeInTheDocument();
+      expect(screen.getByTestId('hub-card-locked-2')).toBeInTheDocument();
     });
   });
 });

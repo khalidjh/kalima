@@ -56,7 +56,9 @@
     "menu_settings": "الإعدادات",
     "age_label": "{{range}} سنوات",
     "change_age_label": "تغيير الفئة العمرية",
-    "recommended_badge": "لك!"
+    "for_age_section": "للأعمار {{range}}",
+    "more_to_explore": "اكتشف المزيد",
+    "locked_title": "؟؟؟"
   },
   "game": {
     "letter_tap_sound": {
