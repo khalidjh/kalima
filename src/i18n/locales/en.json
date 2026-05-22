@@ -1,7 +1,19 @@
 {
   "landing": {
-    "tagline": "Learn letters, words, and wonder.",
-    "cta_start": "Start Learning"
+    "headline_top": "LEARN",
+    "headline_bottom": "LIKE A KID",
+    "tagline": "Arabic + English games for ages 3 to 12.",
+    "cta_start": "Start Learning",
+    "fun_badge": "FUN!",
+    "free_badge": "FREE",
+    "card_letter_tap": "Letter Tap",
+    "card_word_builder": "Word Builder",
+    "card_age_3_5": "Ages 3 – 5",
+    "card_age_6_8": "Ages 6 – 8"
+  },
+  "header": {
+    "brand": "KALIMA",
+    "lang_toggle_aria": "Switch language"
   },
   "auth": {
     "signing_in": "Signing in...",

@@ -1,7 +1,19 @@
 {
   "landing": {
-    "tagline": "تعلّم الحروف والكلمات والدهشة.",
-    "cta_start": "ابدأ التعلّم"
+    "headline_top": "تعلّم",
+    "headline_bottom": "بمتعة",
+    "tagline": "ألعاب عربية وإنجليزية للأعمار 3 إلى 12.",
+    "cta_start": "ابدأ التعلّم",
+    "fun_badge": "متعة!",
+    "free_badge": "مجاناً",
+    "card_letter_tap": "اضغط الحرف",
+    "card_word_builder": "كوّن الكلمة",
+    "card_age_3_5": "3 – 5 سنوات",
+    "card_age_6_8": "6 – 8 سنوات"
+  },
+  "header": {
+    "brand": "كلمة",
+    "lang_toggle_aria": "تبديل اللغة"
   },
   "auth": {
     "signing_in": "جارٍ تسجيل الدخول...",

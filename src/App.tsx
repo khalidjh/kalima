@@ -3,6 +3,7 @@ import { useDirection } from './hooks/useDirection';
 import { useAuth } from './hooks/useAuth';
 import RequireAuth from './components/RequireAuth';
 import RequireProfile from './components/RequireProfile';
+import { Header } from './components/Header';
 import Landing from './pages/Landing';
 import AuthCallback from './pages/AuthCallback';
 import Onboarding from './pages/Onboarding';
@@ -15,7 +16,8 @@ export default function App() {
   useDirection();
   useAuth();
   return (
-    <main className="min-h-screen bg-surface">
+    <main className="min-h-screen bg-sunny">
+      <Header />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth/callback" element={<AuthCallback />} />

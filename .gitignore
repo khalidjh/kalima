@@ -23,6 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
+# Skill / agent session artifacts (not source)
+.superpowers/
+
 # env
 .env
 .env.local
