@@ -4,6 +4,7 @@
     "headline_bottom": "LIKE A KID",
     "tagline": "Arabic + English games for ages 3 to 12.",
     "cta_start": "Start Learning",
+    "cta_guest": "Play as guest",
     "fun_badge": "FUN!",
     "free_badge": "FREE",
     "card_letter_tap": "Letter Tap",
@@ -70,7 +71,9 @@
     "switch_to_ar": "العربية",
     "change_learn_lang": "Change learning language",
     "change_age": "Change age group",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "guest_upgrade": "Save my progress — Sign in with Google",
+    "guest_upgrade_warning": "Heads up: your guest stars won't carry over yet — that's coming soon."
   },
   "errors": {
     "action_failed": "Something went wrong. Please try again."

@@ -4,6 +4,7 @@
     "headline_bottom": "بمتعة",
     "tagline": "ألعاب عربية وإنجليزية للأعمار 3 إلى 12.",
     "cta_start": "ابدأ التعلّم",
+    "cta_guest": "العب كضيف",
     "fun_badge": "متعة!",
     "free_badge": "مجاناً",
     "card_letter_tap": "اضغط الحرف",
@@ -74,7 +75,9 @@
     "switch_to_ar": "العربية",
     "change_learn_lang": "غيّر لغة التعلّم",
     "change_age": "غيّر الفئة العمرية",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "guest_upgrade": "احفظ تقدّمي — سجّل بحساب Google",
+    "guest_upgrade_warning": "تنبيه: لن يتم نقل نجومك كضيف بعد، هذه الميزة قادمة قريباً."
   },
   "errors": {
     "action_failed": "حدث خطأ. حاول مرة أخرى."

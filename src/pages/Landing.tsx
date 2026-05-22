@@ -12,8 +12,15 @@ export default function Landing() {
   const profile = useUserStore((s) => s.profile);
   const learnLang = useUserStore((s) => s.learnLang);
   const ageGroup = useUserStore((s) => s.ageGroup);
+  const startGuestSession = useUserStore((s) => s.startGuestSession);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+
+  function handleGuest() {
+    setError(null);
+    startGuestSession();
+    navigate('/onboarding');
+  }
 
   useEffect(() => {
     if (profile && learnLang && ageGroup) {
@@ -80,7 +87,7 @@ export default function Landing() {
         </p>
 
         {/* CTA */}
-        <div className="mt-8">
+        <div className="mt-8 flex flex-col items-center gap-3">
           <Button
             variant="pop"
             size="lg"
@@ -90,6 +97,14 @@ export default function Landing() {
           >
             ▶ {t('landing.cta_start')}
           </Button>
+          <button
+            type="button"
+            onClick={handleGuest}
+            data-testid="landing-guest-button"
+            className="text-ink font-black text-base underline underline-offset-4 decoration-2 decoration-ink/40 hover:decoration-ink"
+          >
+            {t('landing.cta_guest')}
+          </button>
         </div>
 
         {error && (

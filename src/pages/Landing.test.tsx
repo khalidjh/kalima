@@ -54,6 +54,18 @@ describe('Landing', () => {
     expect(mocks.navigate).toHaveBeenCalledWith('/hub', { replace: true });
   });
 
+  it('starts a guest session and navigates to /onboarding when guest CTA is clicked', async () => {
+    render(
+      <MemoryRouter>
+        <Landing />
+      </MemoryRouter>,
+    );
+    await userEvent.click(screen.getByTestId('landing-guest-button'));
+    expect(useUserStore.getState().isGuest).toBe(true);
+    expect(useUserStore.getState().profile?.id).toMatch(/^guest-/);
+    expect(mocks.navigate).toHaveBeenCalledWith('/onboarding');
+  });
+
   it('shows an inline error when signInWithGoogle rejects', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
     mocks.signIn.mockRejectedValue(new Error('boom'));
