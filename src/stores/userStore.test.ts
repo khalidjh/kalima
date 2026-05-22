@@ -1,14 +1,11 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { useUserStore } from './userStore';
 
 describe('userStore', () => {
   beforeEach(() => {
-    useUserStore.setState({
-      profile: null,
-      learnLang: null,
-      uiLang: 'ar',
-      ageGroup: null,
-      isPremium: false,
-    });
+    useUserStore.getState().reset();
+    // Persist middleware writes to localStorage — clear so tests don't leak
+    localStorage.removeItem('kalima.user');
   });
 
   it('has correct defaults', () => {
@@ -36,5 +33,29 @@ describe('userStore', () => {
     useUserStore.getState().reset();
     expect(useUserStore.getState().learnLang).toBeNull();
     expect(useUserStore.getState().ageGroup).toBeNull();
+  });
+
+  it('starts a guest session with a generated id', () => {
+    useUserStore.getState().startGuestSession();
+    const s = useUserStore.getState();
+    expect(s.isGuest).toBe(true);
+    expect(s.profile?.id).toMatch(/^guest-/);
+    expect(s.profile?.displayName).toBeNull();
+    expect(s.profile?.avatarUrl).toBeNull();
+  });
+
+  it('reuses the same guest id on repeated calls', () => {
+    useUserStore.getState().startGuestSession();
+    const first = useUserStore.getState().profile?.id;
+    useUserStore.getState().startGuestSession();
+    const second = useUserStore.getState().profile?.id;
+    expect(first).toBe(second);
+  });
+
+  it('reset() clears isGuest and profile', () => {
+    useUserStore.getState().startGuestSession();
+    useUserStore.getState().reset();
+    expect(useUserStore.getState().isGuest).toBe(false);
+    expect(useUserStore.getState().profile).toBeNull();
   });
 });
