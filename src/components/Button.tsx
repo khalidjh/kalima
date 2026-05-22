@@ -4,11 +4,14 @@ import type { ReactNode } from 'react';
 type Variant = 'primary' | 'secondary' | 'accent' | 'pop';
 type Size = 'md' | 'lg';
 
+// Pop Cartoon brand chrome is applied to every variant; the variant only
+// chooses the colour pairing. Keeps `bg-primary` / `bg-accent` class names
+// stable for existing tests and external usages.
 const variantClasses: Record<Variant, string> = {
-  primary: 'bg-primary text-ink hover:brightness-95',
-  secondary: 'bg-secondary text-white hover:brightness-110',
-  accent: 'bg-accent text-white hover:brightness-110',
-  pop: 'bg-tomato text-white border-4 border-ink shadow-pop-lg',
+  primary: 'bg-primary text-ink',
+  secondary: 'bg-secondary text-white',
+  accent: 'bg-accent text-white',
+  pop: 'bg-tomato text-white',
 };
 
 const sizeClasses: Record<Size, string> = {
@@ -32,13 +35,14 @@ export function Button({
   const isPop = variant === 'pop';
   return (
     <motion.button
-      whileTap={isPop ? { x: 4, y: 4 } : { scale: 0.95 }}
+      whileTap={{ x: 4, y: 4 }}
       transition={{ type: 'spring', stiffness: 400, damping: 20 }}
       className={[
         'inline-flex items-center justify-center',
-        isPop ? 'rounded-2xl font-black tracking-wide' : 'rounded-full font-display font-semibold',
+        'rounded-2xl border-4 border-ink font-black tracking-wide',
+        isPop ? 'shadow-pop-lg' : 'shadow-pop',
+        'active:shadow-none transition-shadow',
         sizeClasses[size],
-        isPop ? 'active:shadow-none transition-shadow' : 'shadow-card transition-[filter,opacity]',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         variantClasses[variant],
         className,

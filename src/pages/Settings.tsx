@@ -104,9 +104,9 @@ export default function Settings() {
   return (
     <section
       data-testid="settings-page"
-      className="px-6 py-12 flex flex-col items-center gap-6 max-w-md mx-auto"
+      className="px-6 py-12 flex flex-col items-center gap-4 max-w-md mx-auto"
     >
-      <h1 className="font-display text-3xl text-ink">{t('settings.title')}</h1>
+      <h1 className="font-display font-black text-3xl text-ink mb-2">{t('settings.title')}</h1>
 
       <Button variant="secondary" data-testid="toggle-ui-lang" onClick={toggleUiLang}>
         {t('settings.ui_lang')}: {uiLang === 'ar' ? t('settings.switch_to_en') : t('settings.switch_to_ar')}
@@ -143,7 +143,7 @@ export default function Settings() {
       )}
 
       {error && (
-        <p data-testid="settings-error" role="alert" className="text-red-600 text-sm">
+        <p data-testid="settings-error" role="alert" className="text-tomato font-bold text-sm">
           {error}
         </p>
       )}
