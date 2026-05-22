@@ -54,7 +54,8 @@
     "all_games": "كل الألعاب",
     "menu_trophies": "الجوائز",
     "menu_settings": "الإعدادات",
-    "age_label": "{{range}} سنوات"
+    "age_label": "{{range}} سنوات",
+    "change_age_label": "تغيير الفئة العمرية"
   },
   "game": {
     "letter_tap_sound": {

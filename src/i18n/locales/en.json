@@ -50,7 +50,8 @@
     "all_games": "All Games",
     "menu_trophies": "Trophies",
     "menu_settings": "Settings",
-    "age_label": "Ages {{range}}"
+    "age_label": "Ages {{range}}",
+    "change_age_label": "Change age group"
   },
   "game": {
     "letter_tap_sound": {

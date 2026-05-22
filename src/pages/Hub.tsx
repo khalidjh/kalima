@@ -1,8 +1,9 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useUserStore } from '../stores/userStore';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useUserStore, type AgeGroup } from '../stores/userStore';
+import { updateProfile } from '../lib/profile';
 import { useGameProgress } from '../hooks/useGameProgress';
 import { LETTERS_AR } from '../games/letter-tap-sound/data/letters-ar';
 import { LETTERS_EN } from '../games/letter-tap-sound/data/letters-en';
@@ -15,6 +16,12 @@ import {
   GearIcon,
   PlayIcon,
 } from '../components/icons';
+
+const AGE_OPTIONS: { value: AgeGroup; key: string }[] = [
+  { value: '3-5', key: 'onboarding.age_3_5' },
+  { value: '6-8', key: 'onboarding.age_6_8' },
+  { value: '9-12', key: 'onboarding.age_9_12' },
+];
 
 interface GameTileProps {
   testId?: string;
@@ -83,8 +90,32 @@ export default function Hub() {
   const profile = useUserStore((s) => s.profile);
   const learnLang = useUserStore((s) => s.learnLang) ?? 'ar';
   const ageGroup = useUserStore((s) => s.ageGroup);
+  const setAgeGroup = useUserStore((s) => s.setAgeGroup);
+  const isGuest = useUserStore((s) => s.isGuest);
+  const [agePickerOpen, setAgePickerOpen] = useState(false);
+  const [ageError, setAgeError] = useState<string | null>(null);
 
   const { progress } = useGameProgress('letter-tap-sound', learnLang);
+
+  async function pickAge(value: AgeGroup) {
+    if (!profile) return;
+    if (value === ageGroup) {
+      setAgePickerOpen(false);
+      return;
+    }
+    const previous = useUserStore.getState().ageGroup;
+    setAgeError(null);
+    setAgeGroup(value);
+    setAgePickerOpen(false);
+    if (isGuest) return;
+    try {
+      await updateProfile(profile.id, { age_group: value });
+    } catch (err) {
+      console.error('Hub.pickAge updateProfile failed:', err);
+      setAgeGroup(previous);
+      setAgeError(t('errors.action_failed'));
+    }
+  }
 
   const { totalLevels, completed, totalStars, nextLevelIndex } = useMemo(() => {
     const total = learnLang === 'ar' ? LETTERS_AR.length : LETTERS_EN.length;
@@ -130,8 +161,75 @@ export default function Hub() {
               : t('hub.greeting_fallback')}
           </h1>
           {ageLabel && (
-            <div className="mt-1 inline-block bg-white border-2 border-ink rounded-full px-2.5 py-0.5 text-xs font-black text-ink shadow-pop">
-              {ageLabel}
+            <div className="mt-1">
+              <button
+                type="button"
+                data-testid="hub-age-badge"
+                onClick={() => setAgePickerOpen((o) => !o)}
+                aria-expanded={agePickerOpen}
+                aria-label={t('hub.change_age_label')}
+                className="inline-flex items-center gap-1 bg-white border-2 border-ink rounded-full px-2.5 py-0.5 text-xs font-black text-ink shadow-pop active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+              >
+                <span>{ageLabel}</span>
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 10 10"
+                  aria-hidden="true"
+                  className="shrink-0"
+                >
+                  <path
+                    d={agePickerOpen ? 'M2 6 L5 3 L8 6' : 'M2 4 L5 7 L8 4'}
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
+                </svg>
+              </button>
+              <AnimatePresence>
+                {agePickerOpen && (
+                  <motion.div
+                    key="picker"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    data-testid="hub-age-picker"
+                    className="mt-2 flex flex-wrap gap-2"
+                  >
+                    {AGE_OPTIONS.map((opt) => {
+                      const active = opt.value === ageGroup;
+                      return (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          data-testid={`hub-age-option-${opt.value}`}
+                          onClick={() => pickAge(opt.value)}
+                          aria-pressed={active}
+                          className={[
+                            'px-3 py-1 rounded-full border-2 border-ink text-xs font-black shadow-pop',
+                            'active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all',
+                            active ? 'bg-sunny text-ink' : 'bg-white text-ink',
+                          ].join(' ')}
+                        >
+                          {t(opt.key)}
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              {ageError && (
+                <p
+                  data-testid="hub-age-error"
+                  role="alert"
+                  className="mt-1 text-tomato font-bold text-xs"
+                >
+                  {ageError}
+                </p>
+              )}
             </div>
           )}
         </div>
