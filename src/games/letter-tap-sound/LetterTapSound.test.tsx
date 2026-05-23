@@ -1,5 +1,6 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TAP_FEEDBACK_MS } from './timings';
 
 const upsertMock = vi.fn().mockResolvedValue(undefined);
 
@@ -26,9 +27,14 @@ import { useUserStore } from '../../stores/userStore';
 beforeEach(() => {
   upsertMock.mockClear();
   useUserStore.setState({ profile: { id: 'u1', displayName: null, avatarUrl: null }, learnLang: 'ar' });
+  // Quiz now schedules onCorrect/onWrong via setTimeout — use fake timers so
+  // we can flush the feedback window deterministically. `shouldAdvanceTime`
+  // keeps real wall-clock progression so `waitFor` still resolves.
+  vi.useFakeTimers({ shouldAdvanceTime: true });
 });
 
 afterEach(() => {
+  vi.useRealTimers();
   useUserStore.getState().reset();
 });
 
@@ -43,10 +49,18 @@ async function playLevel(_targetChar: string, targetName: string, mistakes: numb
         const tiles = screen.getAllByTestId('quiz-tile');
         const wrong = tiles.find((b) => b.getAttribute('aria-label') !== targetName);
         if (wrong) fireEvent.click(wrong);
+        // Advance past the wrong-tile feedback window so onWrong fires.
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(TAP_FEEDBACK_MS.wrong);
+        });
       }
     }
     const correct = screen.getByLabelText(targetName);
     fireEvent.click(correct);
+    // Advance past the correct-tile feedback window so onCorrect fires.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(TAP_FEEDBACK_MS.correct);
+    });
   }
 }
 
@@ -142,6 +156,9 @@ describe('LetterTapSound', () => {
     for (let p = 0; p < 3; p++) {
       const correct = screen.getByLabelText('thaa');
       fireEvent.click(correct);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(TAP_FEEDBACK_MS.correct);
+      });
     }
     await waitFor(() => expect(screen.getByTestId('level-result')).toBeInTheDocument());
     // Next button is present while index 3 is in the active pool
