@@ -6,7 +6,10 @@ export type SoundKey =
   | 'session_complete'
   | 'button_tap'
   | 'level_up'
-  | 'streak_milestone';
+  | 'streak_milestone'
+  | 'star_ping_1'
+  | 'star_ping_2'
+  | 'star_ping_3';
 
 // Asset paths are placeholders — actual files will be added in Phase 3
 // (the game engine phase). The keys defined here are the contract.
@@ -17,6 +20,9 @@ const SOURCES: Record<SoundKey, string[]> = {
   button_tap: ['/sounds/button_tap.mp3'],
   level_up: ['/sounds/level_up.mp3'],
   streak_milestone: ['/sounds/streak_milestone.mp3'],
+  star_ping_1: ['/sounds/star_ping_1.mp3'],
+  star_ping_2: ['/sounds/star_ping_2.mp3'],
+  star_ping_3: ['/sounds/star_ping_3.mp3'],
 };
 
 const cache = new Map<SoundKey, Howl>();
