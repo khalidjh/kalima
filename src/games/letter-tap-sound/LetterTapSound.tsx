@@ -106,6 +106,7 @@ export function LetterTapSound() {
   const next = () => {
     if (state.kind !== 'result') return;
     const currentPos = levelIndices.indexOf(state.levelIndex);
+    if (currentPos < 0) return;
     const nextPos = currentPos + 1;
     if (nextPos < levelIndices.length) startLevel(levelIndices[nextPos]);
     else goBack();
@@ -139,10 +140,12 @@ export function LetterTapSound() {
     );
   }
   if (state.kind === 'result') {
+    const currentPos = levelIndices.indexOf(state.levelIndex);
+    const hasNext = currentPos >= 0 && currentPos + 1 < levelIndices.length;
     return (
       <LevelResult
         stars={state.stars}
-        hasNext={levelIndices.indexOf(state.levelIndex) + 1 < levelIndices.length}
+        hasNext={hasNext}
         onNext={next}
         onReplay={replay}
         onBack={goBack}

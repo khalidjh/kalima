@@ -130,6 +130,27 @@ describe('LetterTapSound', () => {
     expect(screen.getAllByTestId('quiz-tile')).toHaveLength(2);
   });
 
+  it('hides next button on result when current levelIndex is no longer in the active pool', async () => {
+    useUserStore.setState({
+      profile: { id: 'u1', displayName: null, avatarUrl: null },
+      learnLang: 'ar',
+      ageGroup: null,
+    });
+    render(<LetterTapSound />);
+    // Start level 3 (ث / thaa), which is NOT in the 3-4 bucket
+    fireEvent.click(screen.getByTestId('level-card-3'));
+    for (let p = 0; p < 3; p++) {
+      const correct = screen.getByLabelText('thaa');
+      fireEvent.click(correct);
+    }
+    await waitFor(() => expect(screen.getByTestId('level-result')).toBeInTheDocument());
+    // Next button is present while index 3 is in the active pool
+    expect(screen.getByTestId('result-next')).toBeInTheDocument();
+    // Switch to the 3-4 bucket where index 3 is excluded
+    useUserStore.setState({ ageGroup: '3-4' });
+    await waitFor(() => expect(screen.queryByTestId('result-next')).not.toBeInTheDocument());
+  });
+
   it('falls back to full alphabet and 4 choices when ageGroup is null', () => {
     useUserStore.setState({
       profile: { id: 'u1', displayName: null, avatarUrl: null },
