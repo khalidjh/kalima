@@ -114,6 +114,23 @@ describe('Quiz', () => {
     expect(onWrong).not.toHaveBeenCalled();
   });
 
+  it('ignores two taps fired inside a single React batch (multi-touch lock)', () => {
+    const onCorrect = vi.fn();
+    const onWrong = vi.fn();
+    render(<Quiz target={target} choices={[target, ...distractors]} lang="ar" onCorrect={onCorrect} onWrong={onWrong} />);
+    act(() => {
+      fireEvent.click(screen.getByLabelText('alif'));
+      fireEvent.click(screen.getByLabelText('baa'));
+    });
+    expect(mocks.play).toHaveBeenCalledTimes(1);
+    expect(mocks.play).toHaveBeenCalledWith('correct');
+    act(() => {
+      vi.advanceTimersByTime(TAP_FEEDBACK_MS.correct);
+    });
+    expect(onCorrect).toHaveBeenCalledOnce();
+    expect(onWrong).not.toHaveBeenCalled();
+  });
+
   it('does not fire onCorrect if the component unmounts mid-feedback', () => {
     const onCorrect = vi.fn();
     const { unmount } = render(

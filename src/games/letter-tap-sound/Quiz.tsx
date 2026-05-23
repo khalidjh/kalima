@@ -26,6 +26,7 @@ export function Quiz({ target, choices, lang, onCorrect, onWrong }: QuizProps) {
 
   const [feedback, setFeedback] = useState<Feedback>(null);
   const timerRef = useRef<number | null>(null);
+  const lockedRef = useRef(false);
 
   const playPrompt = useCallback(() => {
     void dispatchSpeak(target.audio_key, lang, speak);
@@ -46,13 +47,15 @@ export function Quiz({ target, choices, lang, onCorrect, onWrong }: QuizProps) {
   }, []);
 
   const handleTileClick = (c: Letter) => {
-    if (feedback !== null) return; // feedback window lock
+    if (lockedRef.current) return;
+    lockedRef.current = true;
     const kind: 'correct' | 'wrong' = c.char === target.char ? 'correct' : 'wrong';
     setFeedback({ char: c.char, kind });
     play(kind);
     const delay = TAP_FEEDBACK_MS[kind];
     timerRef.current = window.setTimeout(() => {
       timerRef.current = null;
+      lockedRef.current = false;
       setFeedback(null);
       if (kind === 'correct') onCorrect();
       else onWrong();
