@@ -21,6 +21,10 @@ vi.mock('../../hooks/useSpeech', () => ({
   useSpeech: () => ({ speak: vi.fn().mockResolvedValue(undefined), speaking: false, supported: true }),
 }));
 
+vi.mock('canvas-confetti', () => ({
+  default: vi.fn(),
+}));
+
 import { LetterTapSound } from './LetterTapSound';
 import { useUserStore } from '../../stores/userStore';
 
