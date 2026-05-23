@@ -73,6 +73,14 @@ describe('getLevelIndicesForAge', () => {
     expect(getLevelIndicesForAge('en', null)).toHaveLength(26);
     expect(getLevelIndicesForAge('ar', null)).toEqual(Array.from({ length: 28 }, (_, i) => i));
   });
+
+  it('returns a fresh array each call so callers can mutate without polluting the config', () => {
+    const a = getLevelIndicesForAge('ar', '3-4');
+    const b = getLevelIndicesForAge('ar', '3-4');
+    expect(a).not.toBe(b);
+    a.push(999);
+    expect(getLevelIndicesForAge('ar', '3-4')).not.toContain(999);
+  });
 });
 
 describe('getChoiceCountForAge', () => {

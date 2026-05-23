@@ -33,7 +33,7 @@ export function getLevelIndicesForAge(
   if (age === null) {
     return allIndices(lang === 'ar' ? LETTERS_AR.length : LETTERS_EN.length);
   }
-  return LEVEL_INDICES_FOR_AGE[lang][age];
+  return [...LEVEL_INDICES_FOR_AGE[lang][age]];
 }
 
 export function getChoiceCountForAge(age: AgeGroup | null): number {
