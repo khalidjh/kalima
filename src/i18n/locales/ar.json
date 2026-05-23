@@ -79,6 +79,9 @@
     "switch_to_ar": "العربية",
     "change_learn_lang": "غيّر لغة التعلّم",
     "change_age": "غيّر الفئة العمرية",
+    "sound_effects": "المؤثرات الصوتية",
+    "sound_effects_on": "تشغيل",
+    "sound_effects_off": "إيقاف",
     "logout": "تسجيل الخروج",
     "guest_upgrade": "احفظ تقدّمي — سجّل بحساب Google",
     "guest_upgrade_warning": "تنبيه: لن يتم نقل نجومك كضيف بعد، هذه الميزة قادمة قريباً."

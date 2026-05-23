@@ -75,6 +75,9 @@
     "switch_to_ar": "العربية",
     "change_learn_lang": "Change learning language",
     "change_age": "Change age group",
+    "sound_effects": "Sound effects",
+    "sound_effects_on": "On",
+    "sound_effects_off": "Off",
     "logout": "Sign out",
     "guest_upgrade": "Save my progress — Sign in with Google",
     "guest_upgrade_warning": "Heads up: your guest stars won't carry over yet — that's coming soon."

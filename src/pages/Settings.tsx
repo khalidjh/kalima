@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { useUserStore } from '../stores/userStore';
+import { useSoundStore } from '../stores/soundStore';
 import { signInWithGoogle, signOut } from '../lib/auth';
 import { updateProfile } from '../lib/profile';
 import type { Lang } from '../stores/userStore';
@@ -17,6 +18,8 @@ export default function Settings() {
   const setUiLang = useUserStore((s) => s.setUiLang);
   const setLearnLang = useUserStore((s) => s.setLearnLang);
   const setAgeGroup = useUserStore((s) => s.setAgeGroup);
+  const muted = useSoundStore((s) => s.muted);
+  const toggleMuted = useSoundStore((s) => s.toggle);
   const [error, setError] = useState<string | null>(null);
 
   async function toggleUiLang() {
@@ -110,6 +113,10 @@ export default function Settings() {
 
       <Button variant="secondary" data-testid="toggle-ui-lang" onClick={toggleUiLang}>
         {t('settings.ui_lang')}: {uiLang === 'ar' ? t('settings.switch_to_en') : t('settings.switch_to_ar')}
+      </Button>
+
+      <Button variant="secondary" data-testid="toggle-sfx" onClick={toggleMuted}>
+        {t('settings.sound_effects')}: {muted ? t('settings.sound_effects_off') : t('settings.sound_effects_on')}
       </Button>
 
       <Button variant="secondary" data-testid="change-learn-lang" onClick={changeLearnLang}>

@@ -24,11 +24,13 @@ vi.mock('../lib/profile', () => ({ updateProfile: mocks.updateProfile }));
 
 import Settings from './Settings';
 import { useUserStore } from '../stores/userStore';
+import { useSoundStore } from '../stores/soundStore';
 import i18n from '../i18n';
 
 beforeEach(() => {
   useUserStore.getState().reset();
   useUserStore.getState().setProfile({ id: 'u1', displayName: null, avatarUrl: null });
+  useSoundStore.setState({ muted: false });
   mocks.navigate.mockReset();
   mocks.signOut.mockReset();
   mocks.signOut.mockResolvedValue(undefined);
@@ -101,5 +103,21 @@ describe('Settings', () => {
       expect(screen.getByTestId('settings-error')).toBeInTheDocument();
     });
     expect(useUserStore.getState().uiLang).toBe('ar');
+  });
+
+  it('renders the sound-effects toggle reflecting the current muted state', async () => {
+    await i18n.changeLanguage('en');
+    useSoundStore.setState({ muted: false });
+    render(<MemoryRouter><Settings /></MemoryRouter>);
+    expect(screen.getByTestId('toggle-sfx')).toHaveTextContent(/on/i);
+  });
+
+  it('flips soundStore.muted when the sound-effects toggle is clicked', async () => {
+    useSoundStore.setState({ muted: false });
+    render(<MemoryRouter><Settings /></MemoryRouter>);
+    await userEvent.click(screen.getByTestId('toggle-sfx'));
+    expect(useSoundStore.getState().muted).toBe(true);
+    await userEvent.click(screen.getByTestId('toggle-sfx'));
+    expect(useSoundStore.getState().muted).toBe(false);
   });
 });
