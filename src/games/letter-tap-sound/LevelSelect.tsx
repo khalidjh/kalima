@@ -3,17 +3,19 @@ import { StarIcon } from '../../components/icons';
 
 interface LevelSelectProps {
   letters: Letter[];
+  levelIndices: number[];
   progress: ProgressMap;
   onPick: (levelIndex: number) => void;
 }
 
-export function LevelSelect({ letters, progress, onPick }: LevelSelectProps) {
+export function LevelSelect({ letters, levelIndices, progress, onPick }: LevelSelectProps) {
   return (
     <div
       data-testid="level-select"
       className="grid grid-cols-4 sm:grid-cols-6 gap-3 px-4 py-6 max-w-2xl mx-auto"
     >
-      {letters.map((l, i) => {
+      {levelIndices.map((i) => {
+        const l = letters[i];
         const stars = progress.get(i) ?? 0;
         return (
           <button

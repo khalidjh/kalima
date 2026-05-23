@@ -6,6 +6,7 @@ import { Quiz } from './Quiz';
 import { LevelResult } from './LevelResult';
 import { LETTERS_AR } from './data/letters-ar';
 import { LETTERS_EN } from './data/letters-en';
+import { getChoiceCountForAge, getLevelIndicesForAge } from './config';
 import type { Letter } from '../../types/game';
 import type { Lang } from '../../stores/userStore';
 
@@ -16,19 +17,29 @@ type State =
   | { kind: 'playing'; levelIndex: number; promptIndex: number; mistakes: number; choices: Letter[] }
   | { kind: 'result'; levelIndex: number; stars: number };
 
-function pickDistractors(pool: Letter[], targetIndex: number): Letter[] {
-  const others = pool.filter((_, i) => i !== targetIndex);
-  // Fisher-Yates partial shuffle, take first 3
+function pickDistractors(
+  letters: Letter[],
+  poolIndices: number[],
+  targetIndex: number,
+  count: number,
+): Letter[] {
+  const others = poolIndices.filter((i) => i !== targetIndex).map((i) => letters[i]);
+  // Fisher-Yates partial shuffle, take first `count`
   for (let i = others.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [others[i], others[j]] = [others[j], others[i]];
   }
-  return others.slice(0, 3);
+  return others.slice(0, count);
 }
 
-function buildChoices(letters: Letter[], levelIndex: number): Letter[] {
+function buildChoices(
+  letters: Letter[],
+  poolIndices: number[],
+  levelIndex: number,
+  choiceCount: number,
+): Letter[] {
   const target = letters[levelIndex];
-  const distractors = pickDistractors(letters, levelIndex);
+  const distractors = pickDistractors(letters, poolIndices, levelIndex, choiceCount - 1);
   const all = [target, ...distractors];
   for (let i = all.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -45,8 +56,14 @@ function starsFor(mistakes: number): number {
 
 export function LetterTapSound() {
   const learnLang = useUserStore((s) => s.learnLang);
+  const ageGroup = useUserStore((s) => s.ageGroup);
   const lang: Lang = learnLang ?? 'ar';
   const letters = lang === 'ar' ? LETTERS_AR : LETTERS_EN;
+  const levelIndices = useMemo(
+    () => getLevelIndicesForAge(lang, ageGroup),
+    [lang, ageGroup],
+  );
+  const choiceCount = getChoiceCountForAge(ageGroup);
   const { progress, upsert } = useGameProgress('letter-tap-sound', lang);
   const [state, setState] = useState<State>({ kind: 'select' });
 
@@ -56,7 +73,7 @@ export function LetterTapSound() {
       levelIndex,
       promptIndex: 0,
       mistakes: 0,
-      choices: buildChoices(letters, levelIndex),
+      choices: buildChoices(letters, levelIndices, levelIndex, choiceCount),
     });
   };
 
@@ -72,7 +89,7 @@ export function LetterTapSound() {
     setState({
       ...state,
       promptIndex: nextPrompt,
-      choices: buildChoices(letters, state.levelIndex),
+      choices: buildChoices(letters, levelIndices, state.levelIndex, choiceCount),
     });
   };
 
@@ -88,8 +105,9 @@ export function LetterTapSound() {
   };
   const next = () => {
     if (state.kind !== 'result') return;
-    const nextIndex = state.levelIndex + 1;
-    if (nextIndex < letters.length) startLevel(nextIndex);
+    const currentPos = levelIndices.indexOf(state.levelIndex);
+    const nextPos = currentPos + 1;
+    if (nextPos < levelIndices.length) startLevel(levelIndices[nextPos]);
     else goBack();
   };
 
@@ -99,7 +117,14 @@ export function LetterTapSound() {
   }, [state, letters]);
 
   if (state.kind === 'select') {
-    return <LevelSelect letters={letters} progress={progress} onPick={startLevel} />;
+    return (
+      <LevelSelect
+        letters={letters}
+        levelIndices={levelIndices}
+        progress={progress}
+        onPick={startLevel}
+      />
+    );
   }
   if (state.kind === 'playing' && target) {
     return (
@@ -117,7 +142,7 @@ export function LetterTapSound() {
     return (
       <LevelResult
         stars={state.stars}
-        hasNext={state.levelIndex + 1 < letters.length}
+        hasNext={levelIndices.indexOf(state.levelIndex) + 1 < levelIndices.length}
         onNext={next}
         onReplay={replay}
         onBack={goBack}

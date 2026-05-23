@@ -90,4 +90,55 @@ describe('LetterTapSound', () => {
     fireEvent.click(screen.getByTestId('result-back'));
     expect(screen.getByTestId('level-select')).toBeInTheDocument();
   });
+
+  it('renders only the age 3-4 starter pool (8 tiles) when ageGroup is 3-4 in Arabic', () => {
+    useUserStore.setState({
+      profile: { id: 'u1', displayName: null, avatarUrl: null },
+      learnLang: 'ar',
+      ageGroup: '3-4',
+    });
+    render(<LetterTapSound />);
+    const tiles = screen.getAllByTestId(/^level-card-/);
+    expect(tiles).toHaveLength(8);
+    // Stable testid keying = full-alphabet index, so the first card is ا (index 0)
+    expect(screen.getByTestId('level-card-0')).toBeInTheDocument();
+    expect(screen.getByTestId('level-card-7')).toBeInTheDocument(); // د
+    expect(screen.getByTestId('level-card-24')).toBeInTheDocument(); // ن
+    // Out-of-bucket letter ث (index 3) is not rendered
+    expect(screen.queryByTestId('level-card-3')).not.toBeInTheDocument();
+  });
+
+  it('shows 6 quiz tiles per round when ageGroup is 8-10', () => {
+    useUserStore.setState({
+      profile: { id: 'u1', displayName: null, avatarUrl: null },
+      learnLang: 'ar',
+      ageGroup: '8-10',
+    });
+    render(<LetterTapSound />);
+    fireEvent.click(screen.getByTestId('level-card-0'));
+    expect(screen.getAllByTestId('quiz-tile')).toHaveLength(6);
+  });
+
+  it('shows 2 quiz tiles per round when ageGroup is 3-4', () => {
+    useUserStore.setState({
+      profile: { id: 'u1', displayName: null, avatarUrl: null },
+      learnLang: 'ar',
+      ageGroup: '3-4',
+    });
+    render(<LetterTapSound />);
+    fireEvent.click(screen.getByTestId('level-card-0'));
+    expect(screen.getAllByTestId('quiz-tile')).toHaveLength(2);
+  });
+
+  it('falls back to full alphabet and 4 choices when ageGroup is null', () => {
+    useUserStore.setState({
+      profile: { id: 'u1', displayName: null, avatarUrl: null },
+      learnLang: 'ar',
+      ageGroup: null,
+    });
+    render(<LetterTapSound />);
+    expect(screen.getAllByTestId(/^level-card-/)).toHaveLength(28);
+    fireEvent.click(screen.getByTestId('level-card-0'));
+    expect(screen.getAllByTestId('quiz-tile')).toHaveLength(4);
+  });
 });
