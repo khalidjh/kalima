@@ -11,7 +11,7 @@ This spec covers a **juice layer** for Letter Tap: per-tap visual + audio feedba
 - **Tap feedback:** every tile press produces an immediate visual + audio response that distinguishes correct from wrong, without hiding the letter itself.
 - **Level-complete celebration:** the result screen builds anticipation (star-by-star cascade with rising pings) and climaxes (confetti + fanfare on the 3rd star + mascot bounce).
 - **Accessibility:** respect `prefers-reduced-motion` by downgrading animations (but keeping audio); offer a persistent in-app mute for SFX.
-- **Reusable infrastructure:** the SFX and reduced-motion code belongs in a shared `src/lib/juice/` module so Word Builder and future games can use it.
+- **Reusable infrastructure:** the reduced-motion hook is a leaf utility usable across all current and future games; the sound infra is already shared (existing `lib/sound.ts` + `useSound`).
 
 ## Non-goals
 
@@ -29,13 +29,17 @@ This spec covers a **juice layer** for Letter Tap: per-tap visual + audio feedba
 
 ### Audio strategy
 
-**Hybrid.**
-- **Synthesized feedback** (correct ding, wrong buzz, star pings) via Web Audio API directly — `OscillatorNode` with short envelopes. Zero asset weight, zero load latency, fully tunable in source.
-- **Pre-recorded fanfare** for level-complete via Howler — a single CC0-licensed clip (~1.5-2.5s, ≤80KB) from freesound.org, stored at `public/sfx/level-complete.mp3` with attribution in `public/sfx/README.md`.
+**All-files via existing infra.** During implementation planning, we discovered the codebase already ships a Howler-based sound system: `src/lib/sound.ts` (cache + player), `src/stores/soundStore.ts` (persisted `muted` flag), and `src/hooks/useSound.ts` (React wrapper). The `SoundKey` type already includes `correct`, `wrong`, and `level_up`. Original plans for a synth-based hybrid were dropped in favor of reusing this infrastructure — building parallel synth code would be duplication.
 
-The split is deliberate: feedback sounds must fire with zero perceptible latency (synthesis = no decode/network), while the fanfare needs harmonic richness that procedural code can't sell.
+**Assets** (placed under `public/sounds/`, ~10-30KB each, ~100KB total):
+- `correct.mp3` — short positive ding (~150ms)
+- `wrong.mp3` — short negative blip (~200ms), gentle (this is a learning game)
+- `star_ping_1.mp3`, `star_ping_2.mp3`, `star_ping_3.mp3` — rising-pitch chimes (~250ms each)
+- `level_up.mp3` — fanfare (~1.5-2.5s, ≤80KB)
 
-If the fanfare file fails to load (404, decode error, or simply not yet committed), the player degrades silently — the level-complete moment still shows visuals + tap-ping sounds; only the fanfare horn is missing.
+All sources are CC0 from freesound.org with attribution in `public/sounds/README.md`. Howler is already configured with `preload: false` and `volume: 0.6` in `lib/sound.ts`, so first-play has a brief load; subsequent plays from cache are ~10ms — imperceptible for kids' game feel.
+
+If any asset 404s or fails to decode, Howler silently no-ops the play — degrades gracefully without throwing.
 
 ### Visual feedback
 
@@ -51,9 +55,9 @@ The Quiz holds a local `feedback` state keyed by the tapped tile's char so anima
 
 | t (ms from mount) | Event |
 |---|---|
-| 0 (synchronous render) | Star 1 appears with spring scale (0 → 1.2 → 1), `ping₁` plays (660 Hz sine) |
-| 350 (`setTimeout`) | Star 2 appears, `ping₂` plays (880 Hz) |
-| 700 (`setTimeout`) | Star 3 appears + confetti burst + mascot bounce, `ping₃` plays (1100 Hz), fanfare plays |
+| 0 (synchronous render) | Star 1 appears with spring scale (0 → 1.2 → 1), `play('star_ping_1')` |
+| 350 (`setTimeout`) | Star 2 appears, `play('star_ping_2')` |
+| 700 (`setTimeout`) | Star 3 appears + confetti burst + mascot bounce, `play('star_ping_3')` + `play('level_up')` |
 
 t=0 means "on the first paint after `LevelResult` mounts" — star 1 is part of the initial render, not deferred via a 0ms timer. Stars 2 and 3 are scheduled with `setTimeout(350)` and `setTimeout(700)` from a single `useEffect` that fires once on mount.
 
@@ -83,52 +87,54 @@ Implemented via `useReducedMotion()` hook (wraps `matchMedia('(prefers-reduced-m
 
 ### SFX mute toggle
 
-**Persistent setting in `userStore`** (`sfxEnabled: boolean`, default `true`). Exposed via a toggle row on the existing Settings page labeled "Sound effects." Persists across sessions via the existing zustand persist middleware (`kalima.user` storage key).
+**Reuse the existing `soundStore.muted` flag** (already persisted via zustand persist as `kalima.sound`, defaults to `false` = unmuted). Expose a toggle row on the existing Settings page labeled "Sound effects" that flips `muted` via `useSoundStore.getState().toggle()`.
 
-The `useSfx` hook reads `sfxEnabled` and returns a façade where every method is a no-op when muted. Components don't conditionally call SFX — they always call, the gate is internal. This keeps component code simple and centralizes the policy.
+The gating is already implemented inside `lib/sound.ts`: `playSound(key, muted)` no-ops when `muted=true`. Components call `useSound().play(key)` and don't need to think about the mute state — it's handled internally.
 
 TTS letter audio (the speaker-button playback in Quiz) is **separate** from SFX and **unaffected** by this toggle — that's instructional audio, not juice. A future "TTS mute" toggle could live next to it but is out of scope here.
 
 ### Browser autoplay handling
 
-`AudioContext` cannot be constructed before a user gesture in modern browsers. The first user gesture in Letter Tap is always the LevelSelect tile tap (which starts a level), and the second is always the speaker-button tap or a quiz tile tap (which the TTS layer already uses via `useSpeech`, so a gesture-unlocked context already exists by the time the first tap-feedback fires). The `useSfx` hook lazy-creates the `AudioContext` on first call; if for some reason that first call happens before any gesture (unlikely), the call no-ops and the next call (post-gesture) succeeds.
+Howler handles the user-gesture unlock internally. The first sound call in a session may be delayed until a gesture occurs; in Letter Tap the first plays happen in response to taps, so the gesture requirement is satisfied by construction. Pre-existing TTS audio (via `useSpeech`) also already triggers gesture unlock by the time juice SFX fire.
 
 ## Architecture
 
 ```
-src/lib/juice/                  ← new shared infra
-├── sfx.ts                      Synth + Howler façade. Exports playCorrect, playWrong,
-│                               playStarPing, playFanfare.
-├── sfx.test.ts                 Mocks AudioContext, Howler.
-├── useSfx.ts                   React hook. Reads sfxEnabled from userStore,
-│                               returns gated façade.
-├── useSfx.test.ts
-├── useReducedMotion.ts         matchMedia wrapper with subscription.
-└── useReducedMotion.test.ts
+src/lib/sound.ts                ← MODIFY: extend SoundKey with star_ping_1/2/3;
+                                  add asset entries
+src/hooks/useReducedMotion.ts   ← CREATE: matchMedia wrapper with subscription
+src/hooks/useReducedMotion.test.tsx
 
-src/stores/userStore.ts         ← add sfxEnabled, setSfxEnabled to persisted state
-src/pages/Settings.tsx          ← add "Sound effects" toggle row
+src/pages/Settings.tsx          ← MODIFY: add "Sound effects" toggle row
+                                  (reads soundStore.muted, calls toggle())
 
 src/games/letter-tap-sound/
-├── Quiz.tsx                    ← feedback state, animation classes, SFX dispatch,
-│                               delay before onCorrect/onWrong
-└── LevelResult.tsx             ← staggered cascade + confetti + fanfare effect
+├── timings.ts                  ← CREATE: TAP_FEEDBACK_MS, STAR_CASCADE_MS,
+│                                 CONFETTI_PARTICLES constants
+├── Quiz.tsx                    ← MODIFY: feedback state, animation classes,
+│                                 useSound().play, delay before onCorrect/onWrong
+└── LevelResult.tsx             ← MODIFY: staggered cascade + confetti + fanfare effect
 
-public/sfx/
-├── level-complete.mp3          ← CC0 fanfare asset
-└── README.md                   ← attribution + source URL
+public/sounds/                  ← CREATE directory + assets
+├── correct.mp3                 (~150ms ding)
+├── wrong.mp3                   (~200ms gentle blip)
+├── star_ping_1.mp3             (~250ms, low pitch)
+├── star_ping_2.mp3             (~250ms, mid pitch)
+├── star_ping_3.mp3             (~250ms, high pitch)
+├── level_up.mp3                (~1.5-2.5s fanfare, ≤80KB)
+└── README.md                   ← attribution + source URLs
 
 package.json                    ← + canvas-confetti, + @types/canvas-confetti
 ```
 
 ### Module boundaries
 
-- **`sfx.ts`** knows about Web Audio and Howler. It does NOT know about React or the user store. Pure module.
-- **`useSfx`** knows about React + user store. It does NOT contain any audio code — it composes `sfx.ts` with the gate.
-- **`useReducedMotion`** knows about React + matchMedia. Nothing else.
-- **`Quiz` and `LevelResult`** know about choreography (timings, which sound for which event). They don't know how sound is produced or gated.
+- **`src/lib/sound.ts` (existing)** knows about Howler. Owns the asset registry and the muted gate.
+- **`src/hooks/useSound.ts` (existing)** wraps `lib/sound.ts` with React + soundStore. Returns `{ play, muted }`.
+- **`src/hooks/useReducedMotion.ts` (new)** wraps `matchMedia` with React state. Returns boolean.
+- **`Quiz` and `LevelResult`** know about choreography (timings, which sound for which event). They use `useSound()` and `useReducedMotion()`. They don't know how sound is produced or gated.
 
-This split lets Word Builder (when it lands) reuse `useSfx` and `useReducedMotion` directly. It also keeps the SFX module testable without React.
+This split keeps the sound system unified for all future games (Word Builder, etc.). `useReducedMotion` is a leaf utility usable anywhere in the app.
 
 ### State during tap feedback
 
@@ -140,7 +146,7 @@ type Feedback = { char: string; kind: 'correct' | 'wrong' } | null;
 
 On tile click:
 1. Set feedback to `{ char, kind }`.
-2. Call `sfx.playCorrect()` or `sfx.playWrong()`.
+2. Call `play('correct')` or `play('wrong')` via `useSound()`.
 3. After 300ms (correct) or 400ms (wrong), clear feedback and fire `onCorrect`/`onWrong`.
 
 The delay is implemented with `setTimeout` inside an effect keyed on `feedback`. Cleanup cancels the pending timer if the component unmounts mid-animation (e.g., user backs out).
@@ -159,16 +165,16 @@ export const CONFETTI_PARTICLES = 60;
 
 ## Behavior matrix
 
-| Event | Visual (default) | Visual (reduced-motion) | Audio |
+| Event | Visual (default) | Visual (reduced-motion) | Audio (SoundKey) |
 |---|---|---|---|
-| Correct tap | tile scale 1.15× + green border pulse, 300ms | tile dims green, 200ms | sine 880 Hz ~150ms |
-| Wrong tap | tile shake 4 cycles + red border flash, 400ms | tile dims red, 200ms | square 220 Hz ~200ms |
-| Star 1 (t=0) | spring scale-in | fade-in | ping 660 Hz |
-| Star 2 (t=350) | spring scale-in | fade-in | ping 880 Hz |
-| Star 3 (t=700) | spring scale-in + confetti burst + mascot bounce | fade-in (no confetti, no bounce) | ping 1100 Hz + fanfare file |
-| SFX muted | (visual unchanged) | (visual unchanged) | silent across all events |
-| Fanfare 404 | (unchanged) | (unchanged) | tap sounds + pings play; fanfare silent (warn in dev) |
-| AudioContext blocked | (unchanged) | (unchanged) | silent until first user gesture creates context |
+| Correct tap | tile scale 1.15× + green border pulse, 300ms | tile dims green, 200ms | `correct` |
+| Wrong tap | tile shake 4 cycles + red border flash, 400ms | tile dims red, 200ms | `wrong` |
+| Star 1 (t=0) | spring scale-in | fade-in | `star_ping_1` |
+| Star 2 (t=350) | spring scale-in | fade-in | `star_ping_2` |
+| Star 3 (t=700) | spring scale-in + confetti burst + mascot bounce | fade-in (no confetti, no bounce) | `star_ping_3` + `level_up` |
+| Muted (`soundStore.muted=true`) | (visual unchanged) | (visual unchanged) | silent across all events |
+| Asset 404 / decode error | (unchanged) | (unchanged) | Howler silently no-ops that key; other keys unaffected |
+| Pre-gesture call | (unchanged) | (unchanged) | Howler queues; plays after first user gesture |
 
 ## Edge cases
 
@@ -177,21 +183,19 @@ export const CONFETTI_PARTICLES = 60;
 - **Rapid tap on different tile during feedback window:** also ignored, same reason. The feedback window is a brief "lock."
 - **Replay button on result screen:** fires immediately, no celebration replay. Starts a new level normally.
 - **Level reaches result with 1-2 stars** (mistakes): the cascade reveals N stars where N = stars earned. The unearned positions are gray placeholders rendered immediately on mount. Each earned star plays its ping at the slot timing (0, 350, 700ms). The climax — confetti + fanfare + mascot bounce — fires at the **last earned star's slot**, not always at t=700. So 1-star → climax at t=0; 2-star → climax at t=350; 3-star → climax at t=700. The minimum earned is 1 star (`starsFor(mistakes)` never returns 0). *Open: should 1-star skip the confetti? Held as default-on for now; revisit after observing kid reactions.*
-- **System volume muted vs `sfxEnabled=false`:** independent. App can be `sfxEnabled=true` while OS is muted (no sound). App can be `sfxEnabled=false` while OS has volume (no SFX, but TTS letter audio still plays — TTS is not gated).
+- **System volume muted vs `soundStore.muted=true`:** independent. App can be unmuted while OS is muted (no sound). App can be muted while OS has volume (no SFX, but TTS letter audio still plays — TTS is not gated by the sound store).
 - **`prefers-reduced-motion` changes mid-session:** the hook subscribes to media query changes, so live OS-level toggling (e.g., parent enables it during play) takes effect immediately on the next render.
 - **`canvas-confetti` lazy-load fails** (offline, CSP, etc.): wrap the import in a try/catch; on failure, skip confetti, log in dev. Other celebration elements unaffected.
 - **Mid-quiz mute toggle:** if the user opens settings mid-level, mutes SFX, and returns, the next tile-tap is silent. No replays of in-flight sounds, no re-rendering of Quiz.
-- **`AudioContext` creation fails** (very old browsers, ITP exotic cases): all synth methods become no-ops. Howler fanfare attempts independently.
+- **Howler initialization fails** (very old browsers, exotic cases): `play()` is a no-op; UI behavior is unaffected.
 
 ## Testing strategy
 
-### Unit tests (juice infra)
+### Unit tests (infra)
 
-- **`sfx.test.ts`** — mock `AudioContext`/`OscillatorNode` constructors. Assert `playCorrect()` creates an oscillator with frequency 880 and type 'sine'; `playWrong()` 220 Hz square; `playStarPing(1/2/3)` 660/880/1100 Hz. Mock Howler — assert `Howl` constructed with the right src and `.play()` called. Fanfare load error → no throw, returns void.
-- **`useSfx.test.ts`** — render in a test component, assert that when `sfxEnabled` is true on userStore the underlying `sfx.playCorrect` is called; when false, it is not.
-- **`useReducedMotion.test.ts`** — mock `matchMedia`; hook returns `true` when match; subscribes via `addEventListener('change', ...)` and updates on `MediaQueryListEvent`.
-- **`userStore.test.ts`** (extended) — `setSfxEnabled(false)` flips state; default is `true`; included in persist payload.
-- **`Settings.test.tsx`** (extended) — toggle row renders with current value, click flips state.
+- **`sound.test.ts`** (extend existing if present, otherwise new) — assert the three new keys (`star_ping_1/2/3`) appear in `SOURCES` with paths under `/sounds/`. The existing test pattern for `useSound` (mocking Howler) covers the play path.
+- **`useReducedMotion.test.tsx`** — mock `matchMedia`; hook returns `true` when the media query matches; subscribes via `addEventListener('change', ...)` and updates on `MediaQueryListEvent`; cleans up on unmount.
+- **`Settings.test.tsx`** (extended) — toggle row renders with current `muted` value, click flips `soundStore.muted`.
 
 ### Integration tests (Letter Tap)
 
@@ -202,13 +206,13 @@ export const CONFETTI_PARTICLES = 60;
   - Second click during feedback window → handler short-circuits, no extra calls.
   - Reduced-motion variant: `data-feedback` still set, but a `data-reduced-motion` attr is on the tile (test asserts presence; CSS proves the visual rule).
 - **`LevelResult.test.tsx`** (extended) — with `vi.useFakeTimers()`, rendered with `stars={3}` unless noted:
-  - On initial render: 1 revealed star (`data-revealed="true"` on first star — synchronous), `playStarPing(1)` called.
-  - Advance 350ms → 2 revealed, `playStarPing(2)` called.
-  - Advance another 350ms (total 700ms) → 3 revealed, `playStarPing(3)` called, `playFanfare()` called, lazy import of `canvas-confetti` resolved + confetti dispatched.
+  - On initial render: 1 revealed star (`data-revealed="true"` on first star — synchronous), `play('star_ping_1')` called.
+  - Advance 350ms → 2 revealed, `play('star_ping_2')` called.
+  - Advance another 350ms (total 700ms) → 3 revealed, `play('star_ping_3')` called, `play('level_up')` called, lazy import of `canvas-confetti` resolved + confetti dispatched.
   - `stars={2}`: on render, 1 revealed; advance 350ms → 2 revealed + fanfare + confetti dispatched at this slot (not at t=700).
   - `stars={1}`: on render, 1 revealed + fanfare + confetti dispatched synchronously (climax at the only star's slot).
   - Reduced-motion variant (`stars={3}`): confetti NOT dispatched; fanfare + pings still play.
-  - Muted (`sfxEnabled=false`, `stars={3}`): stars still cascade visually; `playStarPing`/`playFanfare` calls happen but are internal no-ops (assert on a spy at the `sfx.ts` boundary — should NOT fire).
+  - Muted (`soundStore.muted=true`, `stars={3}`): stars still cascade visually; `play('star_ping_*')` and `play('level_up')` are called from the component but the underlying Howler `play()` is NOT invoked (assert on the Howler mock).
 
 ### What we don't test
 
@@ -218,18 +222,19 @@ export const CONFETTI_PARTICLES = 60;
 
 ## Rollout
 
-1. Implement juice infra (`sfx.ts`, `useSfx`, `useReducedMotion`) and store/settings changes in isolation — verifiable independently, no UI surface yet.
-2. Wire Quiz tap feedback. Verifiable: open in browser, tap tiles, hear/see feedback.
-3. Wire LevelResult cascade + confetti + fanfare. Verifiable: finish a level, watch the choreography.
-4. Add fanfare asset (CC0 from freesound, attribution in README).
+1. Extend `lib/sound.ts` with the 3 new `star_ping_*` keys and update `SOURCES` paths. Add `useReducedMotion` hook. Verifiable: unit tests.
+2. Add "Sound effects" toggle to Settings page wiring `soundStore.muted`. Verifiable: settings tests + manual click.
+3. Wire Quiz tap feedback. Verifiable: open in browser, tap tiles, hear/see feedback.
+4. Wire LevelResult cascade + confetti + fanfare. Verifiable: finish a level, watch the choreography.
+5. Commit asset files (CC0 from freesound, attribution in `public/sounds/README.md`).
 
-Each step is independently mergeable. If the fanfare asset slips, steps 1-3 still ship cleanly with the silent-fanfare degradation path.
+Steps 1-4 ship cleanly without assets — Howler silently no-ops missing files, so the game functions (silently for any unjuiced event) until assets land. Step 5 can ship in the same PR or as a follow-up.
 
 ## Open questions
 
 - **1-star confetti:** does a 1-star finish (lots of mistakes) feel celebratory or hollow? Default-on for v1; reassess from kid reactions.
 - **Confetti color palette:** default `canvas-confetti` colors are bright primary; should they match the Pop Cartoon brand (`sunny`, `accent`, etc.)? Defer to implementation — easy to pass `colors: [...]` into the call.
-- **Synth tone refinement:** the 880 Hz sine "correct" might sound too clinical. Easy to tune (add slight detuning, envelope shaping) post-ship once we hear it in the actual UI.
+- **Asset sourcing:** specific freesound CC0 candidates for each of the 6 sounds — proposed during implementation, picked by Khalid before the asset-commit step.
 
 ## Out of scope (future work)
 
@@ -239,4 +244,4 @@ Each step is independently mergeable. If the fanfare asset slips, steps 1-3 stil
 - Background music or theme songs.
 - Haptic feedback on touch devices (`navigator.vibrate`) — controversial for kids; deferred.
 - TTS mute toggle (separate concern, separate decision).
-- Word Builder integration — that game doesn't exist yet; `useSfx` and `useReducedMotion` will be ready when it does.
+- Word Builder integration — that game doesn't exist yet; the shared `useSound`/`useReducedMotion` infra will be ready when it does.
