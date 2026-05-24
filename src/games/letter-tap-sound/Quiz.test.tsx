@@ -49,6 +49,16 @@ describe('Quiz', () => {
     expect(screen.getAllByTestId('quiz-tile')).toHaveLength(4);
   });
 
+  it('renders quiz tile aria-labels in the same order as the choices array', () => {
+    const choices = [target, ...distractors];
+    render(<Quiz target={target} choices={choices} lang="ar" onCorrect={() => {}} onWrong={() => {}} />);
+    const tiles = screen.getAllByTestId('quiz-tile');
+    expect(tiles).toHaveLength(choices.length);
+    tiles.forEach((tile, i) => {
+      expect(tile.getAttribute('aria-label')).toBe(choices[i].name);
+    });
+  });
+
   it('plays audio on mount', () => {
     render(<Quiz target={target} choices={[target, ...distractors]} lang="ar" onCorrect={() => {}} onWrong={() => {}} />);
     expect(mocks.dispatchSpeak).toHaveBeenCalledWith('alif', 'ar', expect.any(Function));
