@@ -2,14 +2,18 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TAP_FEEDBACK_MS } from './timings';
 
-const upsertMock = vi.fn().mockResolvedValue(undefined);
+const mocks = vi.hoisted(() => ({
+  upsert: vi.fn().mockResolvedValue(undefined),
+  progress: new Map<number, number>(),
+}));
+const upsertMock = mocks.upsert;
 
 vi.mock('../../hooks/useGameProgress', () => ({
   useGameProgress: () => ({
-    progress: new Map(),
+    progress: mocks.progress,
     loading: false,
     error: null,
-    upsert: upsertMock,
+    upsert: mocks.upsert,
   }),
 }));
 
@@ -31,7 +35,8 @@ import { LEVEL_INDICES_FOR_AGE } from './config';
 import { LETTERS_AR } from './data/letters-ar';
 
 beforeEach(() => {
-  upsertMock.mockClear();
+  mocks.upsert.mockClear();
+  mocks.progress = new Map();
   useUserStore.setState({ profile: { id: 'u1', displayName: null, avatarUrl: null }, learnLang: 'ar' });
   // Quiz now schedules onCorrect/onWrong via setTimeout — use fake timers so
   // we can flush the feedback window deterministically. `shouldAdvanceTime`
@@ -203,5 +208,26 @@ describe('LetterTapSound', () => {
     expect(screen.getAllByTestId(/^level-card-/)).toHaveLength(28);
     fireEvent.click(screen.getByTestId('level-card-0'));
     expect(screen.getAllByTestId('quiz-tile')).toHaveLength(4);
+  });
+
+  it('preserves earned stars across an age-group switch (progress is not age-keyed)', async () => {
+    mocks.progress = new Map([[0, 3]]);
+    useUserStore.setState({
+      profile: { id: 'u1', displayName: null, avatarUrl: null },
+      learnLang: 'ar',
+      ageGroup: '3-4',
+    });
+    render(<LetterTapSound />);
+    const card34 = screen.getByTestId('level-card-0');
+    expect(card34.querySelectorAll('svg')).toHaveLength(3);
+    // Switching age bucket must not lose stars: level 0 (ا) is in both pools,
+    // and useGameProgress is keyed by profile|game|lang, not by age.
+    act(() => {
+      useUserStore.setState({ ageGroup: '5-7' });
+    });
+    await waitFor(() => {
+      const card57 = screen.getByTestId('level-card-0');
+      expect(card57.querySelectorAll('svg')).toHaveLength(3);
+    });
   });
 });
