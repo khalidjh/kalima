@@ -27,6 +27,8 @@ vi.mock('canvas-confetti', () => ({
 
 import { LetterTapSound } from './LetterTapSound';
 import { useUserStore } from '../../stores/userStore';
+import { LEVEL_INDICES_FOR_AGE } from './config';
+import { LETTERS_AR } from './data/letters-ar';
 
 beforeEach(() => {
   upsertMock.mockClear();
@@ -135,6 +137,25 @@ describe('LetterTapSound', () => {
     render(<LetterTapSound />);
     fireEvent.click(screen.getByTestId('level-card-0'));
     expect(screen.getAllByTestId('quiz-tile')).toHaveLength(6);
+  });
+
+  it('only renders distractors drawn from the age-bucket pool', () => {
+    useUserStore.setState({
+      profile: { id: 'u1', displayName: null, avatarUrl: null },
+      learnLang: 'ar',
+      ageGroup: '3-4',
+    });
+    render(<LetterTapSound />);
+    fireEvent.click(screen.getByTestId('level-card-0'));
+    const allowedChars = new Set(
+      LEVEL_INDICES_FOR_AGE.ar['3-4'].map((i) => LETTERS_AR[i].char),
+    );
+    const tiles = screen.getAllByTestId('quiz-tile');
+    expect(tiles).toHaveLength(2);
+    for (const tile of tiles) {
+      const char = tile.textContent ?? '';
+      expect(allowedChars.has(char)).toBe(true);
+    }
   });
 
   it('shows 2 quiz tiles per round when ageGroup is 3-4', () => {
