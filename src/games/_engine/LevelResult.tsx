@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mascot } from '../../components/Mascot';
+import { StarIcon } from '../../components/icons';
 import { useSound } from '../../hooks/useSound';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { STAR_CASCADE_MS, CONFETTI_PARTICLES } from './timings';
@@ -85,7 +86,7 @@ export function LevelResult({ stars, hasNext, onNext, onReplay, onBack }: LevelR
     <section data-testid="level-result" className="flex flex-col items-center gap-6 px-6 py-8">
       <Mascot mood={bounceMascot ? 'success' : 'idle'} />
       <h2 className="font-display text-3xl text-ink">{t('game.level_complete')}</h2>
-      <div className="flex gap-2 text-4xl" aria-label={t('game.stars_earned', { stars })}>
+      <div className="flex gap-2" aria-label={t('game.stars_earned', { stars })}>
         {[0, 1, 2].map((i) => {
           const isFilled = i < earned;
           const isRevealed = i < revealed;
@@ -96,20 +97,20 @@ export function LevelResult({ stars, hasNext, onNext, onReplay, onBack }: LevelR
                 data-testid="star-filled"
                 data-revealed={isRevealed ? 'true' : 'false'}
                 className={[
-                  'inline-block transition-all duration-300',
+                  'inline-flex transition-all duration-300',
                   isRevealed ? 'opacity-100' : 'opacity-0',
                   // Default motion: spring scale on reveal
                   !reducedMotion && isRevealed ? 'scale-100' : '',
                   !reducedMotion && !isRevealed ? 'scale-0' : '',
                 ].filter(Boolean).join(' ')}
               >
-                ⭐
+                <StarIcon size={56} />
               </span>
             );
           }
           return (
-            <span key={i} data-testid="star-empty" className="opacity-60">
-              ☆
+            <span key={i} data-testid="star-empty" className="inline-flex opacity-30">
+              <StarIcon size={56} />
             </span>
           );
         })}
