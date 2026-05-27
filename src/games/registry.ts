@@ -36,9 +36,10 @@ export const GAMES_REGISTRY: GameMeta[] = [
     subtitleKey: 'landing.card_age_5_7',
     primaryAge: '5-7',
     alsoGoodFor: ['8-10'],
-    badge: { labelKey: 'hub.coming_soon', tone: 'soon' },
+    badge: { labelKey: 'landing.free_badge', tone: 'free' },
     bg: 'bg-cream',
-    status: 'coming-soon',
+    status: 'playable',
+    route: '/game/word-builder',
   },
   {
     id: 'locked-1',

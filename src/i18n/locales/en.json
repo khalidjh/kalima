@@ -60,6 +60,9 @@
     "letter_tap_sound": {
       "name": "Letter Tap & Sound"
     },
+    "word_builder": {
+      "name": "Word Builder"
+    },
     "level": "Level {{n}}",
     "tap_speaker": "Tap to hear the letter",
     "next_level": "Next level",

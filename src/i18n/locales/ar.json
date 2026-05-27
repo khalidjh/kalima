@@ -64,6 +64,9 @@
     "letter_tap_sound": {
       "name": "اضغط الحرف"
     },
+    "word_builder": {
+      "name": "بناء الكلمات"
+    },
     "level": "المستوى {{n}}",
     "tap_speaker": "اضغط لسماع الحرف",
     "next_level": "المستوى التالي",

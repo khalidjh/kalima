@@ -26,7 +26,7 @@ describe('games registry', () => {
     const wb = GAMES_REGISTRY.find((g) => g.id === 'word-builder');
     expect(wb?.primaryAge).toBe('5-7');
     expect(wb?.alsoGoodFor).toEqual(['8-10']);
-    expect(wb?.status).toBe('coming-soon');
+    expect(wb?.status).toBe('playable');
   });
 
   it('marks locked placeholders with no age and locked status', () => {

@@ -183,11 +183,11 @@ describe('Hub', () => {
       expect(screen.getByTestId('hub-card-locked-2')).toBeInTheDocument();
     });
 
-    it('does not navigate when the coming-soon Word Builder tile is clicked', () => {
+    it('navigates to the Word Builder game when its tile is clicked', () => {
       useUserStore.getState().setAgeGroup('5-7');
       render(<MemoryRouter><Hub /></MemoryRouter>);
       fireEvent.click(screen.getByTestId('hub-card-word-builder'));
-      expect(navigateMock).not.toHaveBeenCalled();
+      expect(navigateMock).toHaveBeenCalledWith('/game/word-builder');
     });
 
     it('does not navigate when a locked tile is clicked', () => {
