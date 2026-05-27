@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Tile } from '../_engine/Tile';
 import type { Word } from './data/words-en';
 import type { PlayConfig } from './config';
@@ -46,7 +46,12 @@ export function SpellPad({ word, config, onComplete }: SpellPadProps) {
   const initialRack = useMemo(() => buildRack(word), [word]);
   const [rack, setRack] = useState<RackTile[]>(initialRack);
   const [filled, setFilled] = useState<string[]>(() => Array(word.text.length).fill(''));
-  const [mistakes, setMistakes] = useState(0);
+  // Tracked in a ref, not state: mistakes is never displayed during play; it's
+  // only read once at completion time. Using state introduced a stale-closure
+  // race when a wrong tap's feedback window (400ms) overlapped with a correct
+  // completing tap's window (300ms) — the microtask fired with the pre-increment
+  // value. A ref reads .current at fire time and side-steps the issue.
+  const mistakesRef = useRef(0);
   const nextSlot = filled.findIndex((s) => s === '');
 
   const expectedLetter = nextSlot >= 0 ? word.text[nextSlot] : null;
@@ -59,14 +64,14 @@ export function SpellPad({ word, config, onComplete }: SpellPadProps) {
       const allFilled = next.every((s) => s !== '');
       if (allFilled) {
         // Defer onComplete so it runs after this state batch settles.
-        queueMicrotask(() => onComplete(mistakes));
+        queueMicrotask(() => onComplete(mistakesRef.current));
       }
       return next;
     });
   };
 
   const handleWrong = () => {
-    setMistakes((m) => m + 1);
+    mistakesRef.current += 1;
   };
 
   return (
