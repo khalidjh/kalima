@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TAP_FEEDBACK_MS } from './timings';
+import { TAP_FEEDBACK_MS } from '../_engine/timings';
 
 const mocks = vi.hoisted(() => ({
   upsert: vi.fn().mockResolvedValue(undefined),

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { TAP_FEEDBACK_MS } from './timings';
+import { TAP_FEEDBACK_MS } from '../_engine/timings';
 
 const mocks = vi.hoisted(() => ({
   dispatchSpeak: vi.fn().mockResolvedValue(undefined),

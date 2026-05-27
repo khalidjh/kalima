@@ -4,7 +4,7 @@ import { dispatchSpeak } from './audio/speak';
 import { useSpeech } from '../../hooks/useSpeech';
 import { useSound } from '../../hooks/useSound';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { TAP_FEEDBACK_MS } from './timings';
+import { TAP_FEEDBACK_MS } from '../_engine/timings';
 import type { Letter } from '../../types/game';
 import type { Lang } from '../../stores/userStore';
 

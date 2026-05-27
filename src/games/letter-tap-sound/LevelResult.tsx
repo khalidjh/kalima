@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Mascot } from '../../components/Mascot';
 import { useSound } from '../../hooks/useSound';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { STAR_CASCADE_MS, CONFETTI_PARTICLES } from './timings';
+import { STAR_CASCADE_MS, CONFETTI_PARTICLES } from '../_engine/timings';
 
 interface LevelResultProps {
   stars: number;
