@@ -17,6 +17,8 @@ interface QuizProps {
 export function Quiz({ target, choices, lang, onCorrect, onWrong }: QuizProps) {
   const { t } = useTranslation();
   const { speak } = useSpeech();
+  // Shared across all sibling Tiles so one decisive tap blocks the others
+  // during a feedback window (kids will mash multiple tiles at once).
   const lockRef = useRef(false);
 
   const playPrompt = useCallback(() => {

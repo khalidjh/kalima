@@ -34,6 +34,9 @@ export function Tile({ label, ariaLabel, isCorrect, onCorrect, onWrong, disabled
     };
   }, []);
 
+  // The branching avoids `(lockRef ?? internalLockRef).current = v`, which the
+  // React Compiler ESLint rule treats as mutation through a possibly-aliased
+  // prop ref. Keep the helpers — don't "simplify" them back to `??`.
   const setLocked = (v: boolean) => {
     if (lockRef) lockRef.current = v;
     else internalLockRef.current = v;
