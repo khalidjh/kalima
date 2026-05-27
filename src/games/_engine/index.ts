@@ -3,3 +3,5 @@ export { starsFor } from './stars';
 export { LevelResult } from './LevelResult';
 export { Tile } from './Tile';
 export { LevelGrid } from './LevelGrid';
+export { useGameShell } from './useGameShell';
+export type { ShellState, UseGameShellArgs, UseGameShellResult } from './types';

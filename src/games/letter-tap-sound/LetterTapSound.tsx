@@ -1,10 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useUserStore } from '../../stores/userStore';
-import { useGameProgress } from '../../hooks/useGameProgress';
-import { starsFor } from '../_engine/stars';
 import { LevelSelect } from './LevelSelect';
 import { Quiz } from './Quiz';
-import { LevelResult } from '../_engine/LevelResult';
+import { LevelResult, useGameShell } from '../_engine';
 import { LETTERS_AR } from './data/letters-ar';
 import { LETTERS_EN } from './data/letters-en';
 import { getChoiceCountForAge, getLevelIndicesForAge } from './config';
@@ -13,11 +11,6 @@ import type { Lang } from '../../stores/userStore';
 
 const PROMPTS_PER_LEVEL = 3;
 
-type State =
-  | { kind: 'select' }
-  | { kind: 'playing'; levelIndex: number; promptIndex: number; mistakes: number; choices: Letter[] }
-  | { kind: 'result'; levelIndex: number; stars: number };
-
 function pickDistractors(
   letters: Letter[],
   poolIndices: number[],
@@ -25,7 +18,6 @@ function pickDistractors(
   count: number,
 ): Letter[] {
   const others = poolIndices.filter((i) => i !== targetIndex).map((i) => letters[i]);
-  // Fisher-Yates partial shuffle, take first `count`
   for (let i = others.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [others[i], others[j]] = [others[j], others[i]];
@@ -49,103 +41,106 @@ function buildChoices(
   return all;
 }
 
+interface PromptState {
+  promptIndex: number;
+  mistakes: number;
+  choices: Letter[];
+}
+
 export function LetterTapSound() {
   const learnLang = useUserStore((s) => s.learnLang);
   const ageGroup = useUserStore((s) => s.ageGroup);
   const lang: Lang = learnLang ?? 'ar';
   const letters = lang === 'ar' ? LETTERS_AR : LETTERS_EN;
-  const levelIndices = useMemo(
-    () => getLevelIndicesForAge(lang, ageGroup),
-    [lang, ageGroup],
-  );
   const choiceCount = getChoiceCountForAge(ageGroup);
-  const { progress, upsert } = useGameProgress('letter-tap-sound', lang);
-  const [state, setState] = useState<State>({ kind: 'select' });
 
-  const startLevel = (levelIndex: number) => {
-    setState({
-      kind: 'playing',
-      levelIndex,
-      promptIndex: 0,
-      mistakes: 0,
-      choices: buildChoices(letters, levelIndices, levelIndex, choiceCount),
-    });
-  };
+  const poolForAge = useMemo(
+    () => (age: typeof ageGroup) => getLevelIndicesForAge(lang, age),
+    [lang],
+  );
+
+  const shell = useGameShell({
+    gameId: 'letter-tap-sound',
+    lang,
+    ageGroup,
+    poolForAge,
+  });
+
+  // Per-level prompt state. We adjust state during render when the playing
+  // level changes — the React-sanctioned alternative to a useEffect setState
+  // (which `react-hooks/set-state-in-effect` forbids) and to the
+  // useMemo-as-setter pattern. See: https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const playingIndex = shell.state.kind === 'playing' ? shell.state.levelIndex : null;
+  const [prompt, setPrompt] = useState<PromptState | null>(null);
+  const [lastPlayingIndex, setLastPlayingIndex] = useState<number | null>(null);
+  if (playingIndex !== lastPlayingIndex) {
+    setLastPlayingIndex(playingIndex);
+    if (playingIndex === null) {
+      setPrompt(null);
+    } else {
+      setPrompt({
+        promptIndex: 0,
+        mistakes: 0,
+        choices: buildChoices(letters, shell.levelIndices, playingIndex, choiceCount),
+      });
+    }
+  }
 
   const onCorrect = () => {
-    if (state.kind !== 'playing') return;
-    const nextPrompt = state.promptIndex + 1;
+    if (!prompt || shell.state.kind !== 'playing') return;
+    const nextPrompt = prompt.promptIndex + 1;
     if (nextPrompt >= PROMPTS_PER_LEVEL) {
-      const stars = starsFor(state.mistakes);
-      void upsert(state.levelIndex, stars);
-      setState({ kind: 'result', levelIndex: state.levelIndex, stars });
+      shell.completeLevel(prompt.mistakes);
       return;
     }
-    setState({
-      ...state,
+    setPrompt({
       promptIndex: nextPrompt,
-      choices: buildChoices(letters, levelIndices, state.levelIndex, choiceCount),
+      mistakes: prompt.mistakes,
+      choices: buildChoices(letters, shell.levelIndices, shell.state.levelIndex, choiceCount),
     });
   };
 
   const onWrong = () => {
-    if (state.kind !== 'playing') return;
-    setState({ ...state, mistakes: state.mistakes + 1 });
+    if (!prompt) return;
+    setPrompt({ ...prompt, mistakes: prompt.mistakes + 1 });
   };
 
-  const goBack = () => setState({ kind: 'select' });
-  const replay = () => {
-    if (state.kind !== 'result') return;
-    startLevel(state.levelIndex);
-  };
-  const next = () => {
-    if (state.kind !== 'result') return;
-    const currentPos = levelIndices.indexOf(state.levelIndex);
-    if (currentPos < 0) return;
-    const nextPos = currentPos + 1;
-    if (nextPos < levelIndices.length) startLevel(levelIndices[nextPos]);
-    else goBack();
-  };
-
-  const target = useMemo(() => {
-    if (state.kind !== 'playing') return null;
-    return letters[state.levelIndex];
-  }, [state, letters]);
-
-  if (state.kind === 'select') {
+  if (shell.state.kind === 'select') {
     return (
       <LevelSelect
         letters={letters}
-        levelIndices={levelIndices}
-        progress={progress}
-        onPick={startLevel}
+        levelIndices={shell.levelIndices}
+        progress={shell.progress}
+        onPick={shell.startLevel}
       />
     );
   }
-  if (state.kind === 'playing' && target) {
+
+  if (shell.state.kind === 'playing' && prompt) {
+    const target = letters[shell.state.levelIndex];
     return (
       <Quiz
-        key={`${state.levelIndex}-${state.promptIndex}`}
+        key={`${shell.state.levelIndex}-${prompt.promptIndex}`}
         target={target}
-        choices={state.choices}
+        choices={prompt.choices}
         lang={lang}
         onCorrect={onCorrect}
         onWrong={onWrong}
       />
     );
   }
-  if (state.kind === 'result') {
-    const currentPos = levelIndices.indexOf(state.levelIndex);
-    const hasNext = currentPos >= 0 && currentPos + 1 < levelIndices.length;
+
+  if (shell.state.kind === 'result') {
     return (
       <LevelResult
-        stars={state.stars}
-        hasNext={hasNext}
-        onNext={next}
-        onReplay={replay}
-        onBack={goBack}
+        stars={shell.state.stars}
+        hasNext={shell.hasNext}
+        onNext={shell.next}
+        onReplay={shell.replay}
+        onBack={shell.goBack}
       />
     );
   }
+
   return null;
 }
