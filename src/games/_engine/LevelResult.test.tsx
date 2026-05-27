@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { STAR_CASCADE_MS } from '../_engine/timings';
+import { STAR_CASCADE_MS } from './timings';
 
 const mocks = vi.hoisted(() => ({
   play: vi.fn(),

@@ -4,7 +4,7 @@ import { useGameProgress } from '../../hooks/useGameProgress';
 import { starsFor } from '../_engine/stars';
 import { LevelSelect } from './LevelSelect';
 import { Quiz } from './Quiz';
-import { LevelResult } from './LevelResult';
+import { LevelResult } from '../_engine/LevelResult';
 import { LETTERS_AR } from './data/letters-ar';
 import { LETTERS_EN } from './data/letters-en';
 import { getChoiceCountForAge, getLevelIndicesForAge } from './config';
