@@ -57,7 +57,7 @@ async function playLevel(_targetChar: string, targetName: string, mistakes: numb
     if (p === 0) {
       // make `mistakes` wrong taps first, then correct
       for (let m = 0; m < mistakes; m++) {
-        const tiles = screen.getAllByTestId('quiz-tile');
+        const tiles = screen.getAllByTestId('engine-tile');
         const wrong = tiles.find((b) => b.getAttribute('aria-label') !== targetName);
         if (wrong) fireEvent.click(wrong);
         // Advance past the wrong-tile feedback window so onWrong fires.
@@ -141,7 +141,7 @@ describe('LetterTapSound', () => {
     });
     render(<LetterTapSound />);
     fireEvent.click(screen.getByTestId('level-card-0'));
-    expect(screen.getAllByTestId('quiz-tile')).toHaveLength(6);
+    expect(screen.getAllByTestId('engine-tile')).toHaveLength(6);
   });
 
   it('only renders distractors drawn from the age-bucket pool', () => {
@@ -155,7 +155,7 @@ describe('LetterTapSound', () => {
     const allowedChars = new Set(
       LEVEL_INDICES_FOR_AGE.ar['3-4'].map((i) => LETTERS_AR[i].char),
     );
-    const tiles = screen.getAllByTestId('quiz-tile');
+    const tiles = screen.getAllByTestId('engine-tile');
     expect(tiles).toHaveLength(2);
     for (const tile of tiles) {
       const char = tile.textContent ?? '';
@@ -171,7 +171,7 @@ describe('LetterTapSound', () => {
     });
     render(<LetterTapSound />);
     fireEvent.click(screen.getByTestId('level-card-0'));
-    expect(screen.getAllByTestId('quiz-tile')).toHaveLength(2);
+    expect(screen.getAllByTestId('engine-tile')).toHaveLength(2);
   });
 
   it('hides next button on result when current levelIndex is no longer in the active pool', async () => {
@@ -207,7 +207,7 @@ describe('LetterTapSound', () => {
     render(<LetterTapSound />);
     expect(screen.getAllByTestId(/^level-card-/)).toHaveLength(28);
     fireEvent.click(screen.getByTestId('level-card-0'));
-    expect(screen.getAllByTestId('quiz-tile')).toHaveLength(4);
+    expect(screen.getAllByTestId('engine-tile')).toHaveLength(4);
   });
 
   it('preserves earned stars across an age-group switch (progress is not age-keyed)', async () => {

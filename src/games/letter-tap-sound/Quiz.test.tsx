@@ -46,13 +46,13 @@ afterEach(() => {
 describe('Quiz', () => {
   it('renders 4 tiles', () => {
     render(<Quiz target={target} choices={[target, ...distractors]} lang="ar" onCorrect={() => {}} onWrong={() => {}} />);
-    expect(screen.getAllByTestId('quiz-tile')).toHaveLength(4);
+    expect(screen.getAllByTestId('engine-tile')).toHaveLength(4);
   });
 
   it('renders quiz tile aria-labels in the same order as the choices array', () => {
     const choices = [target, ...distractors];
     render(<Quiz target={target} choices={choices} lang="ar" onCorrect={() => {}} onWrong={() => {}} />);
-    const tiles = screen.getAllByTestId('quiz-tile');
+    const tiles = screen.getAllByTestId('engine-tile');
     expect(tiles).toHaveLength(choices.length);
     tiles.forEach((tile, i) => {
       expect(tile.getAttribute('aria-label')).toBe(choices[i].name);
