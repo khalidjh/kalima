@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useUserStore } from '../../stores/userStore';
 import { useGameProgress } from '../../hooks/useGameProgress';
+import { starsFor } from '../_engine/stars';
 import { LevelSelect } from './LevelSelect';
 import { Quiz } from './Quiz';
 import { LevelResult } from './LevelResult';
@@ -46,12 +47,6 @@ function buildChoices(
     [all[i], all[j]] = [all[j], all[i]];
   }
   return all;
-}
-
-function starsFor(mistakes: number): number {
-  if (mistakes === 0) return 3;
-  if (mistakes === 1) return 2;
-  return 1;
 }
 
 export function LetterTapSound() {
