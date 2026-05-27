@@ -1,5 +1,7 @@
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tile } from '../_engine/Tile';
+import { useSpeech } from '../../hooks/useSpeech';
 import type { Word } from './data/words-en';
 import type { PlayConfig } from './config';
 
@@ -10,13 +12,14 @@ interface SpellPadProps {
 }
 
 interface RackTile {
-  /** Stable key per tile slot; allows duplicates of the same letter. */
   id: string;
   letter: string;
-  /** Index into word.text this tile is intended to fill (or -1 for pure distractor). */
+  /** -1 if this tile is a distractor that should never match a slot. */
   intendedSlot: number;
   used: boolean;
 }
+
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 function shuffle<T>(arr: T[]): T[] {
   const copy = [...arr];
@@ -27,23 +30,33 @@ function shuffle<T>(arr: T[]): T[] {
   return copy;
 }
 
-/**
- * Build the tile rack. For mode A: exactly the word's letters (one tile per
- * slot), scrambled. Each tile carries `intendedSlot` so we know which slot
- * it fills when tapped — important for words with duplicate letters (e.g. BOOK).
- */
-function buildRack(word: Word): RackTile[] {
-  const tiles: RackTile[] = word.text.split('').map((letter, idx) => ({
+function buildRack(word: Word, config: PlayConfig): RackTile[] {
+  const letterTiles: RackTile[] = word.text.split('').map((letter, idx) => ({
     id: `slot-${idx}`,
     letter,
     intendedSlot: idx,
     used: false,
   }));
-  return shuffle(tiles);
+
+  if (config.extraDistractors <= 0) return shuffle(letterTiles);
+
+  const wordLetterSet = new Set(word.text.split(''));
+  const candidates = ALPHABET.split('').filter((ch) => !wordLetterSet.has(ch));
+  const chosen = shuffle(candidates).slice(0, config.extraDistractors);
+  const distractorTiles: RackTile[] = chosen.map((letter, idx) => ({
+    id: `distractor-${idx}-${letter}`,
+    letter,
+    intendedSlot: -1,
+    used: false,
+  }));
+
+  return shuffle([...letterTiles, ...distractorTiles]);
 }
 
 export function SpellPad({ word, config, onComplete }: SpellPadProps) {
-  const initialRack = useMemo(() => buildRack(word), [word]);
+  const { t } = useTranslation();
+  const { speak } = useSpeech();
+  const initialRack = useMemo(() => buildRack(word, config), [word, config]);
   const [rack, setRack] = useState<RackTile[]>(initialRack);
   const [filled, setFilled] = useState<string[]>(() => Array(word.text.length).fill(''));
   // Tracked in a ref, not state: mistakes is never displayed during play; it's
@@ -53,8 +66,18 @@ export function SpellPad({ word, config, onComplete }: SpellPadProps) {
   // value. A ref reads .current at fire time and side-steps the issue.
   const mistakesRef = useRef(0);
   const nextSlot = filled.findIndex((s) => s === '');
-
   const expectedLetter = nextSlot >= 0 ? word.text[nextSlot] : null;
+
+  const playWordAudio = useCallback(() => {
+    void speak(word.text, 'en');
+  }, [speak, word]);
+
+  // On mount (and when mode flips into audio-only), speak the word once.
+  useEffect(() => {
+    if (config.mode === 'audio-only-with-distractors') {
+      playWordAudio();
+    }
+  }, [config.mode, playWordAudio]);
 
   const handleCorrect = (tile: RackTile) => {
     setRack((prev) => prev.map((t) => (t.id === tile.id ? { ...t, used: true } : t)));
@@ -63,7 +86,6 @@ export function SpellPad({ word, config, onComplete }: SpellPadProps) {
       next[nextSlot] = tile.letter;
       const allFilled = next.every((s) => s !== '');
       if (allFilled) {
-        // Defer onComplete so it runs after this state batch settles.
         queueMicrotask(() => onComplete(mistakesRef.current));
       }
       return next;
@@ -81,6 +103,17 @@ export function SpellPad({ word, config, onComplete }: SpellPadProps) {
           {word.text}
         </div>
       )}
+      {config.mode === 'audio-only-with-distractors' && (
+        <button
+          type="button"
+          data-testid="spell-speaker"
+          onClick={playWordAudio}
+          aria-label={t('game.tap_speaker')}
+          className="text-4xl rounded-full bg-sunny border-4 border-ink shadow-pop w-20 h-20 flex items-center justify-center active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+        >
+          🔊
+        </button>
+      )}
       <div className="flex gap-2">
         {filled.map((ch, i) => (
           <div
@@ -94,9 +127,8 @@ export function SpellPad({ word, config, onComplete }: SpellPadProps) {
       </div>
       <div className="grid grid-cols-4 gap-3">
         {rack.map((tile) => {
-          // A tile is "correct" if its letter matches the next expected slot's letter.
-          // For mode A (no duplicates concern), letter equality is sufficient.
-          const isCorrect = expectedLetter !== null && tile.letter === expectedLetter && !tile.used;
+          const isCorrect =
+            expectedLetter !== null && tile.letter === expectedLetter && !tile.used;
           return (
             <Tile
               key={tile.id}

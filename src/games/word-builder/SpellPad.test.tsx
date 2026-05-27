@@ -103,3 +103,61 @@ describe('SpellPad — mode A (word-shown-no-distractors)', () => {
     expect(screen.getByLabelText('letter C')).toBeDisabled();
   });
 });
+
+describe('SpellPad — mode B (word-shown-with-distractors)', () => {
+  const config = { mode: 'word-shown-with-distractors' as const, extraDistractors: 2 };
+
+  it('renders word + (letters + 2 distractor) tiles', () => {
+    render(<SpellPad word={CAT} config={config} onComplete={() => {}} />);
+    // CAT (3) + 2 distractors = 5 tiles
+    expect(screen.getAllByTestId('engine-tile')).toHaveLength(5);
+  });
+
+  it('shows the word text', () => {
+    render(<SpellPad word={CAT} config={config} onComplete={() => {}} />);
+    expect(screen.getByTestId('spell-word')).toHaveTextContent('CAT');
+  });
+
+  it('distractor letters are not in the target word', () => {
+    render(<SpellPad word={CAT} config={config} onComplete={() => {}} />);
+    const wordLetters = new Set('CAT'.split(''));
+    const tiles = screen.getAllByTestId('engine-tile');
+    const distractors = tiles.filter((t) => !wordLetters.has(t.textContent ?? ''));
+    expect(distractors).toHaveLength(2);
+    for (const d of distractors) {
+      expect('CAT').not.toContain(d.textContent);
+    }
+  });
+
+  it('tapping a distractor counts as a wrong mistake', async () => {
+    const onComplete = vi.fn();
+    render(<SpellPad word={CAT} config={config} onComplete={onComplete} />);
+    const tiles = screen.getAllByTestId('engine-tile');
+    const distractor = tiles.find((t) => !'CAT'.includes(t.textContent ?? ''));
+    if (!distractor) throw new Error('no distractor');
+    fireEvent.click(distractor);
+    await advancePastFeedback('wrong');
+    expect(mocks.play).toHaveBeenCalledWith('wrong');
+  });
+});
+
+describe('SpellPad — mode C (audio-only-with-distractors)', () => {
+  const config = { mode: 'audio-only-with-distractors' as const, extraDistractors: 2 };
+
+  it('does not show the word text', () => {
+    render(<SpellPad word={CAT} config={config} onComplete={() => {}} />);
+    expect(screen.queryByTestId('spell-word')).not.toBeInTheDocument();
+  });
+
+  it('renders a speaker button that calls speak(word.text)', () => {
+    render(<SpellPad word={CAT} config={config} onComplete={() => {}} />);
+    const speaker = screen.getByTestId('spell-speaker');
+    fireEvent.click(speaker);
+    expect(mocks.speak).toHaveBeenCalledWith('CAT', expect.anything());
+  });
+
+  it('plays the word on mount', () => {
+    render(<SpellPad word={CAT} config={config} onComplete={() => {}} />);
+    expect(mocks.speak).toHaveBeenCalledWith('CAT', expect.anything());
+  });
+});
